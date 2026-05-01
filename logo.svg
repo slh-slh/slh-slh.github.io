@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <style>
+      .bar { fill: #2B4C3B; } /* 武大绿 */
+      .bar2 { fill: #D94A4A; } /* 学术红 */
+      .bar3 { fill: #D9A036; } /* 旗舰金 */
+      .arc { fill: none; stroke: #2B4C3B; stroke-width: 6; stroke-linecap: round; }
+    </style>
+  </defs>
+  
+  <!-- 书本/樱花底座弧线 -->
+  <path d="M 40 130 Q 100 160 160 130" class="arc"/>
+  
+  <!-- 中间三片“数据花瓣” -->
+  <rect x="70" y="60" width="20" height="70" rx="3" class="bar" />
+  <rect x="90" y="40" width="20" height="90" rx="3" class="bar2" />
+  <rect x="110" y="75" width="20" height="55" rx="3" class="bar3" />
+  
+  <!-- 绽放的侧花瓣（书页） -->
+  <path d="M 40 90 Q 70 50 90 70" fill="none" stroke="#D94A4A" stroke-width="5" stroke-linecap="round"/>
+  <path d="M 160 90 Q 130 50 110 70" fill="none" stroke="#D9A036" stroke-width="5" stroke-linecap="round"/>
+  
+  <!-- 顶部数据点星光 -->
+  <circle cx="100" cy="35" r="4" fill="#D9A036"/>
+  
+  <!-- 下方文字 -->
+  <text x="100" y="175" text-anchor="middle" font-family="sans-serif" font-size="18" font-weight="bold" fill="#2B4C3B">弘毅数智</text>
+</svg>

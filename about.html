@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>孙梓婧成绩管理</title>
+    <title>孙梓婧成绩管理系统</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232563EB'/%3E%3Cstop offset='100%25' stop-color='%2310B981'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g1)'/%3E%3Cpath d='M25 70 L25 40 L40 55 L55 35 L70 50 L85 25' stroke='white' stroke-width='6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='25' cy='40' r='6' fill='%23F59E0B'/%3E%3Ccircle cx='40' cy='55' r='6' fill='%23EF4444'/%3E%3Ccircle cx='55' cy='35' r='6' fill='%238B5CF6'/%3E%3Ccircle cx='70' cy='50' r='6' fill='%2306B6D4'/%3E%3Ccircle cx='85' cy='25' r='6' fill='%23F59E0B'/%3E%3C/svg%3E">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -921,6 +921,19 @@
                 font-size: 0.85rem;
                 white-space: nowrap;
             }
+            
+            #backup .card-header {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            #backup .card-header .card-actions {
+                width: 100%;
+            }
+            
+            #backup .card-header .card-actions .btn {
+                flex: 1;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1016,6 +1029,7 @@
                     <button class="nav-btn active" data-section="charts">成绩报表</button>
                     <button class="nav-btn" data-section="entry">成绩录入</button>
                     <button class="nav-btn" data-section="query">成绩查询</button>
+                    <button class="nav-btn" data-section="backup">备份管理</button>
                 </nav>
             </div>
         </header>
@@ -1235,6 +1249,78 @@
                 </div>
             </section>
 
+            <section id="backup" class="section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">备份管理</h2>
+                        <div class="card-actions">
+                            <button class="btn btn-outline" onclick="manualBackup()">立即备份</button>
+                            <button class="btn btn-primary" onclick="exportData()">导出数据</button>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid" style="margin-bottom: 1.5rem;">
+                        <div class="stat-card">
+                            <div class="stat-value" id="autoBackupStatus">启用</div>
+                            <div class="stat-label">自动备份</div>
+                        </div>
+                        <div class="stat-card blue">
+                            <div class="stat-value" id="backupCount">0</div>
+                            <div class="stat-label">备份数量</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="padding: 1rem; margin-bottom: 1rem; background: var(--bg-light);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+                            <h3 style="font-size: 1rem; color: var(--text-primary);">自动备份设置</h3>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="autoBackupToggle" checked onchange="toggleAutoBackup()" style="width: 18px; height: 18px;">
+                                <span>启用自动备份</span>
+                            </label>
+                        </div>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <label style="display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem;">备份间隔</label>
+                                <select id="backupInterval" onchange="changeBackupInterval()" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px;">
+                                    <option value="60000">1分钟（测试）</option>
+                                    <option value="3600000">1小时</option>
+                                    <option value="43200000">12小时</option>
+                                    <option value="86400000" selected>24小时</option>
+                                    <option value="604800000">7天</option>
+                                </select>
+                            </div>
+                            <div style="flex: 1; min-width: 200px;">
+                                <label style="display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.25rem;">保留备份数</label>
+                                <select id="maxBackups" onchange="changeMaxBackups()" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px;">
+                                    <option value="3">3个</option>
+                                    <option value="5" selected>5个</option>
+                                    <option value="10">10个</option>
+                                    <option value="20">20个</option>
+                                    <option value="0">不限制</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3 style="font-size: 1rem; color: var(--text-primary);">备份历史</h3>
+                            <button class="btn btn-outline" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;" onclick="clearAllBackups()">清空备份</button>
+                        </div>
+                        <div id="backupList" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                    </div>
+
+                    <div class="card" style="padding: 1rem; background: var(--bg-light);">
+                        <h3 style="font-size: 1rem; color: var(--text-primary); margin-bottom: 1rem;">数据导入</h3>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+                            <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">选择文件导入</button>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); width: 100%; margin-top: 0.5rem;">支持导入JSON格式的备份文件，导入将覆盖现有数据</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section id="charts" class="section active">
                 <div class="stats-grid" id="statsCards">
                     <div class="stat-card">
@@ -1316,13 +1402,20 @@
         let currentExamId = null;
         let editingExamId = null;
         let isDataLocked = false;
+        let backupTimer = null;
+        let autoBackupEnabled = true;
+        let backupInterval = 86400000;
+        let maxBackups = 5;
 
         function init() {
             loadFromStorage();
+            loadBackupSettings();
             setupNavigation();
             setupTabs();
             updateUI();
             renderAllCharts();
+            updateBackupUI();
+            startAutoBackup();
         }
 
         function loadFromStorage() {
@@ -1884,6 +1977,249 @@
 
         function closeExamDetail() {
             document.getElementById('examDetailCard').style.display = 'none';
+        }
+
+        function loadBackupSettings() {
+            const settings = localStorage.getItem('gradeManagementBackupSettings');
+            if (settings) {
+                const parsed = JSON.parse(settings);
+                autoBackupEnabled = parsed.enabled !== false;
+                backupInterval = parsed.interval || 86400000;
+                maxBackups = parsed.maxBackups || 5;
+            }
+            
+            document.getElementById('autoBackupToggle').checked = autoBackupEnabled;
+            document.getElementById('backupInterval').value = backupInterval;
+            document.getElementById('maxBackups').value = maxBackups;
+        }
+
+        function saveBackupSettings() {
+            localStorage.setItem('gradeManagementBackupSettings', JSON.stringify({
+                enabled: autoBackupEnabled,
+                interval: backupInterval,
+                maxBackups: maxBackups
+            }));
+        }
+
+        function toggleAutoBackup() {
+            autoBackupEnabled = document.getElementById('autoBackupToggle').checked;
+            saveBackupSettings();
+            updateBackupUI();
+            if (autoBackupEnabled) {
+                startAutoBackup();
+                showToast('自动备份已启用', 'success');
+            } else {
+                stopAutoBackup();
+                showToast('自动备份已关闭', 'info');
+            }
+        }
+
+        function changeBackupInterval() {
+            backupInterval = parseInt(document.getElementById('backupInterval').value);
+            saveBackupSettings();
+            if (autoBackupEnabled) {
+                stopAutoBackup();
+                startAutoBackup();
+            }
+            showToast('备份间隔已更新', 'success');
+        }
+
+        function changeMaxBackups() {
+            maxBackups = parseInt(document.getElementById('maxBackups').value);
+            saveBackupSettings();
+            cleanupOldBackups();
+            updateBackupUI();
+            showToast('保留备份数已更新', 'success');
+        }
+
+        function getBackups() {
+            const backups = localStorage.getItem('gradeManagementBackups');
+            return backups ? JSON.parse(backups) : [];
+        }
+
+        function saveBackups(backups) {
+            localStorage.setItem('gradeManagementBackups', JSON.stringify(backups));
+        }
+
+        function startAutoBackup() {
+            stopAutoBackup();
+            if (autoBackupEnabled) {
+                backupTimer = setInterval(() => {
+                    if (exams.length > 0) {
+                        createBackup('自动备份');
+                    }
+                }, backupInterval);
+            }
+        }
+
+        function stopAutoBackup() {
+            if (backupTimer) {
+                clearInterval(backupTimer);
+                backupTimer = null;
+            }
+        }
+
+        function createBackup(type = '手动备份') {
+            const backups = getBackups();
+            const backup = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                type: type,
+                data: JSON.parse(JSON.stringify(exams)),
+                examCount: exams.length
+            };
+            backups.unshift(backup);
+            saveBackups(backups);
+            cleanupOldBackups();
+            updateBackupUI();
+            return backup;
+        }
+
+        function manualBackup() {
+            if (exams.length === 0) {
+                showToast('没有数据可备份', 'error');
+                return;
+            }
+            const backup = createBackup('手动备份');
+            showToast(`备份成功！包含 ${backup.examCount} 条记录`, 'success');
+        }
+
+        function cleanupOldBackups() {
+            if (maxBackups === 0) return;
+            let backups = getBackups();
+            if (backups.length > maxBackups) {
+                backups = backups.slice(0, maxBackups);
+                saveBackups(backups);
+            }
+        }
+
+        function restoreBackup(backupId) {
+            if (!confirm('确定要恢复此备份吗？当前数据将被覆盖！')) {
+                return;
+            }
+            const backups = getBackups();
+            const backup = backups.find(b => b.id === backupId);
+            if (backup) {
+                exams = backup.data;
+                saveToStorage();
+                updateUI();
+                renderAllCharts();
+                showToast('备份恢复成功！', 'success');
+            }
+        }
+
+        function deleteBackup(backupId) {
+            if (!confirm('确定要删除此备份吗？')) {
+                return;
+            }
+            let backups = getBackups();
+            backups = backups.filter(b => b.id !== backupId);
+            saveBackups(backups);
+            updateBackupUI();
+            showToast('备份已删除', 'info');
+        }
+
+        function clearAllBackups() {
+            if (!confirm('确定要清空所有备份吗？此操作不可恢复！')) {
+                return;
+            }
+            saveBackups([]);
+            updateBackupUI();
+            showToast('所有备份已清空', 'info');
+        }
+
+        function exportData() {
+            if (exams.length === 0) {
+                showToast('没有数据可导出', 'error');
+                return;
+            }
+            const data = {
+                version: '1.0',
+                exportDate: new Date().toISOString(),
+                exams: exams
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `成绩数据_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('数据导出成功！', 'success');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.exams && Array.isArray(data.exams)) {
+                        if (!confirm(`确定要导入 ${data.exams.length} 条记录吗？当前数据将被覆盖！`)) {
+                            event.target.value = '';
+                            return;
+                        }
+                        exams = data.exams;
+                        saveToStorage();
+                        updateUI();
+                        renderAllCharts();
+                        showToast(`成功导入 ${exams.length} 条记录！`, 'success');
+                    } else {
+                        showToast('文件格式不正确', 'error');
+                    }
+                } catch (err) {
+                    showToast('文件解析失败', 'error');
+                }
+                event.target.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        function saveToStorage() {
+            localStorage.setItem('gradeManagementExams', JSON.stringify(exams));
+            if (autoBackupEnabled && exams.length > 0) {
+                const lastBackup = localStorage.getItem('gradeManagementLastBackup');
+                const now = Date.now();
+                if (!lastBackup || now - parseInt(lastBackup) > 3600000) {
+                    createBackup('自动备份');
+                    localStorage.setItem('gradeManagementLastBackup', now.toString());
+                }
+            }
+        }
+
+        function updateBackupUI() {
+            const backups = getBackups();
+            document.getElementById('autoBackupStatus').textContent = autoBackupEnabled ? '启用' : '关闭';
+            document.getElementById('backupCount').textContent = backups.length;
+            
+            const list = document.getElementById('backupList');
+            if (backups.length === 0) {
+                list.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 2rem;">暂无备份</p>';
+                return;
+            }
+            
+            list.innerHTML = backups.map(backup => {
+                const date = new Date(backup.timestamp);
+                const dateStr = date.toLocaleString('zh-CN');
+                const typeColor = backup.type.includes('自动') ? '#F59E0B' : '#2563EB';
+                return `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--bg-light); border-radius: 8px; gap: 1rem; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                <span style="background: ${typeColor}; color: white; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">${backup.type}</span>
+                                <span style="font-weight: 500;">${dateStr}</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">${backup.examCount} 条考试记录</div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-outline" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;" onclick="restoreBackup(${backup.id})">恢复</button>
+                            <button class="btn" style="font-size: 0.8rem; padding: 0.4rem 0.8rem; background: #EF4444; color: white;" onclick="deleteBackup(${backup.id})">删除</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         document.addEventListener('DOMContentLoaded', init);

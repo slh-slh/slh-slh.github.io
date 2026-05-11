@@ -116,132 +116,10 @@
             opacity: 0.6;
             z-index: -1;
         }
-        .sidebar {
-            width: 200px;
-            min-height: 100vh;
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border-right: 1px solid var(--border-color);
-            padding: 1.25rem 0;
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 100;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-md);
-        }
-        .sidebar-header {
-            padding: 0 1rem 1.25rem;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 1rem;
-            position: relative;
-        }
-        .sidebar-header::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 1rem;
-            right: 1rem;
-            height: 1px;
-            background: var(--gradient-primary);
-            opacity: 0.5;
-        }
-        .sidebar-logo {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-shadow: 0 0 20px rgba(129, 140, 248, 0.4);
-        }
-        .sidebar-logo::before {
-            content: '📊';
-            font-size: 1.25rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.05); }
-        }
-        .sidebar-nav {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .nav-item {
-            padding: 0.6rem 1rem;
-            margin: 0.2rem 0.5rem;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .nav-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: var(--gradient-primary);
-            transform: scaleY(0);
-            transition: transform 0.2s ease;
-        }
-        .nav-item:hover {
-            background: rgba(129, 140, 248, 0.1);
-            color: var(--accent-color);
-            transform: translateX(4px);
-        }
-        .nav-item:hover::before {
-            transform: scaleY(1);
-        }
-        .nav-item.active {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-        .nav-item.active::before {
-            transform: scaleY(1);
-            background: white;
-        }
-        .nav-item span:first-child {
-            font-size: 1rem;
-        }
-        .sidebar-divider {
-            height: 1px;
-            background: var(--border-color);
-            margin: 0.75rem 0.5rem;
-            position: relative;
-        }
-        .sidebar-divider::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 2px;
-            background: var(--accent-color);
-            border-radius: 1px;
-        }
-        .sidebar-bottom {
-            position: absolute;
-            bottom: 1.25rem;
-            left: 0;
-            right: 0;
-            padding: 0 0.5rem;
-        }
+        
         .dashboard { 
             flex: 1;
-            margin-left: 200px;
+            margin-left: 0;
             min-height: 100vh;
         }
         .page-container {
@@ -267,34 +145,7 @@
             color: var(--text-secondary);
             margin: 0 0 1.5rem 0;
         }
-        .mobile-toggle {
-            display: none;
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 101;
-            padding: 0.75rem;
-            background: var(--bg-card);
-            border: none;
-            border-right: 1px solid var(--border-color);
-            cursor: pointer;
-            color: var(--text-primary);
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-                box-shadow: var(--shadow-md);
-            }
-            .dashboard {
-                margin-left: 0;
-            }
-            .mobile-toggle {
-                display: block;
-            }
-        }
+        
         .header-row {
             display: flex;
             align-items: center;
@@ -1858,29 +1709,9 @@
     </style>
     
     <style>
-        /* 移动端遮罩层 */
-        .sidebar-backdrop {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .sidebar-backdrop.show {
-            display: block;
-            opacity: 1;
-        }
-        
         /* 移动端底部导航栏样式 */
         .bottom-nav {
-            display: none;
+            display: flex;
             position: fixed;
             bottom: 0;
             left: 0;
@@ -1950,41 +1781,54 @@
                 justify-content: space-around;
             }
             
-            .sidebar {
-                display: none !important;
-                transform: translateX(-100%);
-                position: fixed;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                width: 280px;
-                z-index: 1002;
-                transition: transform 0.3s ease;
-                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 1.25rem;
+                background: var(--bg-card);
+                border-bottom: 1px solid var(--border-color);
             }
             
-            .sidebar.open {
-                display: block !important;
-                transform: translateX(0);
+            .mobile-header-left {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            
+            .mobile-avatar {
+                font-size: 2.5rem;
+                line-height: 1;
+            }
+            
+            .mobile-welcome {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .mobile-welcome-text {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: var(--text-primary);
+            }
+            
+            .mobile-welcome-sub {
+                font-size: 0.8rem;
+                color: var(--text-secondary);
+                margin-top: 0.25rem;
+            }
+            
+            .mobile-settings-btn {
+                padding: 0.5rem;
+                background: transparent;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
             }
             
             .dashboard {
-                margin-left: 0;
+                padding-top: 0;
                 padding-bottom: calc(80px + env(safe-area-inset-bottom));
-            }
-            
-            .mobile-toggle {
-                display: block !important;
-                position: fixed;
-                left: auto;
-                right: 1rem;
-                top: 1rem;
-                z-index: 1001;
-                background: var(--bg-card);
-                border: 1px solid var(--border-color);
-                border-radius: 8px;
-                padding: 0.5rem 0.75rem;
-                box-shadow: var(--shadow-md);
             }
             
             .page-container {
@@ -2005,16 +1849,21 @@
             .bottom-nav-item {
                 padding: 0.4rem 0.5rem;
             }
-            
-            .sidebar {
-                width: 240px;
-            }
         }
     </style>
 </head>
 <body>
-<!-- 移动端遮罩层 -->
-<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+<!-- 移动端顶部欢迎栏 -->
+<div class="mobile-header" id="mobileHeader">
+    <div class="mobile-header-left">
+        <span class="mobile-avatar">👤</span>
+        <div class="mobile-welcome">
+            <span class="mobile-welcome-text">欢迎回来</span>
+            <span class="mobile-welcome-sub">孙靖宇 · 25级数智人文试验班</span>
+        </div>
+    </div>
+    <button class="mobile-settings-btn" id="mobileSettingsBtn">⚙️</button>
+</div>
 
 <!-- 移动端底部导航栏 -->
 <nav class="bottom-nav" id="bottomNav">
@@ -2040,41 +1889,6 @@
     </div>
 </nav>
 
-<button class="mobile-toggle" id="mobileToggle">☰</button>
-<div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <div class="sidebar-logo">成绩管理</div>
-    </div>
-    <ul class="sidebar-nav">
-        <li class="nav-item active" data-section="analysis">
-            <span>数据分析</span>
-        </li>
-        <li class="nav-item" data-section="courses">
-            <span>课程管理</span>
-        </li>
-        <li class="nav-item" data-section="goal">
-            <span>目标规划</span>
-        </li>
-        <li class="nav-item" data-section="baoyan">
-            <span>保研指导</span>
-        </li>
-    </ul>
-    <div class="sidebar-divider"></div>
-    <ul class="sidebar-nav">
-        <li class="nav-item" data-action="theme">
-            <span>主题切换</span>
-        </li>
-        <li class="nav-item" data-action="settings">
-            <span>系统设置</span>
-        </li>
-    </ul>
-    <div class="sidebar-bottom">
-        <div style="padding: 0.6rem 1.2rem; font-size: 0.8rem; color: var(--text-secondary);">
-            <div>孙靖宇</div>
-            <div style="font-size: 0.7rem;">25级数智人文试验班</div>
-        </div>
-    </div>
-</div>
 <div class="dashboard">
     <div style="display: none;">
         <button id="exportCsvBtn">导出CSV</button>
@@ -4317,35 +4131,6 @@
             }
         });
 
-        document.querySelectorAll('.nav-item[data-section]').forEach(item => {
-            item.addEventListener('click', () => {
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                
-                const section = item.dataset.section;
-                
-                document.querySelectorAll('.page-container').forEach(page => {
-                    page.classList.remove('active');
-                });
-                
-                const pageId = `page-${section}`;
-                const targetPage = document.getElementById(pageId);
-                if (targetPage) {
-                    targetPage.classList.add('active');
-                }
-                
-                document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('sidebarBackdrop').classList.remove('show');
-            document.body.style.overflow = '';
-                
-                if (section === 'analysis') {
-                    updateChart();
-                    updateTypeStats();
-                    updateScoreDistribution();
-                }
-            });
-        });
-
         document.getElementById('backupBtn').addEventListener('click', () => {
             const now = new Date();
             const timestamp = now.toISOString().replace(/[:T]/g, '-').slice(0, 19);
@@ -4469,18 +4254,10 @@
             document.getElementById('userMajor').value = userMajor;
             document.getElementById('userClass').value = userClass;
             
-            const sidebarUser = document.querySelector('.sidebar-bottom');
-            if (sidebarUser) {
-                sidebarUser.innerHTML = `
-                    <div style="padding: 0.6rem 1.2rem; font-size: 0.8rem; color: var(--text-secondary);">
-                        <div style="font-weight: 500; color: var(--text-primary); font-size: 0.85rem;">${userName}</div>
-                        ${userStudentId ? `<div style="font-size: 0.65rem; margin-top: 0.1rem;">学号: ${userStudentId}</div>` : ''}
-                        ${userUniversity ? `<div style="font-size: 0.65rem; margin-top: 0.3rem;">${userUniversity}</div>` : ''}
-                        ${userDepartment ? `<div style="font-size: 0.65rem;">${userDepartment}</div>` : ''}
-                        ${userMajor ? `<div style="font-size: 0.65rem;">${userMajor}</div>` : ''}
-                        <div style="font-size: 0.7rem; margin-top: 0.2rem;">${userClass || '未设置班级'}</div>
-                    </div>
-                `;
+            const mobileHeader = document.querySelector('.mobile-header');
+            if (mobileHeader) {
+                mobileHeader.querySelector('.mobile-welcome-text').textContent = '欢迎回来';
+                mobileHeader.querySelector('.mobile-welcome-sub').textContent = `${userName} · ${userClass || '未设置班级'}`;
             }
         }
 
@@ -5001,7 +4778,7 @@
             const defaultPage = localStorage.getItem('dzh_default_page');
             if (defaultPage) {
                 setTimeout(() => {
-                    const navItem = document.querySelector(`.nav-item[data-section="${defaultPage}"]`);
+                    const navItem = document.querySelector(`.bottom-nav-item[data-section="${defaultPage}"]`);
                     if (navItem) navItem.click();
                 }, 100);
             }
@@ -5022,12 +4799,6 @@
             
             const themeBtn = document.getElementById('themeBtn');
             if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
-            
-            const mobileToggle = document.getElementById('mobileToggle');
-            if (mobileToggle) mobileToggle.addEventListener('click', toggleSidebar);
-            
-            const sidebarBackdrop = document.getElementById('sidebarBackdrop');
-            if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', toggleSidebar);
             
             const compareSem1 = document.getElementById('compareSem1');
             if (compareSem1) compareSem1.addEventListener('change', renderCompareContent);
@@ -5057,18 +4828,16 @@
             const dbClearBtn = document.getElementById('dbClearBtn');
             if (dbClearBtn) dbClearBtn.addEventListener('click', clearDatabase);
             
-            document.querySelectorAll('.nav-item[data-section]').forEach(item => {
-                item.addEventListener('click', handleNavSectionClick);
-            });
-            
-            // 底部导航栏事件绑定（移动端）
+            // 底部导航栏事件绑定
             document.querySelectorAll('.bottom-nav-item').forEach(item => {
                 item.addEventListener('click', handleBottomNavClick);
             });
             
-            document.querySelectorAll('.nav-item[data-action]').forEach(item => {
-                item.addEventListener('click', handleNavActionClick);
-            });
+            // 移动端顶部设置按钮事件绑定
+            const mobileSettingsBtn = document.getElementById('mobileSettingsBtn');
+            if (mobileSettingsBtn) {
+                mobileSettingsBtn.addEventListener('click', handleNavActionClick);
+            }
             
             // 固定导航栏事件绑定
             document.querySelectorAll('.sticky-nav-item').forEach(item => {
@@ -5201,25 +4970,6 @@
             alert('成绩数据已导出成功！');
         }
         
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('sidebarBackdrop');
-            
-            if (sidebar && backdrop) {
-                const isOpen = sidebar.classList.contains('open');
-                
-                if (isOpen) {
-                    sidebar.classList.remove('open');
-                    backdrop.classList.remove('show');
-                    document.body.style.overflow = '';
-                } else {
-                    sidebar.classList.add('open');
-                    backdrop.classList.add('show');
-                    document.body.style.overflow = 'hidden';
-                }
-            }
-        }
-        
         function toggleTheme() {
             const themes = ['light', 'dark', 'stars', 'fresh'];
             const currentTheme = localStorage.getItem('dzh_theme') || 'light';
@@ -5228,36 +4978,6 @@
             setTheme(nextTheme);
         }
         
-        function handleNavSectionClick(e) {
-            const item = e.currentTarget;
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-            
-            // 同时更新底部导航栏（移动端）
-            document.querySelectorAll('.bottom-nav-item[data-section]').forEach(i => i.classList.remove('active'));
-            const bottomNavItem = document.querySelector(`.bottom-nav-item[data-section="${item.dataset.section}"]`);
-            if (bottomNavItem) bottomNavItem.classList.add('active');
-            
-            const section = item.dataset.section;
-            document.querySelectorAll('.page-container').forEach(page => page.classList.remove('active'));
-            
-            const targetPage = document.getElementById(`page-${section}`);
-            if (targetPage) targetPage.classList.add('active');
-            
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('sidebarBackdrop').classList.remove('show');
-            document.body.style.overflow = '';
-            
-            if (section === 'analysis') {
-                updateChart();
-                updateTypeStats();
-                updateScoreDistribution();
-            }
-            
-            if (section === 'baoyan') {
-                updateBaoyanAnalysis();
-            }
-        }
         
         // 底部导航栏点击处理（移动端）
         function handleBottomNavClick(e) {
@@ -5274,11 +4994,6 @@
                 document.querySelectorAll('.page-container').forEach(page => page.classList.remove('active'));
                 const targetPage = document.getElementById(`page-${section}`);
                 if (targetPage) targetPage.classList.add('active');
-                
-                // 同时更新侧边栏导航状态
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                const sidebarItem = document.querySelector(`.nav-item[data-section="${section}"]`);
-                if (sidebarItem) sidebarItem.classList.add('active');
                 
                 if (section === 'analysis') {
                     updateChart();
@@ -5312,9 +5027,6 @@
                     if (bottomNavSettings) bottomNavSettings.classList.add('active');
                     break;
             }
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('sidebarBackdrop').classList.remove('show');
-            document.body.style.overflow = '';
         }
         
         // ==================== 保研指导功能 ====================

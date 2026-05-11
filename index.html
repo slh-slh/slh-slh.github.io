@@ -119,8 +119,244 @@
         
         .dashboard { 
             flex: 1;
-            margin-left: 0;
+            margin-left: 260px;
             min-height: 100vh;
+            padding: 1.5rem;
+            padding-bottom: 2rem;
+        }
+        
+        /* 电脑版侧边栏 */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(124, 58, 237, 0.08) 100%);
+        }
+        
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sidebar-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+            padding: 1rem;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .sidebar-section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            padding-left: 0.75rem;
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0.875rem;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-bottom: 0.25rem;
+        }
+        
+        .sidebar-link:hover {
+            background: rgba(79, 70, 229, 0.08);
+            color: var(--accent-color);
+        }
+        
+        .sidebar-link.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .sidebar-link-icon {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-link-text {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .sidebar-user {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            background: rgba(79, 70, 229, 0.03);
+        }
+        
+        .sidebar-user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .sidebar-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .sidebar-user-details {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .sidebar-user-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .sidebar-user-class {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        /* 首页样式 */
+        .home-header {
+            text-align: center;
+            padding: 2rem 0 3rem 0;
+            margin-bottom: 2rem;
+            background: var(--gradient-glow);
+            border-radius: 16px;
+            margin: -1.5rem -1.5rem 2rem -1.5rem;
+            padding: 3rem 2rem;
+        }
+        
+        .home-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.75rem;
+        }
+        
+        .home-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .quick-access-card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .quick-access-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-color);
+        }
+        
+        .quick-access-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .quick-access-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .quick-access-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .home-stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .home-stat-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .home-stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .home-stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .home-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         
         /* Skip 导航链接样式 */
@@ -2115,6 +2351,30 @@
         
         /* 移动端布局 */
         @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .dashboard {
+                margin-left: 0;
+                padding: 1rem;
+                padding-bottom: calc(80px + env(safe-area-inset-bottom));
+            }
+            
+            .home-header {
+                margin: -1rem -1rem 1.5rem -1rem;
+                padding: 2rem 1.5rem;
+                border-radius: 0 0 20px 20px;
+            }
+            
+            .home-title {
+                font-size: 1.75rem;
+            }
+            
+            .quick-access-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
             .mobile-header {
                 display: flex;
                 justify-content: space-between;
@@ -6747,7 +7007,75 @@
             }
         }
         
+
+        function navigateToSection(section) {
+            // 切换页面
+            document.querySelectorAll('.page-container').forEach(page =&gt; page.classList.remove('active'));
+            const targetPage = document.getElementById(`page-${section}`);
+            if (targetPage) targetPage.classList.add('active');
+            
+            // 更新底部导航栏
+            document.querySelectorAll('.bottom-nav-item').forEach(i =&gt; i.classList.remove('active'));
+            const bottomNavItem = document.querySelector(`.bottom-nav-item[data-section="${section}"]`);
+            if (bottomNavItem) bottomNavItem.classList.add('active');
+            
+            // 更新侧边栏
+            document.querySelectorAll('.sidebar-link').forEach(link =&gt; link.classList.remove('active'));
+            const sidebarLink = document.querySelector(`.sidebar-link[data-section="${section}"]`);
+            if (sidebarLink) sidebarLink.classList.add('active');
+            
+            if (section === 'analysis') {
+                updateChart();
+                updateTypeStats();
+                updateScoreDistribution();
+            }
+            if (section === 'baoyan') {
+                updateBaoyanAnalysis();
+            }
+        }
+        
+        function updateHomeStats() {
+            const allCourses = getAllCourses();
+            const stats = computeStats(allCourses);
+            
+            const gpaEl = document.getElementById('homeTotalGPA');
+            const coursesEl = document.getElementById('homeTotalCourses');
+            const creditsEl = document.getElementById('homeTotalCredits');
+            const scoreEl = document.getElementById('homeAvgScore');
+            
+            if (gpaEl) gpaEl.textContent = stats.gpa.toFixed(2);
+            if (coursesEl) coursesEl.textContent = allCourses.length;
+            if (creditsEl) creditsEl.textContent = stats.totalCredits.toFixed(1);
+            if (scoreEl) scoreEl.textContent = stats.averageScore.toFixed(1);
+        }
+        
+        function handleSidebarClick(e) {
+            const link = e.currentTarget;
+            const section = link.dataset.section;
+            const action = link.dataset.action;
+            
+            // 更新侧边栏状态
+            document.querySelectorAll('.sidebar-link').forEach(l =&gt; l.classList.remove('active'));
+            link.classList.add('active');
+            
+            if (section) {
+                navigateToSection(section);
+            } else if (action === 'home') {
+                document.querySelectorAll('.page-container').forEach(page =&gt; page.classList.remove('active'));
+                const homePage = document.getElementById('page-home');
+                if (homePage) homePage.classList.add('active');
+                updateHomeStats();
+                
+                document.querySelectorAll('.bottom-nav-item').forEach(i =&gt; i.classList.remove('active'));
+                const bottomNavHome = document.querySelector('.bottom-nav-item[data-action="home"]');
+                if (bottomNavHome) bottomNavHome.classList.add('active');
+            } else if (action) {
+                handleNavActionClick(e);
+            }
+        }
+        
         function handleNavActionClick(e) {
+
             const action = e.currentTarget.dataset.action;
             switch (action) {
                 case 'theme':

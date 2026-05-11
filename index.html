@@ -3367,11 +3367,15 @@
             if (allCourses.length > 0) {
                 const avgScoreVal = allCourses.reduce((sum, c) => sum + c.score, 0) / allCourses.length;
                 const maxGpaVal = Math.max(...allCourses.map(c => getGradePoint(c.score)));
-                if (avgScore) avgScore.textContent = avgScoreVal.toFixed(1);
-                if (maxGpa) maxGpa.textContent = maxGpaVal.toFixed(2);
+                const avgScoreEl = document.getElementById('avgScore');
+                const maxGpaEl = document.getElementById('maxGpa');
+                if (avgScoreEl) avgScoreEl.textContent = avgScoreVal.toFixed(1);
+                if (maxGpaEl) maxGpaEl.textContent = maxGpaVal.toFixed(2);
             } else {
-                if (avgScore) avgScore.textContent = '—';
-                if (maxGpa) maxGpa.textContent = '—';
+                const avgScoreEl = document.getElementById('avgScore');
+                const maxGpaEl = document.getElementById('maxGpa');
+                if (avgScoreEl) avgScoreEl.textContent = '—';
+                if (maxGpaEl) maxGpaEl.textContent = '—';
             }
             
             const requiredBar = document.getElementById('requiredBar');

@@ -1658,6 +1658,202 @@
             .main-stat-value {
                 font-size: 2.5rem;
             }
+            
+            /* 移动端优化 */
+            .dashboard {
+                padding: 1rem;
+            }
+            .page-container {
+                padding: 1rem;
+            }
+            .card {
+                padding: 1rem;
+                margin-bottom: 0.75rem;
+            }
+            .page-title {
+                font-size: 1.25rem;
+            }
+            
+            /* 移动端表格优化 */
+            .table-wrapper {
+                margin: 0 -1rem;
+                padding: 0 1rem;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            table {
+                font-size: 0.8rem;
+            }
+            th, td {
+                padding: 0.5rem;
+                white-space: nowrap;
+            }
+            th:first-child, td:first-child {
+                padding-left: 1rem;
+            }
+            th:last-child, td:last-child {
+                padding-right: 1rem;
+            }
+            
+            /* 移动端模态框优化 */
+            .modal-card {
+                width: 95vw;
+                max-width: 95vw;
+                margin: 1rem;
+                padding: 1.25rem;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            .modal-field {
+                margin-bottom: 0.875rem;
+            }
+            .modal-field input, 
+            .modal-field select {
+                padding: 0.75rem;
+                font-size: 16px;
+            }
+            .modal-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .modal-btn {
+                width: 100%;
+                padding: 0.75rem;
+                font-size: 1rem;
+            }
+            
+            /* 移动端按钮优化 */
+            .action-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            .move-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+            
+            /* 移动端学期标签优化 */
+            .semester-tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                flex-wrap: nowrap;
+                padding-bottom: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            .semester-tab {
+                flex-shrink: 0;
+                padding: 0.6rem 1rem;
+            }
+            
+            /* 移动端图表优化 */
+            .chart-card {
+                padding: 1rem;
+            }
+            .chart-wrapper {
+                height: 250px;
+            }
+            
+            /* 移动端统计卡片优化 */
+            .stat-item {
+                padding: 0.75rem;
+            }
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            .overview-value {
+                font-size: 1.75rem;
+            }
+            
+            /* 移动端固定底部间距 */
+            .sticky-nav {
+                padding: 0.5rem 1rem;
+                margin: 0 -1rem;
+            }
+            
+            /* 移动端设置页面优化 */
+            .settings-section {
+                padding: 0.875rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            /* 移动端保研分析优化 */
+            .school-recommend-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            /* 移动端比较面板优化 */
+            .compare-panel {
+                padding: 0.875rem;
+            }
+            
+            /* 移动端目标规划优化 */
+            .goal-calculator {
+                padding: 1rem;
+            }
+            .goal-input-group {
+                flex-direction: column;
+            }
+            .goal-input {
+                width: 100%;
+            }
+            
+            /* 移动端详情卡片优化 */
+            .detail-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            .detail-item {
+                padding: 0.75rem;
+            }
+        }
+        
+        /* 超小屏幕优化 */
+        @media (max-width: 480px) {
+            .dashboard {
+                padding: 0.75rem;
+            }
+            .page-container {
+                padding: 0.75rem;
+            }
+            .card {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+            .page-title {
+                font-size: 1.125rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+            .overview-side-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .semester-bar-container {
+                display: none;
+            }
+            
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .semester-trend-card {
+                padding: 0.75rem;
+            }
+            
+            .chart-wrapper {
+                height: 200px;
+            }
+            
+            .cum-card-mini {
+                width: 100%;
+                justify-content: space-between;
+            }
         }
     </style>
 </head>

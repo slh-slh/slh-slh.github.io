@@ -1858,6 +1858,26 @@
     </style>
     
     <style>
+        /* 移动端遮罩层 */
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .sidebar-backdrop.show {
+            display: block;
+            opacity: 1;
+        }
+        
         /* 移动端底部导航栏样式 */
         .bottom-nav {
             display: none;
@@ -1923,7 +1943,7 @@
             color: white;
         }
         
-        /* 移动端底部导航激活状态 */
+        /* 移动端布局 */
         @media (max-width: 768px) {
             .bottom-nav {
                 display: flex;
@@ -1932,6 +1952,20 @@
             
             .sidebar {
                 display: none !important;
+                transform: translateX(-100%);
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 280px;
+                z-index: 1002;
+                transition: transform 0.3s ease;
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+            }
+            
+            .sidebar.open {
+                display: block !important;
+                transform: translateX(0);
             }
             
             .dashboard {
@@ -1953,18 +1987,6 @@
                 box-shadow: var(--shadow-md);
             }
             
-            /* 侧边栏滑出效果 */
-            .sidebar.open {
-                display: block !important;
-                position: fixed;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                width: 280px;
-                z-index: 1002;
-                transform: translateX(0) !important;
-            }
-            
             .page-container {
                 padding-bottom: 2rem;
             }
@@ -1983,10 +2005,17 @@
             .bottom-nav-item {
                 padding: 0.4rem 0.5rem;
             }
+            
+            .sidebar {
+                width: 240px;
+            }
         }
     </style>
 </head>
 <body>
+<!-- 移动端遮罩层 -->
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
 <!-- 移动端底部导航栏 -->
 <nav class="bottom-nav" id="bottomNav">
     <div class="bottom-nav-item active" data-section="analysis">
@@ -4306,6 +4335,8 @@
                 }
                 
                 document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarBackdrop').classList.remove('show');
+            document.body.style.overflow = '';
                 
                 if (section === 'analysis') {
                     updateChart();
@@ -4993,7 +5024,10 @@
             if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
             
             const mobileToggle = document.getElementById('mobileToggle');
-            if (mobileToggle) mobileToggle.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
+            if (mobileToggle) mobileToggle.addEventListener('click', toggleSidebar);
+            
+            const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+            if (sidebarBackdrop) sidebarBackdrop.addEventListener('click', toggleSidebar);
             
             const compareSem1 = document.getElementById('compareSem1');
             if (compareSem1) compareSem1.addEventListener('change', renderCompareContent);
@@ -5167,6 +5201,25 @@
             alert('成绩数据已导出成功！');
         }
         
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            
+            if (sidebar && backdrop) {
+                const isOpen = sidebar.classList.contains('open');
+                
+                if (isOpen) {
+                    sidebar.classList.remove('open');
+                    backdrop.classList.remove('show');
+                    document.body.style.overflow = '';
+                } else {
+                    sidebar.classList.add('open');
+                    backdrop.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        }
+        
         function toggleTheme() {
             const themes = ['light', 'dark', 'stars', 'fresh'];
             const currentTheme = localStorage.getItem('dzh_theme') || 'light';
@@ -5192,6 +5245,8 @@
             if (targetPage) targetPage.classList.add('active');
             
             document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarBackdrop').classList.remove('show');
+            document.body.style.overflow = '';
             
             if (section === 'analysis') {
                 updateChart();
@@ -5258,6 +5313,8 @@
                     break;
             }
             document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarBackdrop').classList.remove('show');
+            document.body.style.overflow = '';
         }
         
         // ==================== 保研指导功能 ====================

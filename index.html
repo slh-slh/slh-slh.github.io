@@ -1856,8 +1856,161 @@
             }
         }
     </style>
+    
+    <style>
+        /* 移动端底部导航栏样式 */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            padding: 0.5rem 0;
+            padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+        }
+        
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: transparent;
+            border: none;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .bottom-nav-item:active {
+            transform: scale(0.95);
+        }
+        
+        .bottom-nav-item.active {
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .bottom-nav-item.active .bottom-nav-icon {
+            filter: brightness(0) invert(1);
+        }
+        
+        .bottom-nav-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            transition: transform 0.2s ease;
+        }
+        
+        .bottom-nav-item.active .bottom-nav-icon {
+            transform: scale(1.1);
+        }
+        
+        .bottom-nav-text {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        
+        .bottom-nav-item.active .bottom-nav-text {
+            color: white;
+        }
+        
+        /* 移动端底部导航激活状态 */
+        @media (max-width: 768px) {
+            .bottom-nav {
+                display: flex;
+                justify-content: space-around;
+            }
+            
+            .sidebar {
+                display: none !important;
+            }
+            
+            .dashboard {
+                margin-left: 0;
+                padding-bottom: calc(80px + env(safe-area-inset-bottom));
+            }
+            
+            .mobile-toggle {
+                display: block !important;
+                position: fixed;
+                left: auto;
+                right: 1rem;
+                top: 1rem;
+                z-index: 1001;
+                background: var(--bg-card);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                padding: 0.5rem 0.75rem;
+                box-shadow: var(--shadow-md);
+            }
+            
+            /* 侧边栏滑出效果 */
+            .sidebar.open {
+                display: block !important;
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 280px;
+                z-index: 1002;
+                transform: translateX(0) !important;
+            }
+            
+            .page-container {
+                padding-bottom: 2rem;
+            }
+        }
+        
+        /* 超小屏幕优化 */
+        @media (max-width: 480px) {
+            .bottom-nav-text {
+                font-size: 0.65rem;
+            }
+            
+            .bottom-nav-icon {
+                font-size: 1.25rem;
+            }
+            
+            .bottom-nav-item {
+                padding: 0.4rem 0.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
+<!-- 移动端底部导航栏 -->
+<nav class="bottom-nav" id="bottomNav">
+    <div class="bottom-nav-item active" data-section="analysis">
+        <span class="bottom-nav-icon">📊</span>
+        <span class="bottom-nav-text">数据</span>
+    </div>
+    <div class="bottom-nav-item" data-section="courses">
+        <span class="bottom-nav-icon">📚</span>
+        <span class="bottom-nav-text">课程</span>
+    </div>
+    <div class="bottom-nav-item" data-section="goal">
+        <span class="bottom-nav-icon">🎯</span>
+        <span class="bottom-nav-text">目标</span>
+    </div>
+    <div class="bottom-nav-item" data-section="baoyan">
+        <span class="bottom-nav-icon">🏆</span>
+        <span class="bottom-nav-text">保研</span>
+    </div>
+    <div class="bottom-nav-item" data-action="settings">
+        <span class="bottom-nav-icon">⚙️</span>
+        <span class="bottom-nav-text">设置</span>
+    </div>
+</nav>
+
 <button class="mobile-toggle" id="mobileToggle">☰</button>
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -4753,6 +4906,11 @@
                 item.addEventListener('click', handleNavSectionClick);
             });
             
+            // 底部导航栏事件绑定（移动端）
+            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                item.addEventListener('click', handleBottomNavClick);
+            });
+            
             document.querySelectorAll('.nav-item[data-action]').forEach(item => {
                 item.addEventListener('click', handleNavActionClick);
             });
@@ -4879,6 +5037,11 @@
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             item.classList.add('active');
             
+            // 同时更新底部导航栏（移动端）
+            document.querySelectorAll('.bottom-nav-item[data-section]').forEach(i => i.classList.remove('active'));
+            const bottomNavItem = document.querySelector(`.bottom-nav-item[data-section="${item.dataset.section}"]`);
+            if (bottomNavItem) bottomNavItem.classList.add('active');
+            
             const section = item.dataset.section;
             document.querySelectorAll('.page-container').forEach(page => page.classList.remove('active'));
             
@@ -4898,6 +5061,41 @@
             }
         }
         
+        // 底部导航栏点击处理（移动端）
+        function handleBottomNavClick(e) {
+            const item = e.currentTarget;
+            const section = item.dataset.section;
+            const action = item.dataset.action;
+            
+            // 更新底部导航栏状态
+            document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            
+            if (section) {
+                // 切换页面
+                document.querySelectorAll('.page-container').forEach(page => page.classList.remove('active'));
+                const targetPage = document.getElementById(`page-${section}`);
+                if (targetPage) targetPage.classList.add('active');
+                
+                // 同时更新侧边栏导航状态
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                const sidebarItem = document.querySelector(`.nav-item[data-section="${section}"]`);
+                if (sidebarItem) sidebarItem.classList.add('active');
+                
+                if (section === 'analysis') {
+                    updateChart();
+                    updateTypeStats();
+                    updateScoreDistribution();
+                }
+                
+                if (section === 'baoyan') {
+                    updateBaoyanAnalysis();
+                }
+            } else if (action) {
+                handleNavActionClick(e);
+            }
+        }
+        
         function handleNavActionClick(e) {
             const action = e.currentTarget.dataset.action;
             switch (action) {
@@ -4909,6 +5107,11 @@
                     document.getElementById('page-settings').classList.add('active');
                     renderBackupHistory();
                     renderSemesterList();
+                    
+                    // 同时更新底部导航栏（移动端）
+                    document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
+                    const bottomNavSettings = document.querySelector('.bottom-nav-item[data-action="settings"]');
+                    if (bottomNavSettings) bottomNavSettings.classList.add('active');
                     break;
             }
             document.getElementById('sidebar').classList.remove('open');

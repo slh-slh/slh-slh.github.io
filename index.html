@@ -1958,6 +1958,46 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+        
+        /* 新功能样式 */
+        .sync-status-connected { color: var(--success-color); }
+        .sync-status-disconnected { color: var(--text-secondary); }
+        
+        #undoRedoBar, #syncStatusBar {
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        
+        #undoRedoBar:hover, #syncStatusBar:hover {
+            opacity: 1 !important;
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            #undoRedoBar {
+                bottom: 90px;
+                right: 10px;
+            }
+            
+            #syncStatusBar {
+                bottom: 90px;
+                right: 10px;
+                max-width: 220px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #undoRedoBar {
+                bottom: 85px;
+                right: 5px;
+            }
+            
+            #syncStatusBar {
+                bottom: 85px;
+                right: 5px;
+                left: 5px;
+                max-width: none;
+            }
+        }
     </style>
     
     <style>
@@ -3076,7 +3116,161 @@
             </div>
             
             <div class="card" style="padding: 1.25rem;">
-                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">💾 数据管理</h4>
+                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">🔐 数据加密</h4>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                            使用AES-256-GCM加密算法保护您的数据安全
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                            <button id="exportEncryptedBtn" class="modal-btn" style="background: var(--success-color); padding: 0.5rem;">
+                                导出加密数据
+                            </button>
+                            <button id="importEncryptedBtn" class="modal-btn" style="background: var(--accent-color); padding: 0.5rem;">
+                                导入加密数据
+                            </button>
+                        </div>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                            💡 加密导出需要设置密码，导入时需要输入相同密码
+                        </p>
+                    </div>
+                    <div style="border-top: 1px dashed var(--border-color); padding-top: 1rem;">
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            当前加密状态：
+                        </p>
+                        <span id="encryptionStatus" style="font-size: 0.85rem; color: var(--text-secondary);">未设置密码</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="padding: 1.25rem;">
+                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">☁️ 云端同步</h4>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div id="syncStatus">
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            同步状态：<span id="syncStatusText" style="color: var(--accent-color);">未连接</span>
+                        </p>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                            上次同步：<span id="lastSyncTime">—</span>
+                        </p>
+                    </div>
+                    <div class="sync-actions" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                        <button id="enableSyncBtn" class="modal-btn" style="background: var(--accent-color); padding: 0.5rem;">
+                            启用云同步
+                        </button>
+                        <button id="syncNowBtn" class="modal-btn" style="background: var(--bg-card-hover); border: 1px solid var(--border-color); padding: 0.5rem;">
+                            立即同步
+                        </button>
+                    </div>
+                    <div id="syncSettings" style="display: none; border-top: 1px dashed var(--border-color); padding-top: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                            <input type="checkbox" id="autoSync" style="width: 16px; height: 16px;">
+                            自动同步
+                        </label>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">同步间隔：</span>
+                            <select id="syncInterval" style="flex: 1; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-card); color: var(--text-primary);">
+                                <option value="5">每5分钟</option>
+                                <option value="15">每15分钟</option>
+                                <option value="30">每30分钟</option>
+                                <option value="60">每小时</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="padding: 0.5rem; background: rgba(245, 158, 11, 0.05); border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.2);">
+                        <p style="font-size: 0.7rem; color: var(--warning-color); margin: 0;">
+                            ⚠️ 云同步为本地模拟实现，数据存储在浏览器中
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="padding: 1.25rem;">
+                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">⏰ 自动备份</h4>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                            设置自动备份时间间隔，数据将自动保存到本地数据库
+                        </p>
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+                                <input type="checkbox" id="autoBackupEnabled" style="width: 16px; height: 16px;">
+                                启用自动备份
+                            </label>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">备份间隔：</span>
+                            <select id="backupInterval" style="flex: 1; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-card); color: var(--text-primary);">
+                                <option value="daily">每天</option>
+                                <option value="weekly">每周</option>
+                                <option value="monthly">每月</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                        <button id="manualBackupBtn" class="modal-btn" style="background: var(--success-color); padding: 0.5rem;">
+                            立即备份
+                        </button>
+                        <button id="viewBackupHistoryBtn" class="modal-btn" style="background: var(--bg-card-hover); border: 1px solid var(--border-color); padding: 0.5rem;">
+                            查看历史
+                        </button>
+                    </div>
+                    <div style="padding: 0.75rem; background: rgba(16, 185, 129, 0.05); border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                        <p style="font-size: 0.75rem; color: var(--success-color); margin: 0;">
+                            📊 上次备份：<span id="lastBackupTime">—</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="padding: 1.25rem;">
+                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">⌨️ 快捷键</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Ctrl/Cmd + S</span>
+                        <span style="font-size: 0.85rem; color: var(--text-primary);">保存数据</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Ctrl/Cmd + N</span>
+                        <span style="font-size: 0.85rem; color: var(--text-primary);">添加课程</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Ctrl/Cmd + /</span>
+                        <span style="font-size: 0.85rem; color: var(--text-primary);">快捷键帮助</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Ctrl/Cmd + Z</span>
+                        <span style="font-size: 0.85rem; color: var(--text-primary);">撤销</span>
+                    </div>
+                    <button id="showShortcutsBtn" class="modal-btn" style="width: 100%; background: var(--accent-color); padding: 0.5rem;">
+                        查看全部快捷键
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card" style="padding: 1.25rem;">
+                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">🔄 撤销/重做状态</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">可撤销操作</span>
+                        <span id="undoCount" style="font-size: 0.85rem; color: var(--accent-color); font-weight: 600;">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">可重做操作</span>
+                        <span id="redoCount" style="font-size: 0.85rem; color: var(--accent-color); font-weight: 600;">0</span>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0;">
+                        💡 最多记录50条操作历史
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-card">
+        <h3 id="editModalTitle" style="margin-bottom:1.5rem; color:var(--accent-color);">编辑课程</h3>
                 
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1rem;">
                     <button class="modal-btn" id="dbLoadBtn" style="padding: 0.5rem; font-size: 0.85rem; background: var(--bg-card-hover); border: 1px solid var(--border-color);">
@@ -3140,6 +3334,99 @@
     </div>
 </div>
 
+<div id="shortcutsModal" class="modal">
+    <div class="modal-card">
+        <h2 style="margin-bottom: 1rem; color: var(--accent-color);">⌨️ 快捷键</h2>
+        <div style="max-height: 60vh; overflow-y: auto;">
+            <div class="shortcuts-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + S</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">保存数据</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + E</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">导出数据</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + N</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">添加新课程</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + Z</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">撤销</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + Y</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">重做</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + /</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">显示快捷键帮助</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--text-secondary); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Escape</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">关闭模态框</span>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(59, 130, 246, 0.08); border-radius: 8px;">
+            <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0;">
+                💡 提示：Mac用户请使用 ⌘ (Command) 键代替 Ctrl 键
+            </p>
+        </div>
+        <button id="closeShortcutsModal" class="modal-btn" style="width: 100%; margin-top: 1rem; background: var(--accent-color); padding: 0.5rem;">关闭</button>
+    </div>
+</div>
+
+<div id="passwordModal" class="modal">
+    <div class="modal-card">
+        <h3 id="passwordModalTitle" style="margin-bottom: 1rem; color: var(--accent-color);">设置密码</h3>
+        <div class="modal-field">
+            <label>密码</label>
+            <input type="password" id="encryptPassword" placeholder="请输入加密密码">
+        </div>
+        <div class="modal-field">
+            <label>确认密码</label>
+            <input type="password" id="confirmPassword" placeholder="请再次输入密码">
+        </div>
+        <div id="passwordError" style="color: var(--danger-color); font-size: 0.8rem; margin-bottom: 0.5rem; display: none;"></div>
+        <div class="modal-actions">
+            <button class="modal-btn" id="cancelPassword">取消</button>
+            <button class="modal-btn primary" id="confirmPasswordBtn">确认</button>
+        </div>
+    </div>
+</div>
+
+<div id="importPasswordModal" class="modal">
+    <div class="modal-card">
+        <h3 style="margin-bottom: 1rem; color: var(--accent-color);">输入解密密码</h3>
+        <div class="modal-field">
+            <label>密码</label>
+            <input type="password" id="decryptPassword" placeholder="请输入解密密码">
+        </div>
+        <div id="decryptError" style="color: var(--danger-color); font-size: 0.8rem; margin-bottom: 0.5rem; display: none;"></div>
+        <div class="modal-actions">
+            <button class="modal-btn" id="cancelDecrypt">取消</button>
+            <button class="modal-btn primary" id="confirmDecryptBtn">解密并导入</button>
+        </div>
+    </div>
+</div>
+
+<div id="syncStatusBar" style="position: fixed; bottom: 20px; right: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.75rem 1rem; box-shadow: var(--shadow-lg); z-index: 999; display: none; max-width: 280px;">
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span id="syncStatusIcon" style="font-size: 1.2rem;">☁️</span>
+        <div style="flex: 1;">
+            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);" id="syncStatusText">同步中...</div>
+            <div style="font-size: 0.7rem; color: var(--text-secondary);" id="syncLastTime">—</div>
+        </div>
+    </div>
+</div>
+
+<div id="undoRedoBar" style="position: fixed; bottom: 80px; right: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.5rem; box-shadow: var(--shadow-lg); z-index: 999; display: flex; gap: 0.25rem;">
+    <button id="undoBtn" title="撤销 (Ctrl+Z)" style="width: 36px; height: 36px; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">↩️</button>
+    <button id="redoBtn" title="重做 (Ctrl+Y)" style="width: 36px; height: 36px; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">↪️</button>
+</div>
+
 <div id="editModal" class="modal">
     <div class="modal-card">
         <h3 id="editModalTitle" style="margin-bottom:1.5rem; color:var(--accent-color);">编辑课程</h3>
@@ -3158,6 +3445,690 @@
     (function(){
         "use strict";
         Chart.register(ChartDataLabels);
+
+        // ==================== 工具函数模块 ====================
+        const Utils = {
+            throttle: function(func, limit) {
+                let inThrottle;
+                return function(...args) {
+                    if (!inThrottle) {
+                        func.apply(this, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
+            },
+            
+            debounce: function(func, wait) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            },
+            
+            validateEmail: function(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            },
+            
+            validateScore: function(score) {
+                return !isNaN(score) && score >= 0 && score <= 100;
+            },
+            
+            validateCredit: function(credit) {
+                return !isNaN(credit) && credit > 0;
+            },
+            
+            deepClone: function(obj) {
+                return JSON.parse(JSON.stringify(obj));
+            },
+            
+            formatDate: function(date) {
+                return date.toLocaleDateString('zh-CN') + ' ' + date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            },
+            
+            formatRelativeTime: function(date) {
+                const now = new Date();
+                const diff = now - date;
+                if (diff < 60000) return '刚刚';
+                if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
+                if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
+                if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
+                return Utils.formatDate(date);
+            }
+        };
+
+        // ==================== 数据加密模块 ====================
+        const Encryption = {
+            password: null,
+            
+            async generateKey(password, iv) {
+                const encoder = new TextEncoder();
+                const keyMaterial = await crypto.subtle.importKey(
+                    'raw',
+                    encoder.encode(password),
+                    'PBKDF2',
+                    false,
+                    ['deriveBits', 'deriveKey']
+                );
+                
+                return await crypto.subtle.deriveKey(
+                    {
+                        name: 'PBKDF2',
+                        salt: iv,
+                        iterations: 100000,
+                        hash: 'SHA-256'
+                    },
+                    keyMaterial,
+                    { name: 'AES-GCM', length: 256 },
+                    false,
+                    ['encrypt', 'decrypt']
+                );
+            },
+            
+            async encryptData(data, password) {
+                const encoder = new TextEncoder();
+                const dataBuffer = encoder.encode(JSON.stringify(data));
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const key = await this.generateKey(password, iv);
+                
+                const encryptedData = await crypto.subtle.encrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    dataBuffer
+                );
+                
+                return {
+                    iv: Array.from(iv),
+                    data: Array.from(new Uint8Array(encryptedData)),
+                    version: '1.0'
+                };
+            },
+            
+            async decryptData(encryptedObj, password) {
+                try {
+                    const iv = new Uint8Array(encryptedObj.iv);
+                    const data = new Uint8Array(encryptedObj.data);
+                    const key = await this.generateKey(password, iv);
+                    
+                    const decryptedData = await crypto.subtle.decrypt(
+                        { name: 'AES-GCM', iv: iv },
+                        key,
+                        data
+                    );
+                    
+                    const decoder = new TextDecoder();
+                    return JSON.parse(decoder.decode(decryptedData));
+                } catch (error) {
+                    throw new Error('解密失败，密码可能不正确');
+                }
+            },
+            
+            setPassword(pwd) {
+                this.password = pwd;
+                localStorage.setItem('dzh_encryption_salt', crypto.getRandomValues(new Uint8Array(16)).toString());
+            },
+            
+            clearPassword() {
+                this.password = null;
+            },
+            
+            isPasswordSet() {
+                return this.password !== null;
+            }
+        };
+
+        // ==================== 撤销/重做模块 ====================
+        const UndoRedo = {
+            undoStack: [],
+            redoStack: [],
+            maxHistory: 50,
+            
+            execute(command) {
+                this.undoStack.push(command);
+                if (this.undoStack.length > this.maxHistory) {
+                    this.undoStack.shift();
+                }
+                this.redoStack.length = 0;
+                command.execute();
+                this.updateUI();
+            },
+            
+            undo() {
+                if (this.undoStack.length === 0) return false;
+                const command = this.undoStack.pop();
+                command.undo();
+                this.redoStack.push(command);
+                this.updateUI();
+                return true;
+            },
+            
+            redo() {
+                if (this.redoStack.length === 0) return false;
+                const command = this.redoStack.pop();
+                command.execute();
+                this.undoStack.push(command);
+                this.updateUI();
+                return true;
+            },
+            
+            canUndo() {
+                return this.undoStack.length > 0;
+            },
+            
+            canRedo() {
+                return this.redoStack.length > 0;
+            },
+            
+            clear() {
+                this.undoStack.length = 0;
+                this.redoStack.length = 0;
+                this.updateUI();
+            },
+            
+            updateUI() {
+                const undoCountEl = document.getElementById('undoCount');
+                const redoCountEl = document.getElementById('redoCount');
+                const undoBtn = document.getElementById('undoBtn');
+                const redoBtn = document.getElementById('redoBtn');
+                
+                if (undoCountEl) undoCountEl.textContent = this.undoStack.length;
+                if (redoCountEl) redoCountEl.textContent = this.redoStack.length;
+                if (undoBtn) undoBtn.style.opacity = this.canUndo() ? '1' : '0.3';
+                if (redoBtn) redoBtn.style.opacity = this.canRedo() ? '1' : '0.3';
+            }
+        };
+
+        // ==================== 自动备份模块 ====================
+        const AutoBackup = {
+            intervalId: null,
+            
+            init() {
+                this.loadSettings();
+                this.setupBackupTimer();
+                this.updateLastBackupTime();
+            },
+            
+            loadSettings() {
+                const enabled = localStorage.getItem('dzh_auto_backup_enabled') === 'true';
+                const interval = localStorage.getItem('dzh_backup_interval') || 'daily';
+                
+                const enabledEl = document.getElementById('autoBackupEnabled');
+                const intervalEl = document.getElementById('backupInterval');
+                
+                if (enabledEl) enabledEl.checked = enabled;
+                if (intervalEl) intervalEl.value = interval;
+            },
+            
+            saveSettings() {
+                const enabledEl = document.getElementById('autoBackupEnabled');
+                const intervalEl = document.getElementById('backupInterval');
+                
+                if (enabledEl) {
+                    localStorage.setItem('dzh_auto_backup_enabled', enabledEl.checked.toString());
+                }
+                if (intervalEl) {
+                    localStorage.setItem('dzh_backup_interval', intervalEl.value);
+                }
+                
+                this.setupBackupTimer();
+            },
+            
+            setupBackupTimer() {
+                if (this.intervalId) {
+                    clearInterval(this.intervalId);
+                    this.intervalId = null;
+                }
+                
+                const enabled = localStorage.getItem('dzh_auto_backup_enabled') === 'true';
+                if (!enabled) return;
+                
+                const interval = localStorage.getItem('dzh_backup_interval') || 'daily';
+                let ms;
+                
+                switch (interval) {
+                    case 'daily': ms = 24 * 60 * 60 * 1000; break;
+                    case 'weekly': ms = 7 * 24 * 60 * 60 * 1000; break;
+                    case 'monthly': ms = 30 * 24 * 60 * 60 * 1000; break;
+                    default: ms = 24 * 60 * 60 * 1000;
+                }
+                
+                this.intervalId = setInterval(() => {
+                    this.performBackup();
+                }, ms);
+            },
+            
+            performBackup() {
+                const now = new Date();
+                const dataToBackup = {
+                    semestersData: semestersData,
+                    semesterLocks: semesterLocks,
+                    semesters: SEMESTERS,
+                    backupTime: now.toISOString(),
+                    version: '1.0'
+                };
+                
+                const backupHistory = JSON.parse(localStorage.getItem('dzh_backup_history') || '[]');
+                const backupEntry = {
+                    time: now.toISOString(),
+                    type: 'auto',
+                    data: dataToBackup
+                };
+                
+                backupHistory.unshift(backupEntry);
+                if (backupHistory.length > 20) {
+                    backupHistory.length = 20;
+                }
+                
+                localStorage.setItem('dzh_backup_history', JSON.stringify(backupHistory));
+                localStorage.setItem('dzh_last_backup_time', now.toISOString());
+                
+                if (db) {
+                    autoBackupToDatabase();
+                }
+                
+                this.updateLastBackupTime();
+            },
+            
+            manualBackup() {
+                this.performBackup();
+                alert('手动备份完成！');
+            },
+            
+            updateLastBackupTime() {
+                const lastTime = localStorage.getItem('dzh_last_backup_time');
+                const lastTimeEl = document.getElementById('lastBackupTime');
+                
+                if (lastTimeEl) {
+                    if (lastTime) {
+                        const date = new Date(lastTime);
+                        lastTimeEl.textContent = Utils.formatRelativeTime(date);
+                    } else {
+                        lastTimeEl.textContent = '从未备份';
+                    }
+                }
+            },
+            
+            getBackupHistory() {
+                return JSON.parse(localStorage.getItem('dzh_backup_history') || '[]');
+            },
+            
+            restoreFromBackup(backupIndex) {
+                const history = this.getBackupHistory();
+                if (history[backupIndex]) {
+                    const backup = history[backupIndex].data;
+                    if (backup && backup.semestersData) {
+                        semestersData = backup.semestersData;
+                        semesterLocks = backup.semesterLocks || [];
+                        SEMESTERS = backup.semesters || SEMESTERS;
+                        saveData();
+                        renderSemesterTabs();
+                        refreshDisplay();
+                        alert('从备份恢复成功！');
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+
+        // ==================== 云端同步模块 ====================
+        const CloudSync = {
+            enabled: false,
+            autoSync: false,
+            intervalId: null,
+            lastSyncTime: null,
+            
+            CLOUD_KEY: 'dzh_cloud_data',
+            
+            init() {
+                this.loadSettings();
+                this.updateStatusUI();
+            },
+            
+            loadSettings() {
+                this.enabled = localStorage.getItem('dzh_cloud_sync_enabled') === 'true';
+                this.autoSync = localStorage.getItem('dzh_cloud_auto_sync') === 'true';
+                this.interval = parseInt(localStorage.getItem('dzh_cloud_sync_interval') || '15');
+                this.lastSyncTime = localStorage.getItem('dzh_last_sync_time');
+                
+                if (this.autoSync && this.enabled) {
+                    this.startAutoSync();
+                }
+            },
+            
+            saveSettings() {
+                const enabledEl = document.getElementById('autoSync');
+                const intervalEl = document.getElementById('syncInterval');
+                
+                if (enabledEl) {
+                    this.autoSync = enabledEl.checked;
+                    localStorage.setItem('dzh_cloud_auto_sync', this.autoSync.toString());
+                }
+                if (intervalEl) {
+                    this.interval = parseInt(intervalEl.value);
+                    localStorage.setItem('dzh_cloud_sync_interval', this.interval.toString());
+                }
+                
+                if (this.autoSync && this.enabled) {
+                    this.startAutoSync();
+                } else {
+                    this.stopAutoSync();
+                }
+            },
+            
+            enable() {
+                this.enabled = true;
+                localStorage.setItem('dzh_cloud_sync_enabled', 'true');
+                this.updateStatusUI();
+                this.syncNow();
+            },
+            
+            disable() {
+                this.enabled = false;
+                this.stopAutoSync();
+                localStorage.setItem('dzh_cloud_sync_enabled', 'false');
+                this.updateStatusUI();
+            },
+            
+            startAutoSync() {
+                if (this.intervalId) {
+                    clearInterval(this.intervalId);
+                }
+                this.intervalId = setInterval(() => {
+                    this.syncNow();
+                }, this.interval * 60 * 1000);
+            },
+            
+            stopAutoSync() {
+                if (this.intervalId) {
+                    clearInterval(this.intervalId);
+                    this.intervalId = null;
+                }
+            },
+            
+            async syncNow() {
+                if (!this.enabled) return;
+                
+                const statusBar = document.getElementById('syncStatusBar');
+                const statusIcon = document.getElementById('syncStatusIcon');
+                const statusText = document.getElementById('syncStatusText');
+                const lastTimeEl = document.getElementById('lastSyncTime');
+                
+                if (statusBar) statusBar.style.display = 'block';
+                if (statusIcon) statusIcon.textContent = '🔄';
+                if (statusText) statusText.textContent = '同步中...';
+                
+                try {
+                    const localData = this.getLocalData();
+                    const cloudData = this.getCloudData();
+                    
+                    const result = this.resolveConflict(localData, cloudData);
+                    
+                    if (result.action === 'upload') {
+                        this.uploadToCloud(localData);
+                    } else if (result.action === 'download') {
+                        this.downloadFromCloud(cloudData);
+                    } else if (result.action === 'merge') {
+                        this.uploadToCloud(result.data);
+                    }
+                    
+                    this.lastSyncTime = new Date().toISOString();
+                    localStorage.setItem('dzh_last_sync_time', this.lastSyncTime);
+                    
+                    if (statusIcon) statusIcon.textContent = '✅';
+                    if (statusText) statusText.textContent = '同步成功';
+                    if (lastTimeEl) lastTimeEl.textContent = Utils.formatRelativeTime(new Date(this.lastSyncTime));
+                    
+                    setTimeout(() => {
+                        if (statusBar) statusBar.style.display = 'none';
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('同步失败:', error);
+                    if (statusIcon) statusIcon.textContent = '❌';
+                    if (statusText) statusText.textContent = '同步失败';
+                }
+            },
+            
+            getLocalData() {
+                return {
+                    semestersData: semestersData,
+                    semesterLocks: semesterLocks,
+                    semesters: SEMESTERS,
+                    timestamp: new Date().toISOString(),
+                    version: '1.0'
+                };
+            },
+            
+            getCloudData() {
+                const cloudStr = localStorage.getItem(this.CLOUD_KEY);
+                if (cloudStr) {
+                    try {
+                        return JSON.parse(cloudStr);
+                    } catch (e) {
+                        return null;
+                    }
+                }
+                return null;
+            },
+            
+            resolveConflict(localData, cloudData) {
+                if (!cloudData) {
+                    return { action: 'upload', data: localData };
+                }
+                
+                if (!localData.semestersData || localData.semestersData.length === 0) {
+                    return { action: 'download', data: cloudData };
+                }
+                
+                const localTime = new Date(localData.timestamp);
+                const cloudTime = new Date(cloudData.timestamp);
+                
+                if (localTime > cloudTime) {
+                    return { action: 'upload', data: localData };
+                } else if (cloudTime > localTime) {
+                    return { action: 'download', data: cloudData };
+                } else {
+                    return { action: 'merge', data: this.mergeData(localData, cloudData) };
+                }
+            },
+            
+            mergeData(localData, cloudData) {
+                const merged = {
+                    semestersData: [],
+                    semesterLocks: [],
+                    semesters: [],
+                    timestamp: new Date().toISOString(),
+                    version: '1.0'
+                };
+                
+                const maxSemesters = Math.max(
+                    localData.semestersData?.length || 0,
+                    cloudData.semestersData?.length || 0
+                );
+                
+                for (let i = 0; i < maxSemesters; i++) {
+                    const localSem = localData.semestersData?.[i] || [];
+                    const cloudSem = cloudData.semestersData?.[i] || [];
+                    
+                    const mergedSem = [...cloudSem];
+                    localSem.forEach(course => {
+                        if (!mergedSem.find(c => c.name === course.name && c.credit === course.credit)) {
+                            mergedSem.push(course);
+                        }
+                    });
+                    
+                    merged.semestersData.push(mergedSem);
+                }
+                
+                merged.semesterLocks = cloudData.semesterLocks || localData.semesterLocks || [];
+                merged.semesters = cloudData.semesters || localData.semesters || SEMESTERS;
+                
+                return merged;
+            },
+            
+            uploadToCloud(data) {
+                const cloudData = {
+                    ...data,
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem(this.CLOUD_KEY, JSON.stringify(cloudData));
+            },
+            
+            downloadFromCloud(cloudData) {
+                if (cloudData.semestersData) {
+                    semestersData = cloudData.semestersData;
+                }
+                if (cloudData.semesterLocks) {
+                    semesterLocks = cloudData.semesterLocks;
+                }
+                if (cloudData.semesters) {
+                    SEMESTERS = cloudData.semesters;
+                }
+                
+                saveData();
+                renderSemesterTabs();
+                refreshDisplay();
+            },
+            
+            updateStatusUI() {
+                const enableBtn = document.getElementById('enableSyncBtn');
+                const syncSettings = document.getElementById('syncSettings');
+                const statusText = document.getElementById('syncStatusText');
+                const lastTimeEl = document.getElementById('lastSyncTime');
+                const autoSyncEl = document.getElementById('autoSync');
+                const intervalEl = document.getElementById('syncInterval');
+                
+                if (this.enabled) {
+                    if (enableBtn) {
+                        enableBtn.textContent = '禁用云同步';
+                        enableBtn.style.background = 'var(--danger-color)';
+                    }
+                    if (syncSettings) syncSettings.style.display = 'block';
+                    if (statusText) statusText.textContent = '已连接';
+                } else {
+                    if (enableBtn) {
+                        enableBtn.textContent = '启用云同步';
+                        enableBtn.style.background = 'var(--accent-color)';
+                    }
+                    if (syncSettings) syncSettings.style.display = 'none';
+                    if (statusText) statusText.textContent = '未连接';
+                }
+                
+                if (this.lastSyncTime) {
+                    const date = new Date(this.lastSyncTime);
+                    if (lastTimeEl) lastTimeEl.textContent = Utils.formatRelativeTime(date);
+                }
+                
+                if (autoSyncEl) autoSyncEl.checked = this.autoSync;
+                if (intervalEl) intervalEl.value = this.interval.toString();
+            }
+        };
+
+        // ==================== 快捷键模块 ====================
+        const Shortcuts = {
+            init() {
+                document.addEventListener('keydown', this.handleKeyDown.bind(this));
+                this.bindEvents();
+            },
+            
+            handleKeyDown(e) {
+                const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+                const modifier = isMac ? e.metaKey : e.ctrlKey;
+                
+                if (modifier && e.key === 's') {
+                    e.preventDefault();
+                    this.saveData();
+                }
+                
+                if (modifier && e.key === 'e') {
+                    e.preventDefault();
+                    exportToCSV();
+                }
+                
+                if (modifier && e.key === 'n') {
+                    e.preventDefault();
+                    openEditModal(currentSemester, null, true);
+                }
+                
+                if (modifier && e.key === 'z' && !e.shiftKey) {
+                    e.preventDefault();
+                    UndoRedo.undo();
+                }
+                
+                if (modifier && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+                    e.preventDefault();
+                    UndoRedo.redo();
+                }
+                
+                if (modifier && e.key === '/') {
+                    e.preventDefault();
+                    this.showShortcutsModal();
+                }
+                
+                if (e.key === 'Escape') {
+                    this.closeAllModals();
+                }
+            },
+            
+            saveData() {
+                saveData();
+                const statusBar = document.createElement('div');
+                statusBar.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--success-color);color:white;padding:0.5rem 1rem;border-radius:8px;font-size:0.85rem;z-index:9999;animation:fadeIn 0.3s ease;';
+                statusBar.textContent = '✅ 数据已保存';
+                document.body.appendChild(statusBar);
+                setTimeout(() => {
+                    statusBar.style.opacity = '0';
+                    setTimeout(() => statusBar.remove(), 300);
+                }, 1500);
+            },
+            
+            showShortcutsModal() {
+                const modal = document.getElementById('shortcutsModal');
+                if (modal) modal.style.display = 'flex';
+            },
+            
+            closeAllModals() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            },
+            
+            bindEvents() {
+                const closeShortcutsBtn = document.getElementById('closeShortcutsModal');
+                if (closeShortcutsBtn) {
+                    closeShortcutsBtn.addEventListener('click', () => {
+                        document.getElementById('shortcutsModal').style.display = 'none';
+                    });
+                }
+                
+                const showShortcutsBtn = document.getElementById('showShortcutsBtn');
+                if (showShortcutsBtn) {
+                    showShortcutsBtn.addEventListener('click', () => {
+                        this.showShortcutsModal();
+                    });
+                }
+                
+                const undoBtn = document.getElementById('undoBtn');
+                if (undoBtn) {
+                    undoBtn.addEventListener('click', () => {
+                        if (!UndoRedo.undo()) {
+                            alert('没有可撤销的操作');
+                        }
+                    });
+                }
+                
+                const redoBtn = document.getElementById('redoBtn');
+                if (redoBtn) {
+                    redoBtn.addEventListener('click', () => {
+                        if (!UndoRedo.redo()) {
+                            alert('没有可重做的操作');
+                        }
+                    });
+                }
+            }
+        };
 
         // ==================== IndexedDB 数据库 ====================
         const DB_NAME = 'GradeSystemDB';
@@ -3752,8 +4723,22 @@
                     break;
                 case 'delete':
                 case 'delete-btn':
-                    semestersData[currentSemester].splice(idx, 1);
-                    refreshCourseData();
+                    const deletedCourse = Utils.deepClone(semestersData[currentSemester][idx]);
+                    const deleteCommand = {
+                        type: 'delete',
+                        semester: currentSemester,
+                        index: idx,
+                        course: deletedCourse,
+                        execute: function() {
+                            semestersData[this.semester].splice(this.index, 1);
+                            refreshCourseData();
+                        },
+                        undo: function() {
+                            semestersData[this.semester].splice(this.index, 0, Utils.deepClone(this.course));
+                            refreshCourseData();
+                        }
+                    };
+                    UndoRedo.execute(deleteCommand);
                     break;
                 case 'up':
                     moveCourseUp(idx);
@@ -5031,6 +6016,9 @@
                 updateDbDataInfo();
             });
             
+            // 初始化新功能模块
+            initNewFeatures();
+            
             const defaultPage = localStorage.getItem('dzh_default_page');
             if (defaultPage) {
                 setTimeout(() => {
@@ -5178,16 +6166,49 @@
                 if (semesterLocks[pendingEdit.sem] && !confirm('当前学期已锁定，确定要添加课程吗？')) {
                     return;
                 }
-                semestersData[pendingEdit.sem].push({ name, type, credit, score });
+                const newCourse = { name, type, credit, score };
+                const command = {
+                    type: 'add',
+                    semester: pendingEdit.sem,
+                    course: Utils.deepClone(newCourse),
+                    index: semestersData[pendingEdit.sem].length,
+                    execute: function() {
+                        semestersData[this.semester].push(this.course);
+                        refreshCourseData();
+                    },
+                    undo: function() {
+                        semestersData[this.semester].pop();
+                        refreshCourseData();
+                    }
+                };
+                UndoRedo.execute(command);
             } else {
-                const c = semestersData[pendingEdit.sem][pendingEdit.idx];
-                c.type = type;
-                c.credit = credit;
-                c.score = score;
+                const originalCourse = Utils.deepClone(semestersData[pendingEdit.sem][pendingEdit.idx]);
+                const command = {
+                    type: 'edit',
+                    semester: pendingEdit.sem,
+                    index: pendingEdit.idx,
+                    oldData: originalCourse,
+                    newData: { name, type, credit, score },
+                    execute: function() {
+                        const c = semestersData[this.semester][this.index];
+                        c.type = this.newData.type;
+                        c.credit = this.newData.credit;
+                        c.score = this.newData.score;
+                        refreshCourseData();
+                    },
+                    undo: function() {
+                        const c = semestersData[this.semester][this.index];
+                        c.type = this.oldData.type;
+                        c.credit = this.oldData.credit;
+                        c.score = this.oldData.score;
+                        refreshCourseData();
+                    }
+                };
+                UndoRedo.execute(command);
             }
             
             modal.style.display = 'none';
-            refreshCourseData();
         }
         
         function exportToCSV() {
@@ -5496,6 +6517,282 @@
         }
 
         document.addEventListener('DOMContentLoaded', init);
+        
+        function initNewFeatures() {
+            Shortcuts.init();
+            UndoRedo.updateUI();
+            AutoBackup.init();
+            CloudSync.init();
+            bindEncryptionEvents();
+            bindAutoBackupEvents();
+            bindCloudSyncEvents();
+            updateEncryptionStatus();
+        }
+        
+        function bindEncryptionEvents() {
+            const exportEncryptedBtn = document.getElementById('exportEncryptedBtn');
+            const importEncryptedBtn = document.getElementById('importEncryptedBtn');
+            const cancelPasswordBtn = document.getElementById('cancelPassword');
+            const confirmPasswordBtn = document.getElementById('confirmPasswordBtn');
+            const cancelDecryptBtn = document.getElementById('cancelDecrypt');
+            const confirmDecryptBtn = document.getElementById('confirmDecryptBtn');
+            
+            if (exportEncryptedBtn) {
+                exportEncryptedBtn.addEventListener('click', async () => {
+                    const password = prompt('请输入加密密码：');
+                    if (!password) {
+                        alert('密码不能为空');
+                        return;
+                    }
+                    
+                    if (password.length < 6) {
+                        alert('密码长度至少6位');
+                        return;
+                    }
+                    
+                    const confirmPwd = prompt('请再次输入密码：');
+                    if (password !== confirmPwd) {
+                        alert('两次密码不一致');
+                        return;
+                    }
+                    
+                    try {
+                        const dataToEncrypt = {
+                            semestersData: semestersData,
+                            semesterLocks: semesterLocks,
+                            semesters: SEMESTERS,
+                            exportTime: new Date().toISOString(),
+                            version: '1.0'
+                        };
+                        
+                        const encrypted = await Encryption.encryptData(dataToEncrypt, password);
+                        
+                        const blob = new Blob([JSON.stringify(encrypted, null, 2)], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `弘毅成绩加密备份_${new Date().toISOString().slice(0,10)}.json`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        
+                        Encryption.setPassword(password);
+                        updateEncryptionStatus();
+                        alert('数据加密导出成功！');
+                    } catch (error) {
+                        console.error('加密失败:', error);
+                        alert('加密失败：' + error.message);
+                    }
+                });
+            }
+            
+            if (importEncryptedBtn) {
+                importEncryptedBtn.addEventListener('click', () => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.json';
+                    input.onchange = async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        
+                        const reader = new FileReader();
+                        reader.onload = async (event) => {
+                            try {
+                                const encryptedData = JSON.parse(event.target.result);
+                                
+                                if (!encryptedData.iv || !encryptedData.data) {
+                                    alert('这不是加密文件格式，请使用普通备份恢复');
+                                    return;
+                                }
+                                
+                                const password = prompt('请输入解密密码：');
+                                if (!password) {
+                                    alert('密码不能为空');
+                                    return;
+                                }
+                                
+                                try {
+                                    const decrypted = await Encryption.decryptData(encryptedData, password);
+                                    
+                                    if (confirm('解密成功！是否导入该数据？（将覆盖当前数据）')) {
+                                        semestersData = decrypted.semestersData || semestersData;
+                                        semesterLocks = decrypted.semesterLocks || semesterLocks;
+                                        SEMESTERS = decrypted.semesters || SEMESTERS;
+                                        
+                                        saveData();
+                                        renderSemesterTabs();
+                                        refreshDisplay();
+                                        updateCompareSemesters();
+                                        
+                                        Encryption.setPassword(password);
+                                        updateEncryptionStatus();
+                                        alert('加密数据导入成功！');
+                                    }
+                                } catch (error) {
+                                    alert('解密失败：密码可能不正确');
+                                }
+                            } catch (error) {
+                                alert('文件格式错误：' + error.message);
+                            }
+                        };
+                        reader.readAsText(file);
+                    };
+                    input.click();
+                });
+            }
+            
+            if (cancelPasswordBtn) {
+                cancelPasswordBtn.addEventListener('click', () => {
+                    document.getElementById('passwordModal').style.display = 'none';
+                });
+            }
+            
+            if (cancelDecryptBtn) {
+                cancelDecryptBtn.addEventListener('click', () => {
+                    document.getElementById('importPasswordModal').style.display = 'none';
+                });
+            }
+        }
+        
+        function updateEncryptionStatus() {
+            const statusEl = document.getElementById('encryptionStatus');
+            if (statusEl) {
+                statusEl.textContent = Encryption.isPasswordSet() ? '已设置密码' : '未设置密码';
+            }
+        }
+        
+        function bindAutoBackupEvents() {
+            const autoBackupEnabled = document.getElementById('autoBackupEnabled');
+            const backupInterval = document.getElementById('backupInterval');
+            const manualBackupBtn = document.getElementById('manualBackupBtn');
+            const viewBackupHistoryBtn = document.getElementById('viewBackupHistoryBtn');
+            
+            if (autoBackupEnabled) {
+                autoBackupEnabled.addEventListener('change', () => {
+                    AutoBackup.saveSettings();
+                });
+            }
+            
+            if (backupInterval) {
+                backupInterval.addEventListener('change', () => {
+                    AutoBackup.saveSettings();
+                });
+            }
+            
+            if (manualBackupBtn) {
+                manualBackupBtn.addEventListener('click', () => {
+                    AutoBackup.manualBackup();
+                });
+            }
+            
+            if (viewBackupHistoryBtn) {
+                viewBackupHistoryBtn.addEventListener('click', () => {
+                    showBackupHistoryModal();
+                });
+            }
+        }
+        
+        function showBackupHistoryModal() {
+            const history = AutoBackup.getBackupHistory();
+            
+            let content = '<div style="max-height: 400px; overflow-y: auto;">';
+            
+            if (history.length === 0) {
+                content += '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">暂无备份记录</p>';
+            } else {
+                history.forEach((backup, index) => {
+                    const date = new Date(backup.time);
+                    const typeLabel = backup.type === 'auto' ? '自动' : '手动';
+                    const courseCount = backup.data?.semestersData?.flat().length || 0;
+                    
+                    content += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border-bottom: 1px solid var(--border-color);">
+                            <div>
+                                <div style="font-size: 0.85rem; color: var(--text-primary);">
+                                    <span style="background: ${backup.type === 'auto' ? 'var(--accent-color)' : 'var(--success-color)'}; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 0.5rem;">${typeLabel}</span>
+                                    ${Utils.formatDate(date)}
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                                    ${courseCount} 门课程
+                                </div>
+                            </div>
+                            <button class="modal-btn" style="background: var(--accent-color); padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="restoreFromBackupIndex(${index})">
+                                恢复
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+            
+            content += '</div>';
+            
+            const modalContent = `
+                <div class="modal-card" style="width: 450px; max-width: 90vw;">
+                    <h3 style="margin-bottom: 1rem; color: var(--accent-color);">📋 备份历史</h3>
+                    ${content}
+                    <button class="modal-btn" style="width: 100%; margin-top: 1rem; background: var(--accent-color); padding: 0.5rem;" onclick="this.closest('.modal').style.display='none'">
+                        关闭
+                    </button>
+                </div>
+            `;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'flex';
+            modal.innerHTML = modalContent;
+            document.body.appendChild(modal);
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    modal.remove();
+                }
+            });
+        }
+        
+        window.restoreFromBackupIndex = function(index) {
+            if (confirm('确定要从该备份恢复吗？当前数据将被覆盖。')) {
+                if (AutoBackup.restoreFromBackup(index)) {
+                    document.querySelector('.modal')?.remove();
+                }
+            }
+        };
+        
+        function bindCloudSyncEvents() {
+            const enableSyncBtn = document.getElementById('enableSyncBtn');
+            const syncNowBtn = document.getElementById('syncNowBtn');
+            const autoSync = document.getElementById('autoSync');
+            const syncInterval = document.getElementById('syncInterval');
+            
+            if (enableSyncBtn) {
+                enableSyncBtn.addEventListener('click', () => {
+                    if (CloudSync.enabled) {
+                        CloudSync.disable();
+                    } else {
+                        CloudSync.enable();
+                    }
+                });
+            }
+            
+            if (syncNowBtn) {
+                syncNowBtn.addEventListener('click', () => {
+                    CloudSync.syncNow();
+                });
+            }
+            
+            if (autoSync) {
+                autoSync.addEventListener('change', () => {
+                    CloudSync.saveSettings();
+                });
+            }
+            
+            if (syncInterval) {
+                syncInterval.addEventListener('change', () => {
+                    CloudSync.saveSettings();
+                });
+            }
+        }
     })();
 </script>
 </body>

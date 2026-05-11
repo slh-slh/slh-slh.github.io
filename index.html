@@ -145,7 +145,15 @@
             color: var(--text-secondary);
             margin: 0 0 1.5rem 0;
         }
-        
+        .page-header {
+            margin-bottom: 1.5rem;
+        }
+        .page-header .page-title {
+            margin-bottom: 0.5rem;
+        }
+        .page-header .page-subtitle {
+            margin-bottom: 0;
+        }
         .header-row {
             display: flex;
             align-items: center;
@@ -169,10 +177,14 @@
         .card {
             background: var(--bg-card);
             border-radius: 12px;
-            padding: 1.25rem;
+            padding: 1.5rem;
             margin-bottom: 1rem;
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
+            transition: box-shadow 0.15s ease, transform 0.15s ease;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-lg);
         }
         .card-header {
             display: flex;
@@ -325,6 +337,38 @@
             border-color: var(--accent-color); 
             background: rgba(59, 130, 246, 0.04);
         }
+        .btn-primary {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            background: var(--accent-color);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.15s;
+        }
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+        .btn-secondary {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.15s;
+        }
+        .btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
 
         .move-btn {
             background: var(--bg-card);
@@ -415,11 +459,12 @@
         }
         .modal-card {
             background: var(--bg-card);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 1.5rem;
-            width: 420px;
+            width: 480px;
             max-width: 90vw;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
         }
         .settings-section {
             padding: 1rem;
@@ -504,8 +549,14 @@
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            padding: 1rem;
-            border-radius: 10px;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.15s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
         .stat-card .stat-label {
             font-size: 0.75rem;
@@ -585,11 +636,10 @@
             z-index: 100;
             background: var(--bg-card);
             border-bottom: 1px solid var(--border-color);
-            padding: 0.75rem 0;
+            padding: 0.75rem 1.5rem;
             margin: 0 -1.5rem;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-md);
+            transition: box-shadow 0.15s ease;
         }
         .sticky-nav-content {
             display: flex;
@@ -620,7 +670,7 @@
             color: var(--accent-color);
         }
         .sticky-nav-item.active {
-            background: var(--accent-color);
+            background: var(--gradient-primary);
             color: white;
         }
 
@@ -681,10 +731,16 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 1.25rem;
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.15s ease;
+        }
+        .overview-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
         .required-card {
             border-left: 3px solid #3b82f6;
@@ -1520,9 +1576,17 @@
             .card {
                 padding: 1rem;
                 margin-bottom: 0.75rem;
+                border-radius: 10px;
+            }
+            .page-header {
+                margin-bottom: 1rem;
             }
             .page-title {
                 font-size: 1.25rem;
+            }
+            .page-subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 1rem;
             }
             
             /* 移动端表格优化 */
@@ -1554,6 +1618,7 @@
                 padding: 1.25rem;
                 max-height: 90vh;
                 overflow-y: auto;
+                border-radius: 12px;
             }
             .modal-field {
                 margin-bottom: 0.875rem;
@@ -1578,6 +1643,16 @@
                 padding: 0.5rem 0.75rem;
                 font-size: 0.8rem;
             }
+            .add-btn {
+                padding: 0.5rem 1rem;
+                width: 100%;
+                text-align: center;
+            }
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.625rem 1rem;
+                font-size: 0.875rem;
+            }
             .move-btn {
                 width: 32px;
                 height: 32px;
@@ -1600,17 +1675,26 @@
             /* 移动端图表优化 */
             .chart-card {
                 padding: 1rem;
+                border-radius: 10px;
             }
             .chart-wrapper {
                 height: 250px;
             }
             
             /* 移动端统计卡片优化 */
+            .stat-card {
+                padding: 1rem;
+                border-radius: 10px;
+            }
             .stat-item {
                 padding: 0.75rem;
             }
             .stat-value {
                 font-size: 1.5rem;
+            }
+            .overview-card {
+                padding: 1rem;
+                border-radius: 10px;
             }
             .overview-value {
                 font-size: 1.75rem;
@@ -1621,11 +1705,16 @@
                 padding: 0.5rem 1rem;
                 margin: 0 -1rem;
             }
+            .sticky-nav-item {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.8rem;
+            }
             
             /* 移动端设置页面优化 */
             .settings-section {
                 padding: 0.875rem;
                 margin-bottom: 0.75rem;
+                border-radius: 10px;
             }
             
             /* 移动端保研分析优化 */
@@ -1636,17 +1725,23 @@
             /* 移动端比较面板优化 */
             .compare-panel {
                 padding: 0.875rem;
+                border-radius: 10px;
             }
             
             /* 移动端目标规划优化 */
             .goal-calculator {
                 padding: 1rem;
+                border-radius: 10px;
             }
             .goal-input-group {
                 flex-direction: column;
             }
             .goal-input {
                 width: 100%;
+            }
+            .main-stat-card {
+                padding: 1rem;
+                border-radius: 12px;
             }
             
             /* 移动端详情卡片优化 */
@@ -1656,6 +1751,38 @@
             }
             .detail-item {
                 padding: 0.75rem;
+            }
+            
+            /* 移动端表单元素统一 */
+            .goal-input,
+            .modal-field input,
+            .modal-field select {
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+            }
+            
+            /* 移动端进度条优化 */
+            .semester-bar-container {
+                height: 24px;
+            }
+            
+            /* 移动端学期趋势卡片 */
+            .semester-trend-card {
+                padding: 0.75rem;
+                border-radius: 10px;
+            }
+            
+            /* 移动端快捷统计卡片 */
+            .quick-stat-card,
+            .mini-stat-card {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+            
+            /* 移动端分布卡片 */
+            .distribution-card {
+                padding: 0.875rem;
+                border-radius: 10px;
             }
         }
         
@@ -1671,8 +1798,15 @@
                 padding: 0.875rem;
                 border-radius: 10px;
             }
+            .page-header {
+                margin-bottom: 0.75rem;
+            }
             .page-title {
                 font-size: 1.125rem;
+            }
+            .page-subtitle {
+                font-size: 0.75rem;
+                margin-bottom: 0.75rem;
             }
             
             .stats-grid {
@@ -1682,6 +1816,9 @@
                 grid-template-columns: 1fr;
             }
             .overview-side-cards {
+                grid-template-columns: 1fr;
+            }
+            .overview-cards {
                 grid-template-columns: 1fr;
             }
             
@@ -1695,6 +1832,7 @@
             
             .semester-trend-card {
                 padding: 0.75rem;
+                border-radius: 10px;
             }
             
             .chart-wrapper {
@@ -1704,6 +1842,120 @@
             .cum-card-mini {
                 width: 100%;
                 justify-content: space-between;
+            }
+            
+            /* 超小屏幕模态框优化 */
+            .modal-card {
+                width: 98vw;
+                max-width: 98vw;
+                margin: 0.5rem;
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            
+            /* 超小屏幕按钮优化 */
+            .add-btn {
+                padding: 0.625rem 1rem;
+                font-size: 0.875rem;
+            }
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.5rem 0.875rem;
+                font-size: 0.8rem;
+            }
+            
+            /* 超小屏幕统计卡片优化 */
+            .stat-card {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+            .main-stat-card {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            .main-stat-value {
+                font-size: 2rem;
+            }
+            .overview-card {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+            .overview-value {
+                font-size: 1.5rem;
+            }
+            
+            /* 超小屏幕固定导航优化 */
+            .sticky-nav {
+                padding: 0.5rem 0.75rem;
+                margin: 0 -0.75rem;
+            }
+            .sticky-nav-item {
+                padding: 0.375rem 0.625rem;
+                font-size: 0.75rem;
+            }
+            
+            /* 超小屏幕学期标签优化 */
+            .semester-tabs {
+                margin: 0 -0.75rem;
+                padding: 0 0.75rem 0.5rem 0.75rem;
+            }
+            .semester-tab {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            /* 超小屏幕表格优化 */
+            .table-wrapper {
+                margin: 0 -0.75rem;
+                padding: 0 0.75rem;
+            }
+            table {
+                font-size: 0.75rem;
+            }
+            th, td {
+                padding: 0.375rem 0.5rem;
+            }
+            th:first-child, td:first-child {
+                padding-left: 0.75rem;
+            }
+            th:last-child, td:last-child {
+                padding-right: 0.75rem;
+            }
+            
+            /* 超小屏幕进度条隐藏 */
+            .semester-bar-container,
+            .progress-track,
+            .overview-bar {
+                display: none;
+            }
+            
+            /* 超小屏幕设置页面优化 */
+            .settings-section {
+                padding: 0.75rem;
+                margin-bottom: 0.5rem;
+                border-radius: 10px;
+            }
+            
+            /* 超小屏幕目标规划优化 */
+            .goal-calculator {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+            .goal-input-section {
+                gap: 1rem;
+            }
+            .goal-stat-card,
+            .quick-stat-card,
+            .mini-stat-card {
+                padding: 0.75rem;
+                border-radius: 10px;
+            }
+            .distribution-card {
+                padding: 0.75rem;
+                border-radius: 10px;
+            }
+            .distribution-overview {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>

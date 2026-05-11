@@ -122,6 +122,26 @@
             margin-left: 0;
             min-height: 100vh;
         }
+        
+        /* Skip 导航链接样式 */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            z-index: 10000;
+            transition: top 0.3s;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+            outline: 2px solid var(--accent-color);
+            outline-offset: -2px;
+        }
         .page-container {
             padding: 1.5rem;
             display: none;
@@ -1998,6 +2018,29 @@
                 max-width: none;
             }
         }
+        /* ==================== 屏幕阅读器辅助样式 ==================== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        .sr-only-focusable:focus,
+        .sr-only-focusable:active {
+            position: static;
+            width: auto;
+            height: auto;
+            margin: 0;
+            overflow: visible;
+            clip: auto;
+            white-space: normal;
+        }
     </style>
     
     <style>
@@ -2149,6 +2192,12 @@
     </style>
 </head>
 <body>
+<!-- Skip 导航链接，提高可访问性 -->
+<a href="#main-content" class="skip-link sr-only-focusable">跳过导航，直接跳转到主要内容</a>
+
+<!-- 屏幕阅读器状态通知区域 -->
+<div id="ariaAnnouncer" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
 <!-- 移动端顶部欢迎栏 -->
 <div class="mobile-header" id="mobileHeader">
     <div class="mobile-header-left">
@@ -2162,35 +2211,35 @@
 </div>
 
 <!-- 移动端底部导航栏 -->
-<nav class="bottom-nav" id="bottomNav">
-    <div class="bottom-nav-item active" data-section="analysis">
-        <span class="bottom-nav-icon">📊</span>
+<nav class="bottom-nav" id="bottomNav" role="navigation" aria-label="移动端主导航">
+    <div class="bottom-nav-item active" data-section="analysis" role="menuitem" aria-label="数据分析">
+        <span class="bottom-nav-icon" aria-hidden="true">📊</span>
         <span class="bottom-nav-text">数据</span>
     </div>
-    <div class="bottom-nav-item" data-section="courses">
-        <span class="bottom-nav-icon">📚</span>
+    <div class="bottom-nav-item" data-section="courses" role="menuitem" aria-label="课程管理">
+        <span class="bottom-nav-icon" aria-hidden="true">📚</span>
         <span class="bottom-nav-text">课程</span>
     </div>
-    <div class="bottom-nav-item" data-section="goal">
-        <span class="bottom-nav-icon">🎯</span>
+    <div class="bottom-nav-item" data-section="goal" role="menuitem" aria-label="目标规划">
+        <span class="bottom-nav-icon" aria-hidden="true">🎯</span>
         <span class="bottom-nav-text">目标</span>
     </div>
-    <div class="bottom-nav-item" data-section="baoyan">
-        <span class="bottom-nav-icon">🏆</span>
+    <div class="bottom-nav-item" data-section="baoyan" role="menuitem" aria-label="保研指导">
+        <span class="bottom-nav-icon" aria-hidden="true">🏆</span>
         <span class="bottom-nav-text">保研</span>
     </div>
-    <div class="bottom-nav-item" data-action="settings">
-        <span class="bottom-nav-icon">⚙️</span>
+    <div class="bottom-nav-item" data-action="settings" role="menuitem" aria-label="系统设置">
+        <span class="bottom-nav-icon" aria-hidden="true">⚙️</span>
         <span class="bottom-nav-text">设置</span>
     </div>
 </nav>
 
-<div class="dashboard">
+<div class="dashboard" id="main-content" role="main">
     <div style="display: none;">
         <button id="exportCsvBtn">导出CSV</button>
         <button id="themeBtn">深色模式</button>
     </div>
-    <div id="page-courses" class="page-container">
+    <div id="page-courses" class="page-container" aria-label="课程管理页面">
         <h2 class="page-title">课程管理</h2>
         <p class="page-subtitle">管理各学期课程信息</p>
         
@@ -2199,27 +2248,28 @@
                 <div class="semester-tabs" id="semesterTabs"></div>
                 <span class="stat-card" style="padding: 0.5rem 1rem;">学期 GPA: <strong id="currentSemesterGpa">—</strong></span>
             </div>
-            <div class="table-wrapper">
-                <table id="coursesTable">
+            <div class="table-wrapper" role="region" aria-label="课程列表区域">
+                <table id="coursesTable" role="grid" aria-label="课程列表" aria-describedby="coursesTableDesc">
+                    <caption id="coursesTableDesc" class="sr-only">当前学期课程列表，包含课程名称、类型、学分、成绩和绩点信息</caption>
                     <thead>
-                        <tr>
-                            <th>编号</th>
-                            <th>课程</th>
-                            <th>类型</th>
-                            <th>学分</th>
-                            <th>成绩</th>
-                            <th>绩点</th>
-                            <th>操作</th>
+                        <tr role="row">
+                            <th role="columnheader" scope="col" aria-label="课程编号">编号</th>
+                            <th role="columnheader" scope="col">课程</th>
+                            <th role="columnheader" scope="col">类型</th>
+                            <th role="columnheader" scope="col">学分</th>
+                            <th role="columnheader" scope="col">成绩</th>
+                            <th role="columnheader" scope="col">绩点</th>
+                            <th role="columnheader" scope="col">操作</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
                 </table>
             </div>
-            <button class="add-btn" id="addCourseBtn">+ 添加新课程</button>
+            <button class="add-btn" id="addCourseBtn" aria-label="添加新课程">+ 添加新课程</button>
         </div>
     </div>
 
-    <div id="page-analysis" class="page-container active">
+    <div id="page-analysis" class="page-container active" role="region" aria-label="数据分析页面">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; gap: 1rem;">
             <div>
                 <h2 class="page-title">数据分析</h2>
@@ -2228,13 +2278,13 @@
         </div>
         
         <!-- 固定导航栏 -->
-        <div class="sticky-nav" id="analysisStickyNav">
-            <div class="sticky-nav-content">
-                <button class="sticky-nav-item active" data-section="overview">成绩概览</button>
-                <button class="sticky-nav-item" data-section="trend">GPA趋势</button>
-                <button class="sticky-nav-item" data-section="type">课程类型</button>
-                <button class="sticky-nav-item" data-section="compare">学期对比</button>
-                <button class="sticky-nav-item" data-section="distribution">成绩分布</button>
+        <div class="sticky-nav" id="analysisStickyNav" role="navigation" aria-label="数据分析子导航">
+            <div class="sticky-nav-content" role="menubar">
+                <button class="sticky-nav-item active" data-section="overview" role="menuitemradio" aria-checked="true">成绩概览</button>
+                <button class="sticky-nav-item" data-section="trend" role="menuitemradio" aria-checked="false">GPA趋势</button>
+                <button class="sticky-nav-item" data-section="type" role="menuitemradio" aria-checked="false">课程类型</button>
+                <button class="sticky-nav-item" data-section="compare" role="menuitemradio" aria-checked="false">学期对比</button>
+                <button class="sticky-nav-item" data-section="distribution" role="menuitemradio" aria-checked="false">成绩分布</button>
             </div>
         </div>
         
@@ -2251,7 +2301,7 @@
                         <div class="main-stat-label">累积 GPA</div>
                         <div class="main-stat-value" id="cumulativeGpaDisplay">—</div>
                         <div class="main-stat-trend" id="trendDetail"></div>
-                        <div class="main-stat-progress">
+                        <div class="main-stat-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="GPA目标进度">
                             <div class="progress-track">
                                 <div class="progress-fill" id="gpaProgress"></div>
                             </div>
@@ -2614,9 +2664,9 @@
                 </div>
             </div>
             
-            <button class="goal-calc-btn" id="calcBtn">
+            <button class="goal-calc-btn" id="calcBtn" aria-label="计算目标GPA所需成绩">
                 <span>计算目标成绩</span>
-                <span class="btn-arrow">→</span>
+                <span class="btn-arrow" aria-hidden="true">→</span>
             </button>
             
             <div class="goal-result" id="goalResult" style="display: none;">
@@ -3334,9 +3384,9 @@
     </div>
 </div>
 
-<div id="shortcutsModal" class="modal">
+<div id="shortcutsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcutsModalTitle">
     <div class="modal-card">
-        <h2 style="margin-bottom: 1rem; color: var(--accent-color);">⌨️ 快捷键</h2>
+        <h2 id="shortcutsModalTitle" style="margin-bottom: 1rem; color: var(--accent-color);">⌨️ 快捷键</h2>
         <div style="max-height: 60vh; overflow-y: auto;">
             <div class="shortcuts-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
                 <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
@@ -3427,16 +3477,16 @@
     <button id="redoBtn" title="重做 (Ctrl+Y)" style="width: 36px; height: 36px; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">↪️</button>
 </div>
 
-<div id="editModal" class="modal">
-    <div class="modal-card">
+<div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="modal-card" role="document">
         <h3 id="editModalTitle" style="margin-bottom:1.5rem; color:var(--accent-color);">编辑课程</h3>
-        <div class="modal-field"><label>课程名称</label><input type="text" id="editName"></div>
-        <div class="modal-field"><label>课程类型</label><select id="editType"></select></div>
-        <div class="modal-field"><label>学分</label><input type="number" id="editCredit" step="0.5"></div>
-        <div class="modal-field"><label>成绩 (0-100)</label><input type="number" id="editScore" min="0" max="100"></div>
+        <div class="modal-field"><label for="editName">课程名称</label><input type="text" id="editName" aria-required="true"></div>
+        <div class="modal-field"><label for="editType">课程类型</label><select id="editType"></select></div>
+        <div class="modal-field"><label for="editCredit">学分</label><input type="number" id="editCredit" step="0.5" aria-required="true"></div>
+        <div class="modal-field"><label for="editScore">成绩 (0-100)</label><input type="number" id="editScore" min="0" max="100" aria-required="true"></div>
         <div class="modal-actions">
             <button class="modal-btn" id="cancelEdit">取消</button>
-            <button class="modal-btn primary" id="saveEdit">保存</button>
+            <button class="modal-btn primary" id="saveEdit" aria-label="保存课程">保存</button>
         </div>
     </div>
 </div>
@@ -3445,6 +3495,402 @@
     (function(){
         "use strict";
         Chart.register(ChartDataLabels);
+
+        // ==================== 配置常量模块 ====================
+        const CONFIG = {
+            VERSION: '2.0.0',
+            BUILD_DATE: '2026-01-15',
+            
+            STORAGE_KEYS: {
+                COURSES: 'dzh_courses',
+                SEMESTERS: 'dzh_semesters',
+                SETTINGS: 'dzh_settings',
+                THEME: 'dzh_theme',
+                MAIN_DATA: 'dzh_final_trend',
+                ENCRYPTION_SALT: 'dzh_encryption_salt',
+                BACKUP_HISTORY: 'dzh_backup_history',
+                LAST_BACKUP: 'dzh_last_backup_time',
+                AUTO_BACKUP_ENABLED: 'dzh_auto_backup_enabled',
+                BACKUP_INTERVAL: 'dzh_backup_interval'
+            },
+            
+            LIMITS: {
+                MAX_COURSES: 500,
+                MAX_SEMESTERS: 12,
+                MAX_HISTORY: 50,
+                MIN_SCORE: 0,
+                MAX_SCORE: 100,
+                MIN_CREDIT: 0.5,
+                MAX_CREDIT: 10
+            },
+            
+            STYLES: {
+                ANIMATION_DURATION: '0.3s',
+                BORDER_RADIUS: '8px',
+                SHADOW: '0 2px 8px rgba(0,0,0,0.1)'
+            },
+            
+            API: {
+                SYNC_INTERVAL: 5 * 60 * 1000,
+                BACKUP_INTERVAL: 24 * 60 * 60 * 1000,
+                CACHE_TTL: 5 * 60 * 1000
+            }
+        };
+
+        // ==================== 日志系统模块 ====================
+        const Logger = {
+            levels: { DEBUG: 0, INFO: 1, WARN: 2, ERROR: 3 },
+            currentLevel: 'INFO',
+            
+            debug(...args) { this.log('DEBUG', ...args); },
+            info(...args) { this.log('INFO', ...args); },
+            warn(...args) { this.log('WARN', ...args); },
+            error(...args) { this.log('ERROR', ...args); },
+            
+            log(level, ...args) {
+                if (this.levels[level] >= this.levels[this.currentLevel]) {
+                    const timestamp = new Date().toISOString();
+                    const prefix = `[${timestamp}] [${level}]`;
+                    if (level === 'ERROR') {
+                        console.error(prefix, ...args);
+                    } else if (level === 'WARN') {
+                        console.warn(prefix, ...args);
+                    } else {
+                        console.log(prefix, ...args);
+                    }
+                }
+            },
+            
+            setLevel(level) {
+                if (this.levels.hasOwnProperty(level)) {
+                    this.currentLevel = level;
+                }
+            }
+        };
+
+        // ==================== 错误处理模块 ====================
+        const ErrorHandler = {
+            handlers: new Map(),
+            
+            register(errorType, handler) {
+                this.handlers.set(errorType, handler);
+            },
+            
+            handle(error, context = {}) {
+                Logger.error(`[${error.name}]`, error.message, context);
+                
+                const handler = this.handlers.get(error.name);
+                if (handler) {
+                    handler(error, context);
+                } else {
+                    this.defaultHandler(error, context);
+                }
+            },
+            
+            defaultHandler(error, context) {
+                const message = error.message || '操作失败，请稍后重试';
+                Announcer.announce(message, 'assertive');
+            }
+        };
+
+        // ==================== 数据缓存管理模块 ====================
+        const CacheManager = {
+            cache: new Map(),
+            TTL: 5 * 60 * 1000,
+            
+            get(key) {
+                const item = this.cache.get(key);
+                if (!item) return null;
+                
+                if (Date.now() > item.expires) {
+                    this.cache.delete(key);
+                    return null;
+                }
+                return item.value;
+            },
+            
+            set(key, value, ttl = this.TTL) {
+                this.cache.set(key, {
+                    value: value,
+                    expires: Date.now() + ttl
+                });
+            },
+            
+            clear() {
+                this.cache.clear();
+            },
+            
+            has(key) {
+                const item = this.cache.get(key);
+                if (!item) return false;
+                if (Date.now() > item.expires) {
+                    this.cache.delete(key);
+                    return false;
+                }
+                return true;
+            }
+        };
+
+        // ==================== DOM 缓存模块 ====================
+        const DOMCache = {
+            cache: new Map(),
+            
+            get(selector) {
+                if (this.cache.has(selector)) {
+                    return this.cache.get(selector);
+                }
+                const element = document.querySelector(selector);
+                if (element) {
+                    this.cache.set(selector, element);
+                }
+                return element;
+            },
+            
+            getAll(selector) {
+                const cacheKey = `all_${selector}`;
+                if (this.cache.has(cacheKey)) {
+                    return this.cache.get(cacheKey);
+                }
+                const elements = Array.from(document.querySelectorAll(selector));
+                this.cache.set(cacheKey, elements);
+                return elements;
+            },
+            
+            clear() {
+                this.cache.clear();
+            }
+        };
+
+        // ==================== 屏幕阅读器通知模块 ====================
+        const Announcer = {
+            element: null,
+            
+            init() {
+                this.element = document.getElementById('ariaAnnouncer');
+                if (!this.element) {
+                    this.element = document.createElement('div');
+                    this.element.id = 'ariaAnnouncer';
+                    this.element.setAttribute('role', 'status');
+                    this.element.setAttribute('aria-live', 'polite');
+                    this.element.setAttribute('aria-atomic', 'true');
+                    this.element.className = 'sr-only';
+                    document.body.appendChild(this.element);
+                }
+            },
+            
+            announce(message, priority = 'polite') {
+                if (!this.element) this.init();
+                this.element.setAttribute('aria-live', priority);
+                this.element.textContent = '';
+                setTimeout(() => {
+                    this.element.textContent = message;
+                }, 100);
+                Logger.info('通知:', message);
+            }
+        };
+
+        // ==================== 焦点管理模块 ====================
+        const FocusManager = {
+            previousFocus: null,
+            
+            trapFocus(container) {
+                this.previousFocus = document.activeElement;
+                
+                const focusableElements = container.querySelectorAll(
+                    'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                );
+                const firstFocusable = focusableElements[0];
+                const lastFocusable = focusableElements[focusableElements.length - 1];
+                
+                container.addEventListener('keydown', (e) => {
+                    if (e.key !== 'Tab') return;
+                    
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstFocusable) {
+                            e.preventDefault();
+                            lastFocusable?.focus();
+                        }
+                    } else {
+                        if (document.activeElement === lastFocusable) {
+                            e.preventDefault();
+                            firstFocusable?.focus();
+                        }
+                    }
+                });
+                
+                firstFocusable?.focus();
+            },
+            
+            restoreFocus() {
+                if (this.previousFocus && document.contains(this.previousFocus)) {
+                    this.previousFocus.focus();
+                }
+            }
+        };
+
+        // ==================== 键盘导航模块 ====================
+        const KeyboardNavigation = {
+            init() {
+                document.addEventListener('keydown', this.handleKeydown.bind(this));
+            },
+            
+            handleKeydown(e) {
+                const activeElement = document.activeElement;
+                if (!activeElement) return;
+                
+                if (e.key === 'Tab' && !e.shiftKey) {
+                    const focusableElements = this.getFocusableElements();
+                    const firstElement = focusableElements[0];
+                    const lastElement = focusableElements[focusableElements.length - 1];
+                    
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement?.focus();
+                    }
+                } else if (e.key === 'Tab' && e.shiftKey) {
+                    const focusableElements = this.getFocusableElements();
+                    const firstElement = focusableElements[0];
+                    const lastElement = focusableElements[focusableElements.length - 1];
+                    
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement?.focus();
+                    }
+                }
+                
+                const arrowKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+                if (arrowKeys.includes(e.key)) {
+                    const currentMenu = activeElement.closest('[role="menu"], [role="menubar"]');
+                    if (currentMenu) {
+                        e.preventDefault();
+                        this.handleMenuNavigation(currentMenu, e.key);
+                    }
+                }
+            },
+            
+            getFocusableElements() {
+                return Array.from(document.querySelectorAll(
+                    'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+                )).filter(el => {
+                    const style = window.getComputedStyle(el);
+                    return style.display !== 'none' && style.visibility !== 'hidden';
+                });
+            },
+            
+            handleMenuNavigation(menu, key) {
+                const menuItems = Array.from(menu.querySelectorAll('[role="menuitem"], [role="menuitemradio"]'));
+                const currentIndex = menuItems.indexOf(document.activeElement);
+                
+                if (currentIndex === -1) return;
+                
+                let nextIndex;
+                if (key === 'ArrowDown' || key === 'ArrowRight') {
+                    nextIndex = (currentIndex + 1) % menuItems.length;
+                } else {
+                    nextIndex = (currentIndex - 1 + menuItems.length) % menuItems.length;
+                }
+                
+                menuItems[nextIndex]?.focus();
+            }
+        };
+
+        // ==================== 图片懒加载模块 ====================
+        const LazyLoad = {
+            observer: null,
+            
+            init() {
+                if ('IntersectionObserver' in window) {
+                    this.observer = new IntersectionObserver(this.handleIntersection.bind(this), {
+                        rootMargin: '50px 0px',
+                        threshold: 0.1
+                    });
+                    
+                    document.querySelectorAll('img[data-src]').forEach(img => {
+                        this.observer.observe(img);
+                    });
+                } else {
+                    this.fallback();
+                }
+            },
+            
+            handleIntersection(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                        this.observer?.unobserve(img);
+                    }
+                });
+            },
+            
+            fallback() {
+                document.querySelectorAll('img[data-src]').forEach(img => {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                });
+            },
+            
+            observe(element) {
+                if (this.observer && element) {
+                    this.observer.observe(element);
+                }
+            }
+        };
+
+        // ==================== 单元测试框架模块 ====================
+        const TestRunner = {
+            results: [],
+            
+            test(name, fn) {
+                try {
+                    fn();
+                    this.results.push({ name, status: 'pass' });
+                    Logger.info(`✓ ${name}`);
+                } catch (error) {
+                    this.results.push({ name, status: 'fail', error });
+                    Logger.error(`✗ ${name}: ${error.message}`);
+                }
+            },
+            
+            assertEqual(actual, expected) {
+                if (actual !== expected) {
+                    throw new Error(`Expected ${expected}, got ${actual}`);
+                }
+            },
+            
+            assertTrue(condition, message = 'Expected true, got false') {
+                if (!condition) {
+                    throw new Error(message);
+                }
+            },
+            
+            assertFalse(condition, message = 'Expected false, got true') {
+                if (condition) {
+                    throw new Error(message);
+                }
+            },
+            
+            summary() {
+                const passed = this.results.filter(r => r.status === 'pass').length;
+                const failed = this.results.filter(r => r.status === 'fail').length;
+                Logger.info(`\n测试结果: ${passed}/${passed + failed} 通过`);
+                if (failed > 0) {
+                    this.results.filter(r => r.status === 'fail').forEach(r => {
+                        Logger.error(`失败: ${r.name}`, r.error);
+                    });
+                }
+                return { passed, failed };
+            },
+            
+            runTests() {
+                this.results = [];
+                Logger.info('开始运行单元测试...');
+                return this.summary();
+            }
+        };
 
         // ==================== 工具函数模块 ====================
         const Utils = {
@@ -4440,7 +4886,7 @@
         let typeOptions = ['公共基础必修','公共基础选修','专业教育必修','专业必修','专业选修','实践必修','学科基础','科研训练'];
 
         function loadData() {
-            const saved = localStorage.getItem('dzh_final_trend');
+            const saved = localStorage.getItem(CONFIG.STORAGE_KEYS.MAIN_DATA);
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -4449,10 +4895,10 @@
                         
                         const totalCourses = semestersData.flat().length;
                         if (totalCourses === 0) {
-                            semestersData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                            semestersData = Utils.deepClone(DEFAULT_DATA);
                         }
                     } else {
-                        semestersData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                        semestersData = Utils.deepClone(DEFAULT_DATA);
                     }
                     if (parsed.semesterLocks && Array.isArray(parsed.semesterLocks)) {
                         semesterLocks = parsed.semesterLocks;
@@ -4462,24 +4908,30 @@
                     if (parsed.semesters && Array.isArray(parsed.semesters)) {
                         SEMESTERS = parsed.semesters;
                     } else {
-                        // 默认学期列表
                         SEMESTERS = ['大一上','大一下','大二上','大二下','大三上','大三下','大四上','大四下'];
                     }
+                    Logger.info('数据加载成功');
                 } catch(e) { 
-                    console.error('Failed to load data:', e);
-                    semestersData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                    Logger.error('数据加载失败，使用默认数据', e);
+                    semestersData = Utils.deepClone(DEFAULT_DATA);
                     SEMESTERS = ['大一上','大一下','大二上','大二下','大三上','大三下','大四上','大四下'];
                     semesterLocks = new Array(SEMESTERS.length).fill(false);
                 }
             } else {
-                semestersData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                semestersData = Utils.deepClone(DEFAULT_DATA);
                 SEMESTERS = ['大一上','大一下','大二上','大二下','大三上','大三下','大四上','大四下'];
                 semesterLocks = new Array(SEMESTERS.length).fill(false);
             }
         }
         function saveData() {
-            localStorage.setItem('dzh_final_trend', JSON.stringify({ semestersData, semesterLocks, semesters: SEMESTERS }));
-            autoBackupToDatabase();
+            try {
+                localStorage.setItem(CONFIG.STORAGE_KEYS.MAIN_DATA, JSON.stringify({ semestersData, semesterLocks, semesters: SEMESTERS }));
+                autoBackupToDatabase();
+                Logger.debug('数据保存成功');
+            } catch (error) {
+                Logger.error('数据保存失败', error);
+                ErrorHandler.handle(error, { context: 'saveData' });
+            }
         }
 
         function autoBackupToDatabase() {
@@ -5990,6 +6442,12 @@
         });
 
         function init() {
+            Logger.info('应用初始化开始...');
+            
+            Announcer.init();
+            KeyboardNavigation.init();
+            LazyLoad.init();
+            
             loadData();
             loadCourseTypes();
             
@@ -6010,6 +6468,8 @@
             renderCompareContent();
             
             bindEvents();
+            
+            Logger.info('应用初始化完成');
             
             // 初始化数据库
             openDatabase(function() {
@@ -6088,8 +6548,9 @@
                 item.addEventListener('click', handleStickyNavClick);
             });
             
-            // 滚动监听更新活跃状态
-            document.addEventListener('scroll', handleAnalysisScroll);
+            // 滚动监听更新活跃状态（使用节流优化）
+            const throttledScrollHandler = Utils.throttle(handleAnalysisScroll, 100);
+            document.addEventListener('scroll', throttledScrollHandler);
         }
         
         // 固定导航栏点击处理

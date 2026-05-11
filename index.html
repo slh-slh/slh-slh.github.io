@@ -116,133 +116,31 @@
             opacity: 0.6;
             z-index: -1;
         }
-        .sidebar {
-            width: 200px;
-            min-height: 100vh;
-            background: var(--bg-card);
-            backdrop-filter: blur(12px);
-            border-right: 1px solid var(--border-color);
-            padding: 1.25rem 0;
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 100;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-md);
-        }
-        .sidebar-header {
-            padding: 0 1rem 1.25rem;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 1rem;
-            position: relative;
-        }
-        .sidebar-header::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 1rem;
-            right: 1rem;
-            height: 1px;
-            background: var(--gradient-primary);
-            opacity: 0.5;
-        }
-        .sidebar-logo {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--accent-color);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-shadow: 0 0 20px rgba(129, 140, 248, 0.4);
-        }
-        .sidebar-logo::before {
-            content: '📊';
-            font-size: 1.25rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.05); }
-        }
-        .sidebar-nav {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .nav-item {
-            padding: 0.6rem 1rem;
-            margin: 0.2rem 0.5rem;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .nav-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: var(--gradient-primary);
-            transform: scaleY(0);
-            transition: transform 0.2s ease;
-        }
-        .nav-item:hover {
-            background: rgba(129, 140, 248, 0.1);
-            color: var(--accent-color);
-            transform: translateX(4px);
-        }
-        .nav-item:hover::before {
-            transform: scaleY(1);
-        }
-        .nav-item.active {
-            background: var(--gradient-primary);
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-        .nav-item.active::before {
-            transform: scaleY(1);
-            background: white;
-        }
-        .nav-item span:first-child {
-            font-size: 1rem;
-        }
-        .sidebar-divider {
-            height: 1px;
-            background: var(--border-color);
-            margin: 0.75rem 0.5rem;
-            position: relative;
-        }
-        .sidebar-divider::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 2px;
-            background: var(--accent-color);
-            border-radius: 1px;
-        }
-        .sidebar-bottom {
-            position: absolute;
-            bottom: 1.25rem;
-            left: 0;
-            right: 0;
-            padding: 0 0.5rem;
-        }
+        
         .dashboard { 
             flex: 1;
-            margin-left: 200px;
+            margin-left: 0;
             min-height: 100vh;
+        }
+        
+        /* Skip 导航链接样式 */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #000;
+            color: #fff;
+            padding: 8px 16px;
+            z-index: 10000;
+            transition: top 0.3s;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+            outline: 2px solid var(--accent-color);
+            outline-offset: -2px;
         }
         .page-container {
             padding: 1.5rem;
@@ -267,33 +165,14 @@
             color: var(--text-secondary);
             margin: 0 0 1.5rem 0;
         }
-        .mobile-toggle {
-            display: none;
-            position: fixed;
-            left: 0;
-            top: 0;
-            z-index: 101;
-            padding: 0.75rem;
-            background: var(--bg-card);
-            border: none;
-            border-right: 1px solid var(--border-color);
-            cursor: pointer;
-            color: var(--text-primary);
+        .page-header {
+            margin-bottom: 1.5rem;
         }
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-                box-shadow: var(--shadow-md);
-            }
-            .dashboard {
-                margin-left: 0;
-            }
-            .mobile-toggle {
-                display: block;
-            }
+        .page-header .page-title {
+            margin-bottom: 0.5rem;
+        }
+        .page-header .page-subtitle {
+            margin-bottom: 0;
         }
         .header-row {
             display: flex;
@@ -318,10 +197,14 @@
         .card {
             background: var(--bg-card);
             border-radius: 12px;
-            padding: 1.25rem;
+            padding: 1.5rem;
             margin-bottom: 1rem;
             border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
+            transition: box-shadow 0.15s ease, transform 0.15s ease;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-lg);
         }
         .card-header {
             display: flex;
@@ -474,6 +357,38 @@
             border-color: var(--accent-color); 
             background: rgba(59, 130, 246, 0.04);
         }
+        .btn-primary {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            background: var(--accent-color);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.15s;
+        }
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+        .btn-secondary {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.15s;
+        }
+        .btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.08);
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
 
         .move-btn {
             background: var(--bg-card);
@@ -564,11 +479,12 @@
         }
         .modal-card {
             background: var(--bg-card);
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 1.5rem;
-            width: 420px;
+            width: 480px;
             max-width: 90vw;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
         }
         .settings-section {
             padding: 1rem;
@@ -653,8 +569,14 @@
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            padding: 1rem;
-            border-radius: 10px;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.15s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
         .stat-card .stat-label {
             font-size: 0.75rem;
@@ -734,11 +656,10 @@
             z-index: 100;
             background: var(--bg-card);
             border-bottom: 1px solid var(--border-color);
-            padding: 0.75rem 0;
+            padding: 0.75rem 1.5rem;
             margin: 0 -1.5rem;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            box-shadow: var(--shadow-md);
+            transition: box-shadow 0.15s ease;
         }
         .sticky-nav-content {
             display: flex;
@@ -769,7 +690,7 @@
             color: var(--accent-color);
         }
         .sticky-nav-item.active {
-            background: var(--accent-color);
+            background: var(--gradient-primary);
             color: white;
         }
 
@@ -830,10 +751,16 @@
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 1.25rem;
+            padding: 1.5rem;
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
+            box-shadow: var(--shadow-md);
+            transition: all 0.15s ease;
+        }
+        .overview-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
         .required-card {
             border-left: 3px solid #3b82f6;
@@ -1658,51 +1585,661 @@
             .main-stat-value {
                 font-size: 2.5rem;
             }
+            
+            /* 移动端优化 */
+            .dashboard {
+                padding: 1rem;
+            }
+            .page-container {
+                padding: 1rem;
+            }
+            .card {
+                padding: 1rem;
+                margin-bottom: 0.75rem;
+                border-radius: 10px;
+            }
+            .page-header {
+                margin-bottom: 1rem;
+            }
+            .page-title {
+                font-size: 1.25rem;
+            }
+            .page-subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 1rem;
+            }
+            
+            /* 移动端表格优化 */
+            .table-wrapper {
+                margin: 0 -1rem;
+                padding: 0 1rem;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            table {
+                font-size: 0.8rem;
+            }
+            th, td {
+                padding: 0.5rem;
+                white-space: nowrap;
+            }
+            th:first-child, td:first-child {
+                padding-left: 1rem;
+            }
+            th:last-child, td:last-child {
+                padding-right: 1rem;
+            }
+            
+            /* 移动端模态框优化 */
+            .modal-card {
+                width: 95vw;
+                max-width: 95vw;
+                margin: 1rem;
+                padding: 1.25rem;
+                max-height: 90vh;
+                overflow-y: auto;
+                border-radius: 12px;
+            }
+            .modal-field {
+                margin-bottom: 0.875rem;
+            }
+            .modal-field input, 
+            .modal-field select {
+                padding: 0.75rem;
+                font-size: 16px;
+            }
+            .modal-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .modal-btn {
+                width: 100%;
+                padding: 0.75rem;
+                font-size: 1rem;
+            }
+            
+            /* 移动端按钮优化 */
+            .action-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            .add-btn {
+                padding: 0.5rem 1rem;
+                width: 100%;
+                text-align: center;
+            }
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.625rem 1rem;
+                font-size: 0.875rem;
+            }
+            .move-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+            
+            /* 移动端学期标签优化 */
+            .semester-tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                flex-wrap: nowrap;
+                padding-bottom: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            .semester-tab {
+                flex-shrink: 0;
+                padding: 0.6rem 1rem;
+            }
+            
+            /* 移动端图表优化 */
+            .chart-card {
+                padding: 1rem;
+                border-radius: 10px;
+            }
+            .chart-wrapper {
+                height: 250px;
+            }
+            
+            /* 移动端统计卡片优化 */
+            .stat-card {
+                padding: 1rem;
+                border-radius: 10px;
+            }
+            .stat-item {
+                padding: 0.75rem;
+            }
+            .stat-value {
+                font-size: 1.5rem;
+            }
+            .overview-card {
+                padding: 1rem;
+                border-radius: 10px;
+            }
+            .overview-value {
+                font-size: 1.75rem;
+            }
+            
+            /* 移动端固定底部间距 */
+            .sticky-nav {
+                padding: 0.5rem 1rem;
+                margin: 0 -1rem;
+            }
+            .sticky-nav-item {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            /* 移动端设置页面优化 */
+            .settings-section {
+                padding: 0.875rem;
+                margin-bottom: 0.75rem;
+                border-radius: 10px;
+            }
+            
+            /* 移动端保研分析优化 */
+            .school-recommend-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            /* 移动端比较面板优化 */
+            .compare-panel {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+            
+            /* 移动端目标规划优化 */
+            .goal-calculator {
+                padding: 1rem;
+                border-radius: 10px;
+            }
+            .goal-input-group {
+                flex-direction: column;
+            }
+            .goal-input {
+                width: 100%;
+            }
+            .main-stat-card {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            
+            /* 移动端详情卡片优化 */
+            .detail-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            .detail-item {
+                padding: 0.75rem;
+            }
+            
+            /* 移动端表单元素统一 */
+            .goal-input,
+            .modal-field input,
+            .modal-field select {
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+            }
+            
+            /* 移动端进度条优化 */
+            .semester-bar-container {
+                height: 24px;
+            }
+            
+            /* 移动端学期趋势卡片 */
+            .semester-trend-card {
+                padding: 0.75rem;
+                border-radius: 10px;
+            }
+            
+            /* 移动端快捷统计卡片 */
+            .quick-stat-card,
+            .mini-stat-card {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+            
+            /* 移动端分布卡片 */
+            .distribution-card {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+        }
+        
+        /* 超小屏幕优化 */
+        @media (max-width: 480px) {
+            .dashboard {
+                padding: 0.75rem;
+            }
+            .page-container {
+                padding: 0.75rem;
+            }
+            .card {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+            .page-header {
+                margin-bottom: 0.75rem;
+            }
+            .page-title {
+                font-size: 1.125rem;
+            }
+            .page-subtitle {
+                font-size: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+            .overview-side-cards {
+                grid-template-columns: 1fr;
+            }
+            .overview-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .semester-bar-container {
+                display: none;
+            }
+            
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .semester-trend-card {
+                padding: 0.75rem;
+                border-radius: 10px;
+            }
+            
+            .chart-wrapper {
+                height: 200px;
+            }
+            
+            .cum-card-mini {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            /* 超小屏幕模态框优化 */
+            .modal-card {
+                width: 98vw;
+                max-width: 98vw;
+                margin: 0.5rem;
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            
+            /* 超小屏幕按钮优化 */
+            .add-btn {
+                padding: 0.625rem 1rem;
+                font-size: 0.875rem;
+            }
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.5rem 0.875rem;
+                font-size: 0.8rem;
+            }
+            
+            /* 超小屏幕统计卡片优化 */
+            .stat-card {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+            .main-stat-card {
+                padding: 1rem;
+                border-radius: 12px;
+            }
+            .main-stat-value {
+                font-size: 2rem;
+            }
+            .overview-card {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+            .overview-value {
+                font-size: 1.5rem;
+            }
+            
+            /* 超小屏幕固定导航优化 */
+            .sticky-nav {
+                padding: 0.5rem 0.75rem;
+                margin: 0 -0.75rem;
+            }
+            .sticky-nav-item {
+                padding: 0.375rem 0.625rem;
+                font-size: 0.75rem;
+            }
+            
+            /* 超小屏幕学期标签优化 */
+            .semester-tabs {
+                margin: 0 -0.75rem;
+                padding: 0 0.75rem 0.5rem 0.75rem;
+            }
+            .semester-tab {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            /* 超小屏幕表格优化 */
+            .table-wrapper {
+                margin: 0 -0.75rem;
+                padding: 0 0.75rem;
+            }
+            table {
+                font-size: 0.75rem;
+            }
+            th, td {
+                padding: 0.375rem 0.5rem;
+            }
+            th:first-child, td:first-child {
+                padding-left: 0.75rem;
+            }
+            th:last-child, td:last-child {
+                padding-right: 0.75rem;
+            }
+            
+            /* 超小屏幕进度条隐藏 */
+            .semester-bar-container,
+            .progress-track,
+            .overview-bar {
+                display: none;
+            }
+            
+            /* 超小屏幕设置页面优化 */
+            .settings-section {
+                padding: 0.75rem;
+                margin-bottom: 0.5rem;
+                border-radius: 10px;
+            }
+            
+            /* 超小屏幕目标规划优化 */
+            .goal-calculator {
+                padding: 0.875rem;
+                border-radius: 10px;
+            }
+            .goal-input-section {
+                gap: 1rem;
+            }
+            .goal-stat-card,
+            .quick-stat-card,
+            .mini-stat-card {
+                padding: 0.75rem;
+                border-radius: 10px;
+            }
+            .distribution-card {
+                padding: 0.75rem;
+                border-radius: 10px;
+            }
+            .distribution-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* 新功能样式 */
+        .sync-status-connected { color: var(--success-color); }
+        .sync-status-disconnected { color: var(--text-secondary); }
+        
+        #undoRedoBar, #syncStatusBar {
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        
+        #undoRedoBar:hover, #syncStatusBar:hover {
+            opacity: 1 !important;
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            #undoRedoBar {
+                bottom: 90px;
+                right: 10px;
+            }
+            
+            #syncStatusBar {
+                bottom: 90px;
+                right: 10px;
+                max-width: 220px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #undoRedoBar {
+                bottom: 85px;
+                right: 5px;
+            }
+            
+            #syncStatusBar {
+                bottom: 85px;
+                right: 5px;
+                left: 5px;
+                max-width: none;
+            }
+        }
+        /* ==================== 屏幕阅读器辅助样式 ==================== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        .sr-only-focusable:focus,
+        .sr-only-focusable:active {
+            position: static;
+            width: auto;
+            height: auto;
+            margin: 0;
+            overflow: visible;
+            clip: auto;
+            white-space: normal;
+        }
+    </style>
+    
+    <style>
+        /* 移动端底部导航栏样式 - 默认隐藏 */
+        .mobile-header {
+            display: none;
+        }
+        
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            padding: 0.5rem 0;
+            padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+        }
+        
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: transparent;
+            border: none;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .bottom-nav-item:active {
+            transform: scale(0.95);
+        }
+        
+        .bottom-nav-item.active {
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .bottom-nav-item.active .bottom-nav-icon {
+            filter: brightness(0) invert(1);
+        }
+        
+        .bottom-nav-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            transition: transform 0.2s ease;
+        }
+        
+        .bottom-nav-item.active .bottom-nav-icon {
+            transform: scale(1.1);
+        }
+        
+        .bottom-nav-text {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        
+        .bottom-nav-item.active .bottom-nav-text {
+            color: white;
+        }
+        
+        /* 移动端布局 */
+        @media (max-width: 768px) {
+            .mobile-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem 1.25rem;
+                background: var(--bg-card);
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .bottom-nav {
+                display: flex;
+                justify-content: space-around;
+            }
+            
+            .mobile-header-left {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            
+            .mobile-avatar {
+                font-size: 2.5rem;
+                line-height: 1;
+            }
+            
+            .mobile-welcome {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .mobile-welcome-text {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: var(--text-primary);
+            }
+            
+            .mobile-welcome-sub {
+                font-size: 0.8rem;
+                color: var(--text-secondary);
+                margin-top: 0.25rem;
+            }
+            
+            .mobile-settings-btn {
+                padding: 0.5rem;
+                background: transparent;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+            
+            .dashboard {
+                padding-top: 0;
+                padding-bottom: calc(80px + env(safe-area-inset-bottom));
+            }
+            
+            .page-container {
+                padding-bottom: 2rem;
+            }
+        }
+        
+        /* 超小屏幕优化 */
+        @media (max-width: 480px) {
+            .bottom-nav-text {
+                font-size: 0.65rem;
+            }
+            
+            .bottom-nav-icon {
+                font-size: 1.25rem;
+            }
+            
+            .bottom-nav-item {
+                padding: 0.4rem 0.5rem;
+            }
         }
     </style>
 </head>
 <body>
-<button class="mobile-toggle" id="mobileToggle">☰</button>
-<div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <div class="sidebar-logo">成绩管理</div>
-    </div>
-    <ul class="sidebar-nav">
-        <li class="nav-item active" data-section="analysis">
-            <span>数据分析</span>
-        </li>
-        <li class="nav-item" data-section="courses">
-            <span>课程管理</span>
-        </li>
-        <li class="nav-item" data-section="goal">
-            <span>目标规划</span>
-        </li>
-        <li class="nav-item" data-section="baoyan">
-            <span>保研指导</span>
-        </li>
-    </ul>
-    <div class="sidebar-divider"></div>
-    <ul class="sidebar-nav">
-        <li class="nav-item" data-action="theme">
-            <span>主题切换</span>
-        </li>
-        <li class="nav-item" data-action="settings">
-            <span>系统设置</span>
-        </li>
-    </ul>
-    <div class="sidebar-bottom">
-        <div style="padding: 0.6rem 1.2rem; font-size: 0.8rem; color: var(--text-secondary);">
-            <div>孙靖宇</div>
-            <div style="font-size: 0.7rem;">25级数智人文试验班</div>
+<!-- Skip 导航链接，提高可访问性 -->
+<a href="#main-content" class="skip-link sr-only-focusable">跳过导航，直接跳转到主要内容</a>
+
+<!-- 屏幕阅读器状态通知区域 -->
+<div id="ariaAnnouncer" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+<!-- 移动端顶部欢迎栏 -->
+<div class="mobile-header" id="mobileHeader">
+    <div class="mobile-header-left">
+        <span class="mobile-avatar">👤</span>
+        <div class="mobile-welcome">
+            <span class="mobile-welcome-text">欢迎回来</span>
+            <span class="mobile-welcome-sub">孙靖宇 · 25级数智人文试验班</span>
         </div>
     </div>
+    <button class="mobile-settings-btn" id="mobileSettingsBtn">⚙️</button>
 </div>
-<div class="dashboard">
+
+<!-- 移动端底部导航栏 -->
+<nav class="bottom-nav" id="bottomNav" role="navigation" aria-label="移动端主导航">
+    <div class="bottom-nav-item active" data-section="analysis" role="menuitem" aria-label="数据分析">
+        <span class="bottom-nav-icon" aria-hidden="true">📊</span>
+        <span class="bottom-nav-text">数据</span>
+    </div>
+    <div class="bottom-nav-item" data-section="courses" role="menuitem" aria-label="课程管理">
+        <span class="bottom-nav-icon" aria-hidden="true">📚</span>
+        <span class="bottom-nav-text">课程</span>
+    </div>
+    <div class="bottom-nav-item" data-section="goal" role="menuitem" aria-label="目标规划">
+        <span class="bottom-nav-icon" aria-hidden="true">🎯</span>
+        <span class="bottom-nav-text">目标</span>
+    </div>
+    <div class="bottom-nav-item" data-section="baoyan" role="menuitem" aria-label="保研指导">
+        <span class="bottom-nav-icon" aria-hidden="true">🏆</span>
+        <span class="bottom-nav-text">保研</span>
+    </div>
+    <div class="bottom-nav-item" data-action="settings" role="menuitem" aria-label="系统设置">
+        <span class="bottom-nav-icon" aria-hidden="true">⚙️</span>
+        <span class="bottom-nav-text">设置</span>
+    </div>
+</nav>
+
+<div class="dashboard" id="main-content" role="main">
     <div style="display: none;">
         <button id="exportCsvBtn">导出CSV</button>
         <button id="themeBtn">深色模式</button>
     </div>
-    <div id="page-courses" class="page-container">
+    <div id="page-courses" class="page-container" aria-label="课程管理页面">
         <h2 class="page-title">课程管理</h2>
         <p class="page-subtitle">管理各学期课程信息</p>
         
@@ -1711,27 +2248,28 @@
                 <div class="semester-tabs" id="semesterTabs"></div>
                 <span class="stat-card" style="padding: 0.5rem 1rem;">学期 GPA: <strong id="currentSemesterGpa">—</strong></span>
             </div>
-            <div class="table-wrapper">
-                <table id="coursesTable">
+            <div class="table-wrapper" role="region" aria-label="课程列表区域">
+                <table id="coursesTable" role="grid" aria-label="课程列表" aria-describedby="coursesTableDesc">
+                    <caption id="coursesTableDesc" class="sr-only">当前学期课程列表，包含课程名称、类型、学分、成绩和绩点信息</caption>
                     <thead>
-                        <tr>
-                            <th>编号</th>
-                            <th>课程</th>
-                            <th>类型</th>
-                            <th>学分</th>
-                            <th>成绩</th>
-                            <th>绩点</th>
-                            <th>操作</th>
+                        <tr role="row">
+                            <th role="columnheader" scope="col" aria-label="课程编号">编号</th>
+                            <th role="columnheader" scope="col">课程</th>
+                            <th role="columnheader" scope="col">类型</th>
+                            <th role="columnheader" scope="col">学分</th>
+                            <th role="columnheader" scope="col">成绩</th>
+                            <th role="columnheader" scope="col">绩点</th>
+                            <th role="columnheader" scope="col">操作</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
                 </table>
             </div>
-            <button class="add-btn" id="addCourseBtn">+ 添加新课程</button>
+            <button class="add-btn" id="addCourseBtn" aria-label="添加新课程">+ 添加新课程</button>
         </div>
     </div>
 
-    <div id="page-analysis" class="page-container active">
+    <div id="page-analysis" class="page-container active" role="region" aria-label="数据分析页面">
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; gap: 1rem;">
             <div>
                 <h2 class="page-title">数据分析</h2>
@@ -1740,13 +2278,13 @@
         </div>
         
         <!-- 固定导航栏 -->
-        <div class="sticky-nav" id="analysisStickyNav">
-            <div class="sticky-nav-content">
-                <button class="sticky-nav-item active" data-section="overview">成绩概览</button>
-                <button class="sticky-nav-item" data-section="trend">GPA趋势</button>
-                <button class="sticky-nav-item" data-section="type">课程类型</button>
-                <button class="sticky-nav-item" data-section="compare">学期对比</button>
-                <button class="sticky-nav-item" data-section="distribution">成绩分布</button>
+        <div class="sticky-nav" id="analysisStickyNav" role="navigation" aria-label="数据分析子导航">
+            <div class="sticky-nav-content" role="menubar">
+                <button class="sticky-nav-item active" data-section="overview" role="menuitemradio" aria-checked="true">成绩概览</button>
+                <button class="sticky-nav-item" data-section="trend" role="menuitemradio" aria-checked="false">GPA趋势</button>
+                <button class="sticky-nav-item" data-section="type" role="menuitemradio" aria-checked="false">课程类型</button>
+                <button class="sticky-nav-item" data-section="compare" role="menuitemradio" aria-checked="false">学期对比</button>
+                <button class="sticky-nav-item" data-section="distribution" role="menuitemradio" aria-checked="false">成绩分布</button>
             </div>
         </div>
         
@@ -1763,7 +2301,7 @@
                         <div class="main-stat-label">累积 GPA</div>
                         <div class="main-stat-value" id="cumulativeGpaDisplay">—</div>
                         <div class="main-stat-trend" id="trendDetail"></div>
-                        <div class="main-stat-progress">
+                        <div class="main-stat-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="GPA目标进度">
                             <div class="progress-track">
                                 <div class="progress-fill" id="gpaProgress"></div>
                             </div>
@@ -2126,9 +2664,9 @@
                 </div>
             </div>
             
-            <button class="goal-calc-btn" id="calcBtn">
+            <button class="goal-calc-btn" id="calcBtn" aria-label="计算目标GPA所需成绩">
                 <span>计算目标成绩</span>
-                <span class="btn-arrow">→</span>
+                <span class="btn-arrow" aria-hidden="true">→</span>
             </button>
             
             <div class="goal-result" id="goalResult" style="display: none;">
@@ -2628,7 +3166,161 @@
             </div>
             
             <div class="card" style="padding: 1.25rem;">
-                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">💾 数据管理</h4>
+                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">🔐 数据加密</h4>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                            使用AES-256-GCM加密算法保护您的数据安全
+                        </p>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                            <button id="exportEncryptedBtn" class="modal-btn" style="background: var(--success-color); padding: 0.5rem;">
+                                导出加密数据
+                            </button>
+                            <button id="importEncryptedBtn" class="modal-btn" style="background: var(--accent-color); padding: 0.5rem;">
+                                导入加密数据
+                            </button>
+                        </div>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                            💡 加密导出需要设置密码，导入时需要输入相同密码
+                        </p>
+                    </div>
+                    <div style="border-top: 1px dashed var(--border-color); padding-top: 1rem;">
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            当前加密状态：
+                        </p>
+                        <span id="encryptionStatus" style="font-size: 0.85rem; color: var(--text-secondary);">未设置密码</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="padding: 1.25rem;">
+                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">☁️ 云端同步</h4>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div id="syncStatus">
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
+                            同步状态：<span id="syncStatusText" style="color: var(--accent-color);">未连接</span>
+                        </p>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                            上次同步：<span id="lastSyncTime">—</span>
+                        </p>
+                    </div>
+                    <div class="sync-actions" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                        <button id="enableSyncBtn" class="modal-btn" style="background: var(--accent-color); padding: 0.5rem;">
+                            启用云同步
+                        </button>
+                        <button id="syncNowBtn" class="modal-btn" style="background: var(--bg-card-hover); border: 1px solid var(--border-color); padding: 0.5rem;">
+                            立即同步
+                        </button>
+                    </div>
+                    <div id="syncSettings" style="display: none; border-top: 1px dashed var(--border-color); padding-top: 1rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                            <input type="checkbox" id="autoSync" style="width: 16px; height: 16px;">
+                            自动同步
+                        </label>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">同步间隔：</span>
+                            <select id="syncInterval" style="flex: 1; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-card); color: var(--text-primary);">
+                                <option value="5">每5分钟</option>
+                                <option value="15">每15分钟</option>
+                                <option value="30">每30分钟</option>
+                                <option value="60">每小时</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="padding: 0.5rem; background: rgba(245, 158, 11, 0.05); border-radius: 6px; border: 1px solid rgba(245, 158, 11, 0.2);">
+                        <p style="font-size: 0.7rem; color: var(--warning-color); margin: 0;">
+                            ⚠️ 云同步为本地模拟实现，数据存储在浏览器中
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="padding: 1.25rem;">
+                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">⏰ 自动备份</h4>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                            设置自动备份时间间隔，数据将自动保存到本地数据库
+                        </p>
+                        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary);">
+                                <input type="checkbox" id="autoBackupEnabled" style="width: 16px; height: 16px;">
+                                启用自动备份
+                            </label>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">备份间隔：</span>
+                            <select id="backupInterval" style="flex: 1; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 6px; background: var(--bg-card); color: var(--text-primary);">
+                                <option value="daily">每天</option>
+                                <option value="weekly">每周</option>
+                                <option value="monthly">每月</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
+                        <button id="manualBackupBtn" class="modal-btn" style="background: var(--success-color); padding: 0.5rem;">
+                            立即备份
+                        </button>
+                        <button id="viewBackupHistoryBtn" class="modal-btn" style="background: var(--bg-card-hover); border: 1px solid var(--border-color); padding: 0.5rem;">
+                            查看历史
+                        </button>
+                    </div>
+                    <div style="padding: 0.75rem; background: rgba(16, 185, 129, 0.05); border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                        <p style="font-size: 0.75rem; color: var(--success-color); margin: 0;">
+                            📊 上次备份：<span id="lastBackupTime">—</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="padding: 1.25rem;">
+                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">⌨️ 快捷键</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Ctrl/Cmd + S</span>
+                        <span style="font-size: 0.85rem; color: var(--text-primary);">保存数据</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Ctrl/Cmd + N</span>
+                        <span style="font-size: 0.85rem; color: var(--text-primary);">添加课程</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Ctrl/Cmd + /</span>
+                        <span style="font-size: 0.85rem; color: var(--text-primary);">快捷键帮助</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">Ctrl/Cmd + Z</span>
+                        <span style="font-size: 0.85rem; color: var(--text-primary);">撤销</span>
+                    </div>
+                    <button id="showShortcutsBtn" class="modal-btn" style="width: 100%; background: var(--accent-color); padding: 0.5rem;">
+                        查看全部快捷键
+                    </button>
+                </div>
+            </div>
+            
+            <div class="card" style="padding: 1.25rem;">
+                <h4 style="margin-bottom: 1rem; color: var(--text-primary); font-size: 1rem; font-weight: 600; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">🔄 撤销/重做状态</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">可撤销操作</span>
+                        <span id="undoCount" style="font-size: 0.85rem; color: var(--accent-color); font-weight: 600;">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">可重做操作</span>
+                        <span id="redoCount" style="font-size: 0.85rem; color: var(--accent-color); font-weight: 600;">0</span>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0;">
+                        💡 最多记录50条操作历史
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-card">
+        <h3 id="editModalTitle" style="margin-bottom:1.5rem; color:var(--accent-color);">编辑课程</h3>
                 
                 <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-bottom: 1rem;">
                     <button class="modal-btn" id="dbLoadBtn" style="padding: 0.5rem; font-size: 0.85rem; background: var(--bg-card-hover); border: 1px solid var(--border-color);">
@@ -2692,16 +3384,109 @@
     </div>
 </div>
 
-<div id="editModal" class="modal">
+<div id="shortcutsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcutsModalTitle">
     <div class="modal-card">
+        <h2 id="shortcutsModalTitle" style="margin-bottom: 1rem; color: var(--accent-color);">⌨️ 快捷键</h2>
+        <div style="max-height: 60vh; overflow-y: auto;">
+            <div class="shortcuts-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + S</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">保存数据</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + E</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">导出数据</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + N</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">添加新课程</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + Z</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">撤销</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + Y</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">重做</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Ctrl/Cmd + /</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">显示快捷键帮助</span>
+                </div>
+                <div class="shortcut-item" style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                    <span class="shortcut-key" style="background: var(--text-secondary); color: white; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Escape</span>
+                    <span class="shortcut-desc" style="color: var(--text-secondary); font-size: 0.85rem;">关闭模态框</span>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(59, 130, 246, 0.08); border-radius: 8px;">
+            <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0;">
+                💡 提示：Mac用户请使用 ⌘ (Command) 键代替 Ctrl 键
+            </p>
+        </div>
+        <button id="closeShortcutsModal" class="modal-btn" style="width: 100%; margin-top: 1rem; background: var(--accent-color); padding: 0.5rem;">关闭</button>
+    </div>
+</div>
+
+<div id="passwordModal" class="modal">
+    <div class="modal-card">
+        <h3 id="passwordModalTitle" style="margin-bottom: 1rem; color: var(--accent-color);">设置密码</h3>
+        <div class="modal-field">
+            <label>密码</label>
+            <input type="password" id="encryptPassword" placeholder="请输入加密密码">
+        </div>
+        <div class="modal-field">
+            <label>确认密码</label>
+            <input type="password" id="confirmPassword" placeholder="请再次输入密码">
+        </div>
+        <div id="passwordError" style="color: var(--danger-color); font-size: 0.8rem; margin-bottom: 0.5rem; display: none;"></div>
+        <div class="modal-actions">
+            <button class="modal-btn" id="cancelPassword">取消</button>
+            <button class="modal-btn primary" id="confirmPasswordBtn">确认</button>
+        </div>
+    </div>
+</div>
+
+<div id="importPasswordModal" class="modal">
+    <div class="modal-card">
+        <h3 style="margin-bottom: 1rem; color: var(--accent-color);">输入解密密码</h3>
+        <div class="modal-field">
+            <label>密码</label>
+            <input type="password" id="decryptPassword" placeholder="请输入解密密码">
+        </div>
+        <div id="decryptError" style="color: var(--danger-color); font-size: 0.8rem; margin-bottom: 0.5rem; display: none;"></div>
+        <div class="modal-actions">
+            <button class="modal-btn" id="cancelDecrypt">取消</button>
+            <button class="modal-btn primary" id="confirmDecryptBtn">解密并导入</button>
+        </div>
+    </div>
+</div>
+
+<div id="syncStatusBar" style="position: fixed; bottom: 20px; right: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.75rem 1rem; box-shadow: var(--shadow-lg); z-index: 999; display: none; max-width: 280px;">
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <span id="syncStatusIcon" style="font-size: 1.2rem;">☁️</span>
+        <div style="flex: 1;">
+            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);" id="syncStatusText">同步中...</div>
+            <div style="font-size: 0.7rem; color: var(--text-secondary);" id="syncLastTime">—</div>
+        </div>
+    </div>
+</div>
+
+<div id="undoRedoBar" style="position: fixed; bottom: 80px; right: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 0.5rem; box-shadow: var(--shadow-lg); z-index: 999; display: flex; gap: 0.25rem;">
+    <button id="undoBtn" title="撤销 (Ctrl+Z)" style="width: 36px; height: 36px; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">↩️</button>
+    <button id="redoBtn" title="重做 (Ctrl+Y)" style="width: 36px; height: 36px; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: background 0.15s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">↪️</button>
+</div>
+
+<div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="modal-card" role="document">
         <h3 id="editModalTitle" style="margin-bottom:1.5rem; color:var(--accent-color);">编辑课程</h3>
-        <div class="modal-field"><label>课程名称</label><input type="text" id="editName"></div>
-        <div class="modal-field"><label>课程类型</label><select id="editType"></select></div>
-        <div class="modal-field"><label>学分</label><input type="number" id="editCredit" step="0.5"></div>
-        <div class="modal-field"><label>成绩 (0-100)</label><input type="number" id="editScore" min="0" max="100"></div>
+        <div class="modal-field"><label for="editName">课程名称</label><input type="text" id="editName" aria-required="true"></div>
+        <div class="modal-field"><label for="editType">课程类型</label><select id="editType"></select></div>
+        <div class="modal-field"><label for="editCredit">学分</label><input type="number" id="editCredit" step="0.5" aria-required="true"></div>
+        <div class="modal-field"><label for="editScore">成绩 (0-100)</label><input type="number" id="editScore" min="0" max="100" aria-required="true"></div>
         <div class="modal-actions">
             <button class="modal-btn" id="cancelEdit">取消</button>
-            <button class="modal-btn primary" id="saveEdit">保存</button>
+            <button class="modal-btn primary" id="saveEdit" aria-label="保存课程">保存</button>
         </div>
     </div>
 </div>
@@ -2710,6 +3495,1086 @@
     (function(){
         "use strict";
         Chart.register(ChartDataLabels);
+
+        // ==================== 配置常量模块 ====================
+        const CONFIG = {
+            VERSION: '2.0.0',
+            BUILD_DATE: '2026-01-15',
+            
+            STORAGE_KEYS: {
+                COURSES: 'dzh_courses',
+                SEMESTERS: 'dzh_semesters',
+                SETTINGS: 'dzh_settings',
+                THEME: 'dzh_theme',
+                MAIN_DATA: 'dzh_final_trend',
+                ENCRYPTION_SALT: 'dzh_encryption_salt',
+                BACKUP_HISTORY: 'dzh_backup_history',
+                LAST_BACKUP: 'dzh_last_backup_time',
+                AUTO_BACKUP_ENABLED: 'dzh_auto_backup_enabled',
+                BACKUP_INTERVAL: 'dzh_backup_interval'
+            },
+            
+            LIMITS: {
+                MAX_COURSES: 500,
+                MAX_SEMESTERS: 12,
+                MAX_HISTORY: 50,
+                MIN_SCORE: 0,
+                MAX_SCORE: 100,
+                MIN_CREDIT: 0.5,
+                MAX_CREDIT: 10
+            },
+            
+            STYLES: {
+                ANIMATION_DURATION: '0.3s',
+                BORDER_RADIUS: '8px',
+                SHADOW: '0 2px 8px rgba(0,0,0,0.1)'
+            },
+            
+            API: {
+                SYNC_INTERVAL: 5 * 60 * 1000,
+                BACKUP_INTERVAL: 24 * 60 * 60 * 1000,
+                CACHE_TTL: 5 * 60 * 1000
+            }
+        };
+
+        // ==================== 日志系统模块 ====================
+        const Logger = {
+            levels: { DEBUG: 0, INFO: 1, WARN: 2, ERROR: 3 },
+            currentLevel: 'INFO',
+            
+            debug(...args) { this.log('DEBUG', ...args); },
+            info(...args) { this.log('INFO', ...args); },
+            warn(...args) { this.log('WARN', ...args); },
+            error(...args) { this.log('ERROR', ...args); },
+            
+            log(level, ...args) {
+                if (this.levels[level] >= this.levels[this.currentLevel]) {
+                    const timestamp = new Date().toISOString();
+                    const prefix = `[${timestamp}] [${level}]`;
+                    if (level === 'ERROR') {
+                        console.error(prefix, ...args);
+                    } else if (level === 'WARN') {
+                        console.warn(prefix, ...args);
+                    } else {
+                        console.log(prefix, ...args);
+                    }
+                }
+            },
+            
+            setLevel(level) {
+                if (this.levels.hasOwnProperty(level)) {
+                    this.currentLevel = level;
+                }
+            }
+        };
+
+        // ==================== 错误处理模块 ====================
+        const ErrorHandler = {
+            handlers: new Map(),
+            
+            register(errorType, handler) {
+                this.handlers.set(errorType, handler);
+            },
+            
+            handle(error, context = {}) {
+                Logger.error(`[${error.name}]`, error.message, context);
+                
+                const handler = this.handlers.get(error.name);
+                if (handler) {
+                    handler(error, context);
+                } else {
+                    this.defaultHandler(error, context);
+                }
+            },
+            
+            defaultHandler(error, context) {
+                const message = error.message || '操作失败，请稍后重试';
+                Announcer.announce(message, 'assertive');
+            }
+        };
+
+        // ==================== 数据缓存管理模块 ====================
+        const CacheManager = {
+            cache: new Map(),
+            TTL: 5 * 60 * 1000,
+            
+            get(key) {
+                const item = this.cache.get(key);
+                if (!item) return null;
+                
+                if (Date.now() > item.expires) {
+                    this.cache.delete(key);
+                    return null;
+                }
+                return item.value;
+            },
+            
+            set(key, value, ttl = this.TTL) {
+                this.cache.set(key, {
+                    value: value,
+                    expires: Date.now() + ttl
+                });
+            },
+            
+            clear() {
+                this.cache.clear();
+            },
+            
+            has(key) {
+                const item = this.cache.get(key);
+                if (!item) return false;
+                if (Date.now() > item.expires) {
+                    this.cache.delete(key);
+                    return false;
+                }
+                return true;
+            }
+        };
+
+        // ==================== DOM 缓存模块 ====================
+        const DOMCache = {
+            cache: new Map(),
+            
+            get(selector) {
+                if (this.cache.has(selector)) {
+                    return this.cache.get(selector);
+                }
+                const element = document.querySelector(selector);
+                if (element) {
+                    this.cache.set(selector, element);
+                }
+                return element;
+            },
+            
+            getAll(selector) {
+                const cacheKey = `all_${selector}`;
+                if (this.cache.has(cacheKey)) {
+                    return this.cache.get(cacheKey);
+                }
+                const elements = Array.from(document.querySelectorAll(selector));
+                this.cache.set(cacheKey, elements);
+                return elements;
+            },
+            
+            clear() {
+                this.cache.clear();
+            }
+        };
+
+        // ==================== 屏幕阅读器通知模块 ====================
+        const Announcer = {
+            element: null,
+            
+            init() {
+                this.element = document.getElementById('ariaAnnouncer');
+                if (!this.element) {
+                    this.element = document.createElement('div');
+                    this.element.id = 'ariaAnnouncer';
+                    this.element.setAttribute('role', 'status');
+                    this.element.setAttribute('aria-live', 'polite');
+                    this.element.setAttribute('aria-atomic', 'true');
+                    this.element.className = 'sr-only';
+                    document.body.appendChild(this.element);
+                }
+            },
+            
+            announce(message, priority = 'polite') {
+                if (!this.element) this.init();
+                this.element.setAttribute('aria-live', priority);
+                this.element.textContent = '';
+                setTimeout(() => {
+                    this.element.textContent = message;
+                }, 100);
+                Logger.info('通知:', message);
+            }
+        };
+
+        // ==================== 焦点管理模块 ====================
+        const FocusManager = {
+            previousFocus: null,
+            
+            trapFocus(container) {
+                this.previousFocus = document.activeElement;
+                
+                const focusableElements = container.querySelectorAll(
+                    'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                );
+                const firstFocusable = focusableElements[0];
+                const lastFocusable = focusableElements[focusableElements.length - 1];
+                
+                container.addEventListener('keydown', (e) => {
+                    if (e.key !== 'Tab') return;
+                    
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstFocusable) {
+                            e.preventDefault();
+                            lastFocusable?.focus();
+                        }
+                    } else {
+                        if (document.activeElement === lastFocusable) {
+                            e.preventDefault();
+                            firstFocusable?.focus();
+                        }
+                    }
+                });
+                
+                firstFocusable?.focus();
+            },
+            
+            restoreFocus() {
+                if (this.previousFocus && document.contains(this.previousFocus)) {
+                    this.previousFocus.focus();
+                }
+            }
+        };
+
+        // ==================== 键盘导航模块 ====================
+        const KeyboardNavigation = {
+            init() {
+                document.addEventListener('keydown', this.handleKeydown.bind(this));
+            },
+            
+            handleKeydown(e) {
+                const activeElement = document.activeElement;
+                if (!activeElement) return;
+                
+                if (e.key === 'Tab' && !e.shiftKey) {
+                    const focusableElements = this.getFocusableElements();
+                    const firstElement = focusableElements[0];
+                    const lastElement = focusableElements[focusableElements.length - 1];
+                    
+                    if (document.activeElement === lastElement) {
+                        e.preventDefault();
+                        firstElement?.focus();
+                    }
+                } else if (e.key === 'Tab' && e.shiftKey) {
+                    const focusableElements = this.getFocusableElements();
+                    const firstElement = focusableElements[0];
+                    const lastElement = focusableElements[focusableElements.length - 1];
+                    
+                    if (document.activeElement === firstElement) {
+                        e.preventDefault();
+                        lastElement?.focus();
+                    }
+                }
+                
+                const arrowKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+                if (arrowKeys.includes(e.key)) {
+                    const currentMenu = activeElement.closest('[role="menu"], [role="menubar"]');
+                    if (currentMenu) {
+                        e.preventDefault();
+                        this.handleMenuNavigation(currentMenu, e.key);
+                    }
+                }
+            },
+            
+            getFocusableElements() {
+                return Array.from(document.querySelectorAll(
+                    'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+                )).filter(el => {
+                    const style = window.getComputedStyle(el);
+                    return style.display !== 'none' && style.visibility !== 'hidden';
+                });
+            },
+            
+            handleMenuNavigation(menu, key) {
+                const menuItems = Array.from(menu.querySelectorAll('[role="menuitem"], [role="menuitemradio"]'));
+                const currentIndex = menuItems.indexOf(document.activeElement);
+                
+                if (currentIndex === -1) return;
+                
+                let nextIndex;
+                if (key === 'ArrowDown' || key === 'ArrowRight') {
+                    nextIndex = (currentIndex + 1) % menuItems.length;
+                } else {
+                    nextIndex = (currentIndex - 1 + menuItems.length) % menuItems.length;
+                }
+                
+                menuItems[nextIndex]?.focus();
+            }
+        };
+
+        // ==================== 图片懒加载模块 ====================
+        const LazyLoad = {
+            observer: null,
+            
+            init() {
+                if ('IntersectionObserver' in window) {
+                    this.observer = new IntersectionObserver(this.handleIntersection.bind(this), {
+                        rootMargin: '50px 0px',
+                        threshold: 0.1
+                    });
+                    
+                    document.querySelectorAll('img[data-src]').forEach(img => {
+                        this.observer.observe(img);
+                    });
+                } else {
+                    this.fallback();
+                }
+            },
+            
+            handleIntersection(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                        }
+                        this.observer?.unobserve(img);
+                    }
+                });
+            },
+            
+            fallback() {
+                document.querySelectorAll('img[data-src]').forEach(img => {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                });
+            },
+            
+            observe(element) {
+                if (this.observer && element) {
+                    this.observer.observe(element);
+                }
+            }
+        };
+
+        // ==================== 单元测试框架模块 ====================
+        const TestRunner = {
+            results: [],
+            
+            test(name, fn) {
+                try {
+                    fn();
+                    this.results.push({ name, status: 'pass' });
+                    Logger.info(`✓ ${name}`);
+                } catch (error) {
+                    this.results.push({ name, status: 'fail', error });
+                    Logger.error(`✗ ${name}: ${error.message}`);
+                }
+            },
+            
+            assertEqual(actual, expected) {
+                if (actual !== expected) {
+                    throw new Error(`Expected ${expected}, got ${actual}`);
+                }
+            },
+            
+            assertTrue(condition, message = 'Expected true, got false') {
+                if (!condition) {
+                    throw new Error(message);
+                }
+            },
+            
+            assertFalse(condition, message = 'Expected false, got true') {
+                if (condition) {
+                    throw new Error(message);
+                }
+            },
+            
+            summary() {
+                const passed = this.results.filter(r => r.status === 'pass').length;
+                const failed = this.results.filter(r => r.status === 'fail').length;
+                Logger.info(`\n测试结果: ${passed}/${passed + failed} 通过`);
+                if (failed > 0) {
+                    this.results.filter(r => r.status === 'fail').forEach(r => {
+                        Logger.error(`失败: ${r.name}`, r.error);
+                    });
+                }
+                return { passed, failed };
+            },
+            
+            runTests() {
+                this.results = [];
+                Logger.info('开始运行单元测试...');
+                return this.summary();
+            }
+        };
+
+        // ==================== 工具函数模块 ====================
+        const Utils = {
+            throttle: function(func, limit) {
+                let inThrottle;
+                return function(...args) {
+                    if (!inThrottle) {
+                        func.apply(this, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
+            },
+            
+            debounce: function(func, wait) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), wait);
+                };
+            },
+            
+            validateEmail: function(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            },
+            
+            validateScore: function(score) {
+                return !isNaN(score) && score >= 0 && score <= 100;
+            },
+            
+            validateCredit: function(credit) {
+                return !isNaN(credit) && credit > 0;
+            },
+            
+            deepClone: function(obj) {
+                return JSON.parse(JSON.stringify(obj));
+            },
+            
+            formatDate: function(date) {
+                return date.toLocaleDateString('zh-CN') + ' ' + date.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+            },
+            
+            formatRelativeTime: function(date) {
+                const now = new Date();
+                const diff = now - date;
+                if (diff < 60000) return '刚刚';
+                if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
+                if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
+                if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
+                return Utils.formatDate(date);
+            }
+        };
+
+        // ==================== 数据加密模块 ====================
+        const Encryption = {
+            password: null,
+            
+            async generateKey(password, iv) {
+                const encoder = new TextEncoder();
+                const keyMaterial = await crypto.subtle.importKey(
+                    'raw',
+                    encoder.encode(password),
+                    'PBKDF2',
+                    false,
+                    ['deriveBits', 'deriveKey']
+                );
+                
+                return await crypto.subtle.deriveKey(
+                    {
+                        name: 'PBKDF2',
+                        salt: iv,
+                        iterations: 100000,
+                        hash: 'SHA-256'
+                    },
+                    keyMaterial,
+                    { name: 'AES-GCM', length: 256 },
+                    false,
+                    ['encrypt', 'decrypt']
+                );
+            },
+            
+            async encryptData(data, password) {
+                const encoder = new TextEncoder();
+                const dataBuffer = encoder.encode(JSON.stringify(data));
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const key = await this.generateKey(password, iv);
+                
+                const encryptedData = await crypto.subtle.encrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    dataBuffer
+                );
+                
+                return {
+                    iv: Array.from(iv),
+                    data: Array.from(new Uint8Array(encryptedData)),
+                    version: '1.0'
+                };
+            },
+            
+            async decryptData(encryptedObj, password) {
+                try {
+                    const iv = new Uint8Array(encryptedObj.iv);
+                    const data = new Uint8Array(encryptedObj.data);
+                    const key = await this.generateKey(password, iv);
+                    
+                    const decryptedData = await crypto.subtle.decrypt(
+                        { name: 'AES-GCM', iv: iv },
+                        key,
+                        data
+                    );
+                    
+                    const decoder = new TextDecoder();
+                    return JSON.parse(decoder.decode(decryptedData));
+                } catch (error) {
+                    throw new Error('解密失败，密码可能不正确');
+                }
+            },
+            
+            setPassword(pwd) {
+                this.password = pwd;
+                localStorage.setItem('dzh_encryption_salt', crypto.getRandomValues(new Uint8Array(16)).toString());
+            },
+            
+            clearPassword() {
+                this.password = null;
+            },
+            
+            isPasswordSet() {
+                return this.password !== null;
+            }
+        };
+
+        // ==================== 撤销/重做模块 ====================
+        const UndoRedo = {
+            undoStack: [],
+            redoStack: [],
+            maxHistory: 50,
+            
+            execute(command) {
+                this.undoStack.push(command);
+                if (this.undoStack.length > this.maxHistory) {
+                    this.undoStack.shift();
+                }
+                this.redoStack.length = 0;
+                command.execute();
+                this.updateUI();
+            },
+            
+            undo() {
+                if (this.undoStack.length === 0) return false;
+                const command = this.undoStack.pop();
+                command.undo();
+                this.redoStack.push(command);
+                this.updateUI();
+                return true;
+            },
+            
+            redo() {
+                if (this.redoStack.length === 0) return false;
+                const command = this.redoStack.pop();
+                command.execute();
+                this.undoStack.push(command);
+                this.updateUI();
+                return true;
+            },
+            
+            canUndo() {
+                return this.undoStack.length > 0;
+            },
+            
+            canRedo() {
+                return this.redoStack.length > 0;
+            },
+            
+            clear() {
+                this.undoStack.length = 0;
+                this.redoStack.length = 0;
+                this.updateUI();
+            },
+            
+            updateUI() {
+                const undoCountEl = document.getElementById('undoCount');
+                const redoCountEl = document.getElementById('redoCount');
+                const undoBtn = document.getElementById('undoBtn');
+                const redoBtn = document.getElementById('redoBtn');
+                
+                if (undoCountEl) undoCountEl.textContent = this.undoStack.length;
+                if (redoCountEl) redoCountEl.textContent = this.redoStack.length;
+                if (undoBtn) undoBtn.style.opacity = this.canUndo() ? '1' : '0.3';
+                if (redoBtn) redoBtn.style.opacity = this.canRedo() ? '1' : '0.3';
+            }
+        };
+
+        // ==================== 自动备份模块 ====================
+        const AutoBackup = {
+            intervalId: null,
+            
+            init() {
+                this.loadSettings();
+                this.setupBackupTimer();
+                this.updateLastBackupTime();
+            },
+            
+            loadSettings() {
+                const enabled = localStorage.getItem('dzh_auto_backup_enabled') === 'true';
+                const interval = localStorage.getItem('dzh_backup_interval') || 'daily';
+                
+                const enabledEl = document.getElementById('autoBackupEnabled');
+                const intervalEl = document.getElementById('backupInterval');
+                
+                if (enabledEl) enabledEl.checked = enabled;
+                if (intervalEl) intervalEl.value = interval;
+            },
+            
+            saveSettings() {
+                const enabledEl = document.getElementById('autoBackupEnabled');
+                const intervalEl = document.getElementById('backupInterval');
+                
+                if (enabledEl) {
+                    localStorage.setItem('dzh_auto_backup_enabled', enabledEl.checked.toString());
+                }
+                if (intervalEl) {
+                    localStorage.setItem('dzh_backup_interval', intervalEl.value);
+                }
+                
+                this.setupBackupTimer();
+            },
+            
+            setupBackupTimer() {
+                if (this.intervalId) {
+                    clearInterval(this.intervalId);
+                    this.intervalId = null;
+                }
+                
+                const enabled = localStorage.getItem('dzh_auto_backup_enabled') === 'true';
+                if (!enabled) return;
+                
+                const interval = localStorage.getItem('dzh_backup_interval') || 'daily';
+                let ms;
+                
+                switch (interval) {
+                    case 'daily': ms = 24 * 60 * 60 * 1000; break;
+                    case 'weekly': ms = 7 * 24 * 60 * 60 * 1000; break;
+                    case 'monthly': ms = 30 * 24 * 60 * 60 * 1000; break;
+                    default: ms = 24 * 60 * 60 * 1000;
+                }
+                
+                this.intervalId = setInterval(() => {
+                    this.performBackup();
+                }, ms);
+            },
+            
+            performBackup() {
+                const now = new Date();
+                const dataToBackup = {
+                    semestersData: semestersData,
+                    semesterLocks: semesterLocks,
+                    semesters: SEMESTERS,
+                    backupTime: now.toISOString(),
+                    version: '1.0'
+                };
+                
+                const backupHistory = JSON.parse(localStorage.getItem('dzh_backup_history') || '[]');
+                const backupEntry = {
+                    time: now.toISOString(),
+                    type: 'auto',
+                    data: dataToBackup
+                };
+                
+                backupHistory.unshift(backupEntry);
+                if (backupHistory.length > 20) {
+                    backupHistory.length = 20;
+                }
+                
+                localStorage.setItem('dzh_backup_history', JSON.stringify(backupHistory));
+                localStorage.setItem('dzh_last_backup_time', now.toISOString());
+                
+                if (db) {
+                    autoBackupToDatabase();
+                }
+                
+                this.updateLastBackupTime();
+            },
+            
+            manualBackup() {
+                this.performBackup();
+                alert('手动备份完成！');
+            },
+            
+            updateLastBackupTime() {
+                const lastTime = localStorage.getItem('dzh_last_backup_time');
+                const lastTimeEl = document.getElementById('lastBackupTime');
+                
+                if (lastTimeEl) {
+                    if (lastTime) {
+                        const date = new Date(lastTime);
+                        lastTimeEl.textContent = Utils.formatRelativeTime(date);
+                    } else {
+                        lastTimeEl.textContent = '从未备份';
+                    }
+                }
+            },
+            
+            getBackupHistory() {
+                return JSON.parse(localStorage.getItem('dzh_backup_history') || '[]');
+            },
+            
+            restoreFromBackup(backupIndex) {
+                const history = this.getBackupHistory();
+                if (history[backupIndex]) {
+                    const backup = history[backupIndex].data;
+                    if (backup && backup.semestersData) {
+                        semestersData = backup.semestersData;
+                        semesterLocks = backup.semesterLocks || [];
+                        SEMESTERS = backup.semesters || SEMESTERS;
+                        saveData();
+                        renderSemesterTabs();
+                        refreshDisplay();
+                        alert('从备份恢复成功！');
+                        return true;
+                    }
+                }
+                return false;
+            }
+        };
+
+        // ==================== 云端同步模块 ====================
+        const CloudSync = {
+            enabled: false,
+            autoSync: false,
+            intervalId: null,
+            lastSyncTime: null,
+            
+            CLOUD_KEY: 'dzh_cloud_data',
+            
+            init() {
+                this.loadSettings();
+                this.updateStatusUI();
+            },
+            
+            loadSettings() {
+                this.enabled = localStorage.getItem('dzh_cloud_sync_enabled') === 'true';
+                this.autoSync = localStorage.getItem('dzh_cloud_auto_sync') === 'true';
+                this.interval = parseInt(localStorage.getItem('dzh_cloud_sync_interval') || '15');
+                this.lastSyncTime = localStorage.getItem('dzh_last_sync_time');
+                
+                if (this.autoSync && this.enabled) {
+                    this.startAutoSync();
+                }
+            },
+            
+            saveSettings() {
+                const enabledEl = document.getElementById('autoSync');
+                const intervalEl = document.getElementById('syncInterval');
+                
+                if (enabledEl) {
+                    this.autoSync = enabledEl.checked;
+                    localStorage.setItem('dzh_cloud_auto_sync', this.autoSync.toString());
+                }
+                if (intervalEl) {
+                    this.interval = parseInt(intervalEl.value);
+                    localStorage.setItem('dzh_cloud_sync_interval', this.interval.toString());
+                }
+                
+                if (this.autoSync && this.enabled) {
+                    this.startAutoSync();
+                } else {
+                    this.stopAutoSync();
+                }
+            },
+            
+            enable() {
+                this.enabled = true;
+                localStorage.setItem('dzh_cloud_sync_enabled', 'true');
+                this.updateStatusUI();
+                this.syncNow();
+            },
+            
+            disable() {
+                this.enabled = false;
+                this.stopAutoSync();
+                localStorage.setItem('dzh_cloud_sync_enabled', 'false');
+                this.updateStatusUI();
+            },
+            
+            startAutoSync() {
+                if (this.intervalId) {
+                    clearInterval(this.intervalId);
+                }
+                this.intervalId = setInterval(() => {
+                    this.syncNow();
+                }, this.interval * 60 * 1000);
+            },
+            
+            stopAutoSync() {
+                if (this.intervalId) {
+                    clearInterval(this.intervalId);
+                    this.intervalId = null;
+                }
+            },
+            
+            async syncNow() {
+                if (!this.enabled) return;
+                
+                const statusBar = document.getElementById('syncStatusBar');
+                const statusIcon = document.getElementById('syncStatusIcon');
+                const statusText = document.getElementById('syncStatusText');
+                const lastTimeEl = document.getElementById('lastSyncTime');
+                
+                if (statusBar) statusBar.style.display = 'block';
+                if (statusIcon) statusIcon.textContent = '🔄';
+                if (statusText) statusText.textContent = '同步中...';
+                
+                try {
+                    const localData = this.getLocalData();
+                    const cloudData = this.getCloudData();
+                    
+                    const result = this.resolveConflict(localData, cloudData);
+                    
+                    if (result.action === 'upload') {
+                        this.uploadToCloud(localData);
+                    } else if (result.action === 'download') {
+                        this.downloadFromCloud(cloudData);
+                    } else if (result.action === 'merge') {
+                        this.uploadToCloud(result.data);
+                    }
+                    
+                    this.lastSyncTime = new Date().toISOString();
+                    localStorage.setItem('dzh_last_sync_time', this.lastSyncTime);
+                    
+                    if (statusIcon) statusIcon.textContent = '✅';
+                    if (statusText) statusText.textContent = '同步成功';
+                    if (lastTimeEl) lastTimeEl.textContent = Utils.formatRelativeTime(new Date(this.lastSyncTime));
+                    
+                    setTimeout(() => {
+                        if (statusBar) statusBar.style.display = 'none';
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('同步失败:', error);
+                    if (statusIcon) statusIcon.textContent = '❌';
+                    if (statusText) statusText.textContent = '同步失败';
+                }
+            },
+            
+            getLocalData() {
+                return {
+                    semestersData: semestersData,
+                    semesterLocks: semesterLocks,
+                    semesters: SEMESTERS,
+                    timestamp: new Date().toISOString(),
+                    version: '1.0'
+                };
+            },
+            
+            getCloudData() {
+                const cloudStr = localStorage.getItem(this.CLOUD_KEY);
+                if (cloudStr) {
+                    try {
+                        return JSON.parse(cloudStr);
+                    } catch (e) {
+                        return null;
+                    }
+                }
+                return null;
+            },
+            
+            resolveConflict(localData, cloudData) {
+                if (!cloudData) {
+                    return { action: 'upload', data: localData };
+                }
+                
+                if (!localData.semestersData || localData.semestersData.length === 0) {
+                    return { action: 'download', data: cloudData };
+                }
+                
+                const localTime = new Date(localData.timestamp);
+                const cloudTime = new Date(cloudData.timestamp);
+                
+                if (localTime > cloudTime) {
+                    return { action: 'upload', data: localData };
+                } else if (cloudTime > localTime) {
+                    return { action: 'download', data: cloudData };
+                } else {
+                    return { action: 'merge', data: this.mergeData(localData, cloudData) };
+                }
+            },
+            
+            mergeData(localData, cloudData) {
+                const merged = {
+                    semestersData: [],
+                    semesterLocks: [],
+                    semesters: [],
+                    timestamp: new Date().toISOString(),
+                    version: '1.0'
+                };
+                
+                const maxSemesters = Math.max(
+                    localData.semestersData?.length || 0,
+                    cloudData.semestersData?.length || 0
+                );
+                
+                for (let i = 0; i < maxSemesters; i++) {
+                    const localSem = localData.semestersData?.[i] || [];
+                    const cloudSem = cloudData.semestersData?.[i] || [];
+                    
+                    const mergedSem = [...cloudSem];
+                    localSem.forEach(course => {
+                        if (!mergedSem.find(c => c.name === course.name && c.credit === course.credit)) {
+                            mergedSem.push(course);
+                        }
+                    });
+                    
+                    merged.semestersData.push(mergedSem);
+                }
+                
+                merged.semesterLocks = cloudData.semesterLocks || localData.semesterLocks || [];
+                merged.semesters = cloudData.semesters || localData.semesters || SEMESTERS;
+                
+                return merged;
+            },
+            
+            uploadToCloud(data) {
+                const cloudData = {
+                    ...data,
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem(this.CLOUD_KEY, JSON.stringify(cloudData));
+            },
+            
+            downloadFromCloud(cloudData) {
+                if (cloudData.semestersData) {
+                    semestersData = cloudData.semestersData;
+                }
+                if (cloudData.semesterLocks) {
+                    semesterLocks = cloudData.semesterLocks;
+                }
+                if (cloudData.semesters) {
+                    SEMESTERS = cloudData.semesters;
+                }
+                
+                saveData();
+                renderSemesterTabs();
+                refreshDisplay();
+            },
+            
+            updateStatusUI() {
+                const enableBtn = document.getElementById('enableSyncBtn');
+                const syncSettings = document.getElementById('syncSettings');
+                const statusText = document.getElementById('syncStatusText');
+                const lastTimeEl = document.getElementById('lastSyncTime');
+                const autoSyncEl = document.getElementById('autoSync');
+                const intervalEl = document.getElementById('syncInterval');
+                
+                if (this.enabled) {
+                    if (enableBtn) {
+                        enableBtn.textContent = '禁用云同步';
+                        enableBtn.style.background = 'var(--danger-color)';
+                    }
+                    if (syncSettings) syncSettings.style.display = 'block';
+                    if (statusText) statusText.textContent = '已连接';
+                } else {
+                    if (enableBtn) {
+                        enableBtn.textContent = '启用云同步';
+                        enableBtn.style.background = 'var(--accent-color)';
+                    }
+                    if (syncSettings) syncSettings.style.display = 'none';
+                    if (statusText) statusText.textContent = '未连接';
+                }
+                
+                if (this.lastSyncTime) {
+                    const date = new Date(this.lastSyncTime);
+                    if (lastTimeEl) lastTimeEl.textContent = Utils.formatRelativeTime(date);
+                }
+                
+                if (autoSyncEl) autoSyncEl.checked = this.autoSync;
+                if (intervalEl) intervalEl.value = this.interval.toString();
+            }
+        };
+
+        // ==================== 快捷键模块 ====================
+        const Shortcuts = {
+            init() {
+                document.addEventListener('keydown', this.handleKeyDown.bind(this));
+                this.bindEvents();
+            },
+            
+            handleKeyDown(e) {
+                const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+                const modifier = isMac ? e.metaKey : e.ctrlKey;
+                
+                if (modifier && e.key === 's') {
+                    e.preventDefault();
+                    this.saveData();
+                }
+                
+                if (modifier && e.key === 'e') {
+                    e.preventDefault();
+                    exportToCSV();
+                }
+                
+                if (modifier && e.key === 'n') {
+                    e.preventDefault();
+                    openEditModal(currentSemester, null, true);
+                }
+                
+                if (modifier && e.key === 'z' && !e.shiftKey) {
+                    e.preventDefault();
+                    UndoRedo.undo();
+                }
+                
+                if (modifier && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+                    e.preventDefault();
+                    UndoRedo.redo();
+                }
+                
+                if (modifier && e.key === '/') {
+                    e.preventDefault();
+                    this.showShortcutsModal();
+                }
+                
+                if (e.key === 'Escape') {
+                    this.closeAllModals();
+                }
+            },
+            
+            saveData() {
+                saveData();
+                const statusBar = document.createElement('div');
+                statusBar.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:var(--success-color);color:white;padding:0.5rem 1rem;border-radius:8px;font-size:0.85rem;z-index:9999;animation:fadeIn 0.3s ease;';
+                statusBar.textContent = '✅ 数据已保存';
+                document.body.appendChild(statusBar);
+                setTimeout(() => {
+                    statusBar.style.opacity = '0';
+                    setTimeout(() => statusBar.remove(), 300);
+                }, 1500);
+            },
+            
+            showShortcutsModal() {
+                const modal = document.getElementById('shortcutsModal');
+                if (modal) modal.style.display = 'flex';
+            },
+            
+            closeAllModals() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            },
+            
+            bindEvents() {
+                const closeShortcutsBtn = document.getElementById('closeShortcutsModal');
+                if (closeShortcutsBtn) {
+                    closeShortcutsBtn.addEventListener('click', () => {
+                        document.getElementById('shortcutsModal').style.display = 'none';
+                    });
+                }
+                
+                const showShortcutsBtn = document.getElementById('showShortcutsBtn');
+                if (showShortcutsBtn) {
+                    showShortcutsBtn.addEventListener('click', () => {
+                        this.showShortcutsModal();
+                    });
+                }
+                
+                const undoBtn = document.getElementById('undoBtn');
+                if (undoBtn) {
+                    undoBtn.addEventListener('click', () => {
+                        if (!UndoRedo.undo()) {
+                            alert('没有可撤销的操作');
+                        }
+                    });
+                }
+                
+                const redoBtn = document.getElementById('redoBtn');
+                if (redoBtn) {
+                    redoBtn.addEventListener('click', () => {
+                        if (!UndoRedo.redo()) {
+                            alert('没有可重做的操作');
+                        }
+                    });
+                }
+            }
+        };
 
         // ==================== IndexedDB 数据库 ====================
         const DB_NAME = 'GradeSystemDB';
@@ -3021,7 +4886,7 @@
         let typeOptions = ['公共基础必修','公共基础选修','专业教育必修','专业必修','专业选修','实践必修','学科基础','科研训练'];
 
         function loadData() {
-            const saved = localStorage.getItem('dzh_final_trend');
+            const saved = localStorage.getItem(CONFIG.STORAGE_KEYS.MAIN_DATA);
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
@@ -3030,10 +4895,10 @@
                         
                         const totalCourses = semestersData.flat().length;
                         if (totalCourses === 0) {
-                            semestersData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                            semestersData = Utils.deepClone(DEFAULT_DATA);
                         }
                     } else {
-                        semestersData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                        semestersData = Utils.deepClone(DEFAULT_DATA);
                     }
                     if (parsed.semesterLocks && Array.isArray(parsed.semesterLocks)) {
                         semesterLocks = parsed.semesterLocks;
@@ -3043,24 +4908,30 @@
                     if (parsed.semesters && Array.isArray(parsed.semesters)) {
                         SEMESTERS = parsed.semesters;
                     } else {
-                        // 默认学期列表
                         SEMESTERS = ['大一上','大一下','大二上','大二下','大三上','大三下','大四上','大四下'];
                     }
+                    Logger.info('数据加载成功');
                 } catch(e) { 
-                    console.error('Failed to load data:', e);
-                    semestersData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                    Logger.error('数据加载失败，使用默认数据', e);
+                    semestersData = Utils.deepClone(DEFAULT_DATA);
                     SEMESTERS = ['大一上','大一下','大二上','大二下','大三上','大三下','大四上','大四下'];
                     semesterLocks = new Array(SEMESTERS.length).fill(false);
                 }
             } else {
-                semestersData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                semestersData = Utils.deepClone(DEFAULT_DATA);
                 SEMESTERS = ['大一上','大一下','大二上','大二下','大三上','大三下','大四上','大四下'];
                 semesterLocks = new Array(SEMESTERS.length).fill(false);
             }
         }
         function saveData() {
-            localStorage.setItem('dzh_final_trend', JSON.stringify({ semestersData, semesterLocks, semesters: SEMESTERS }));
-            autoBackupToDatabase();
+            try {
+                localStorage.setItem(CONFIG.STORAGE_KEYS.MAIN_DATA, JSON.stringify({ semestersData, semesterLocks, semesters: SEMESTERS }));
+                autoBackupToDatabase();
+                Logger.debug('数据保存成功');
+            } catch (error) {
+                Logger.error('数据保存失败', error);
+                ErrorHandler.handle(error, { context: 'saveData' });
+            }
         }
 
         function autoBackupToDatabase() {
@@ -3224,8 +5095,12 @@
         }
 
         function moveCourseUp(index) {
+            if (semesterLocks[currentSemester]) {
+                alert('当前学期已锁定，无法移动课程');
+                return;
+            }
             const courses = semestersData[currentSemester];
-            if (index > 0) {
+            if (index > 0 && courses[index] && !courses[index].locked) {
                 const temp = courses[index];
                 courses[index] = courses[index - 1];
                 courses[index - 1] = temp;
@@ -3234,8 +5109,12 @@
         }
         
         function moveCourseDown(index) {
+            if (semesterLocks[currentSemester]) {
+                alert('当前学期已锁定，无法移动课程');
+                return;
+            }
             const courses = semestersData[currentSemester];
-            if (index < courses.length - 1) {
+            if (index < courses.length - 1 && courses[index] && !courses[index].locked) {
                 const temp = courses[index];
                 courses[index] = courses[index + 1];
                 courses[index + 1] = temp;
@@ -3296,8 +5175,22 @@
                     break;
                 case 'delete':
                 case 'delete-btn':
-                    semestersData[currentSemester].splice(idx, 1);
-                    refreshCourseData();
+                    const deletedCourse = Utils.deepClone(semestersData[currentSemester][idx]);
+                    const deleteCommand = {
+                        type: 'delete',
+                        semester: currentSemester,
+                        index: idx,
+                        course: deletedCourse,
+                        execute: function() {
+                            semestersData[this.semester].splice(this.index, 1);
+                            refreshCourseData();
+                        },
+                        undo: function() {
+                            semestersData[this.semester].splice(this.index, 0, Utils.deepClone(this.course));
+                            refreshCourseData();
+                        }
+                    };
+                    UndoRedo.execute(deleteCommand);
                     break;
                 case 'up':
                     moveCourseUp(idx);
@@ -3315,8 +5208,20 @@
 
         function updateTypeStats() {
             const allCourses = getAllCourses();
-            const requiredCourses = allCourses.filter(c => c.type.includes('必修') || !c.type.includes('选修'));
-            const electiveCourses = allCourses.filter(c => c.type.includes('选修'));
+            
+            // 改进的课程类型分类逻辑：明确区分必修和选修
+            const requiredCourses = allCourses.filter(c => {
+                const type = c.type || '';
+                const isElective = type.includes('选修');
+                const isRequired = type.includes('必修') && !isElective;
+                const isPractice = type === '实践必修' || type === '科研训练';
+                return isRequired || isPractice || (!type.includes('选修') && type.includes('必修'));
+            });
+            
+            const electiveCourses = allCourses.filter(c => {
+                const type = c.type || '';
+                return type.includes('选修');
+            });
             
             const requiredStats = computeStats(requiredCourses);
             const electiveStats = computeStats(electiveCourses);
@@ -3367,11 +5272,15 @@
             if (allCourses.length > 0) {
                 const avgScoreVal = allCourses.reduce((sum, c) => sum + c.score, 0) / allCourses.length;
                 const maxGpaVal = Math.max(...allCourses.map(c => getGradePoint(c.score)));
-                if (avgScore) avgScore.textContent = avgScoreVal.toFixed(1);
-                if (maxGpa) maxGpa.textContent = maxGpaVal.toFixed(2);
+                const avgScoreEl = document.getElementById('avgScore');
+                const maxGpaEl = document.getElementById('maxGpa');
+                if (avgScoreEl) avgScoreEl.textContent = avgScoreVal.toFixed(1);
+                if (maxGpaEl) maxGpaEl.textContent = maxGpaVal.toFixed(2);
             } else {
-                if (avgScore) avgScore.textContent = '—';
-                if (maxGpa) maxGpa.textContent = '—';
+                const avgScoreEl = document.getElementById('avgScore');
+                const maxGpaEl = document.getElementById('maxGpa');
+                if (avgScoreEl) avgScoreEl.textContent = '—';
+                if (maxGpaEl) maxGpaEl.textContent = '—';
             }
             
             const requiredBar = document.getElementById('requiredBar');
@@ -3673,7 +5582,14 @@
             if (isNaN(targetGpa) || isNaN(remainingCredits) || targetGpa < 0 || targetGpa > 4 || remainingCredits < 0) {
                 resultDiv.style.display = 'block';
                 resultDiv.className = 'goal-result warning';
-                resultText.innerHTML = '请输入有效的目标GPA (0-4.0) 和剩余学分';
+                resultText.innerHTML = '请输入有效的目标GPA (0-4.0) 和剩余学分（大于0）';
+                return;
+            }
+            
+            if (remainingCredits === 0) {
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'goal-result warning';
+                resultText.innerHTML = '请输入剩余学分（大于0）';
                 return;
             }
             
@@ -3684,10 +5600,29 @@
             const futureTotalCredits = currentTotalCredits + remainingCredits;
             const requiredTotalPoints = targetGpa * futureTotalCredits;
             const requiredFuturePoints = requiredTotalPoints - currentTotalPoints;
-            const requiredGpa = remainingCredits > 0 ? requiredFuturePoints / remainingCredits : targetGpa;
+            const requiredGpa = requiredFuturePoints / remainingCredits;
             
             resultDiv.style.display = 'block';
             
+            // 最高可达GPA（假设剩余课程全4.0）
+            const maxAchievableGpa = (currentTotalPoints + remainingCredits * 4.0) / futureTotalCredits;
+            // 最低GPA（假设剩余课程全0分）
+            const minAchievableGpa = currentTotalPoints / futureTotalCredits;
+            
+            // 情况1：所需GPA为负数或0（已远超目标）
+            if (requiredGpa <= 0) {
+                resultDiv.className = 'goal-result success';
+                resultText.innerHTML = `
+                    <strong>🎉 太棒了！已远超目标！</strong><br>
+                    当前累积学分: ${currentTotalCredits.toFixed(1)} · 当前GPA: ${currentStats.gpa.toFixed(2)}<br>
+                    目标GPA: ${targetGpa.toFixed(2)} · 剩余学分: ${remainingCredits.toFixed(1)}<br>
+                    即使剩余课程全部不及格，您也能达成目标！<br>
+                    建议：继续保持，稳定发挥即可。
+                `;
+                return;
+            }
+            
+            // 情况2：所需GPA在可达成范围内 (0 < requiredGpa <= 4.0)
             if (requiredGpa <= 4.0) {
                 resultDiv.className = 'goal-result success';
                 const requiredScore = requiredGpa >= 4.0 ? '90+' : 
@@ -3700,20 +5635,44 @@
                                      requiredGpa >= 1.5 ? '64-67' :
                                      requiredGpa >= 1.0 ? '60-63' : '<60';
                 
+                const difficulty = requiredGpa >= 3.5 ? '⚠️ 有一定挑战' :
+                                  requiredGpa >= 3.0 ? '✓ 努努力可以实现' : '✓ 相对容易达成';
+                
                 resultText.innerHTML = `
-                    <strong>目标可达成！</strong><br>
-                    当前累积学分: ${currentTotalCredits.toFixed(1)} · 当前GPA: ${currentStats.gpa.toFixed(2)}<br>
-                    剩余学分: ${remainingCredits.toFixed(1)} · 目标GPA: ${targetGpa.toFixed(2)}<br>
-                    <strong>需要在剩余课程中取得平均 GPA: ${requiredGpa.toFixed(2)}</strong><br>
-                    对应成绩区间: ${requiredScore}分
+                    <strong>目标可达成！${difficulty}</strong><br>
+                    当前: ${currentTotalCredits.toFixed(1)}学分 · GPA ${currentStats.gpa.toFixed(2)}<br>
+                    剩余: ${remainingCredits.toFixed(1)}学分 · 目标 ${targetGpa.toFixed(2)}<br>
+                    <strong>需在剩余课程中取得平均 GPA: ${requiredGpa.toFixed(2)}</strong><br>
+                    对应成绩区间: ${requiredScore}分<br>
+                    📊 可达范围: ${minAchievableGpa.toFixed(2)} ~ ${maxAchievableGpa.toFixed(2)}
                 `;
-            } else {
+                return;
+            }
+            
+            // 情况3：所需GPA超过4.0（超出范围）
+            resultDiv.className = 'goal-result warning';
+            const gap = requiredGpa - 4.0;
+            const maxPossibleGpa = maxAchievableGpa;
+            
+            if (maxPossibleGpa >= targetGpa) {
+                // 虽然需要超过4.0，但理论上可以通过提高学分来达成
                 resultDiv.className = 'goal-result warning';
                 resultText.innerHTML = `
-                    <strong>目标超出范围</strong><br>
-                    当前累积学分: ${currentTotalCredits.toFixed(1)} · 当前GPA: ${currentStats.gpa.toFixed(2)}<br>
-                    即使剩余课程全部取得4.0，最高可达到: ${(requiredTotalPoints / futureTotalCredits).toFixed(2)}<br>
-                    建议调整目标或增加学分
+                    <strong>⚠️ 目标需要努力</strong><br>
+                    当前: ${currentTotalCredits.toFixed(1)}学分 · GPA ${currentStats.gpa.toFixed(2)}<br>
+                    剩余: ${remainingCredits.toFixed(1)}学分 · 目标 ${targetGpa.toFixed(2)}<br>
+                    理论上需要平均 GPA: ${requiredGpa.toFixed(2)} (超出4.0上限 ${gap.toFixed(2)})<br>
+                    💡 建议：① 提升当前课程成绩 ② 增加选修学分稀释影响
+                `;
+            } else {
+                // 即使全4.0也无法达成
+                resultDiv.className = 'goal-result warning';
+                resultText.innerHTML = `
+                    <strong>❌ 目标较难达成</strong><br>
+                    当前: ${currentTotalCredits.toFixed(1)}学分 · GPA ${currentStats.gpa.toFixed(2)}<br>
+                    即使剩余课程全4.0，最高可达: ${maxPossibleGpa.toFixed(2)}<br>
+                    与目标差距: ${(targetGpa - maxPossibleGpa).toFixed(2)}<br>
+                    💡 建议：① 调整合理目标 ② 努力提升当前课程 ③ 争取补考机会
                 `;
             }
         }
@@ -3865,33 +5824,6 @@
             }
         });
 
-        document.querySelectorAll('.nav-item[data-section]').forEach(item => {
-            item.addEventListener('click', () => {
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                
-                const section = item.dataset.section;
-                
-                document.querySelectorAll('.page-container').forEach(page => {
-                    page.classList.remove('active');
-                });
-                
-                const pageId = `page-${section}`;
-                const targetPage = document.getElementById(pageId);
-                if (targetPage) {
-                    targetPage.classList.add('active');
-                }
-                
-                document.getElementById('sidebar').classList.remove('open');
-                
-                if (section === 'analysis') {
-                    updateChart();
-                    updateTypeStats();
-                    updateScoreDistribution();
-                }
-            });
-        });
-
         document.getElementById('backupBtn').addEventListener('click', () => {
             const now = new Date();
             const timestamp = now.toISOString().replace(/[:T]/g, '-').slice(0, 19);
@@ -4015,18 +5947,10 @@
             document.getElementById('userMajor').value = userMajor;
             document.getElementById('userClass').value = userClass;
             
-            const sidebarUser = document.querySelector('.sidebar-bottom');
-            if (sidebarUser) {
-                sidebarUser.innerHTML = `
-                    <div style="padding: 0.6rem 1.2rem; font-size: 0.8rem; color: var(--text-secondary);">
-                        <div style="font-weight: 500; color: var(--text-primary); font-size: 0.85rem;">${userName}</div>
-                        ${userStudentId ? `<div style="font-size: 0.65rem; margin-top: 0.1rem;">学号: ${userStudentId}</div>` : ''}
-                        ${userUniversity ? `<div style="font-size: 0.65rem; margin-top: 0.3rem;">${userUniversity}</div>` : ''}
-                        ${userDepartment ? `<div style="font-size: 0.65rem;">${userDepartment}</div>` : ''}
-                        ${userMajor ? `<div style="font-size: 0.65rem;">${userMajor}</div>` : ''}
-                        <div style="font-size: 0.7rem; margin-top: 0.2rem;">${userClass || '未设置班级'}</div>
-                    </div>
-                `;
+            const mobileHeader = document.querySelector('.mobile-header');
+            if (mobileHeader) {
+                mobileHeader.querySelector('.mobile-welcome-text').textContent = '欢迎回来';
+                mobileHeader.querySelector('.mobile-welcome-sub').textContent = `${userName} · ${userClass || '未设置班级'}`;
             }
         }
 
@@ -4038,40 +5962,91 @@
             reader.onload = (event) => {
                 try {
                     const csvContent = event.target.result;
-                    const lines = csvContent.split('\n').filter(line => line.trim());
+                    const lines = csvContent.split(/\r?\n/).filter(line => line.trim());
                     const importData = [];
+                    const errorRows = [];
                     
                     for (let i = 0; i < lines.length; i++) {
-                        const parts = lines[i].split(',');
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        const parts = parseCSVLine(line);
+                        
                         if (parts.length >= 4) {
                             const name = parts[0].trim();
                             const type = parts[1].trim() || '专业教育必修';
                             const credit = parseFloat(parts[2].trim());
                             const score = parseFloat(parts[3].trim());
                             
-                            if (name && !isNaN(credit) && !isNaN(score) && score >= 0 && score <= 100) {
+                            if (name && !isNaN(credit) && !isNaN(score) && score >= 0 && score <= 100 && credit > 0) {
                                 importData.push({ name, type, credit, score });
+                            } else {
+                                errorRows.push(i + 1);
                             }
+                        } else if (parts.length > 0 && parts[0].trim()) {
+                            errorRows.push(i + 1);
                         }
                     }
                     
                     if (importData.length === 0) {
-                        alert('未找到有效数据，请检查CSV格式');
+                        alert('未找到有效数据，请检查CSV格式是否正确');
                         return;
                     }
                     
-                    if (confirm(`成功解析 ${importData.length} 条课程数据，是否导入到当前学期？`)) {
+                    const errorInfo = errorRows.length > 0 ? `\n\n注意：有 ${errorRows.length} 行数据格式不正确，已跳过` : '';
+                    
+                    if (confirm(`成功解析 ${importData.length} 条课程数据，是否导入到当前学期？${errorInfo}`)) {
+                        if (semesterLocks[currentSemester]) {
+                            if (!confirm('当前学期已锁定，导入数据将会解除锁定，确定继续吗？')) {
+                                return;
+                            }
+                            semesterLocks[currentSemester] = false;
+                        }
                         semestersData[currentSemester].push(...importData);
                         refreshCourseData();
                         document.getElementById('importFile').value = '';
                         alert(`成功导入 ${importData.length} 条课程数据！`);
                     }
                 } catch (error) {
-                    alert('CSV文件解析失败');
+                    alert('CSV文件解析失败，请检查文件格式是否正确');
                 }
             };
-            reader.readAsText(file);
+            reader.readAsText(file, 'UTF-8');
         });
+        
+        // CSV行解析函数：正确处理带引号的字段
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                const nextChar = line[i + 1];
+                
+                if (inQuotes) {
+                    if (char === '"' && nextChar === '"') {
+                        current += '"';
+                        i++;
+                    } else if (char === '"') {
+                        inQuotes = false;
+                    } else {
+                        current += char;
+                    }
+                } else {
+                    if (char === '"') {
+                        inQuotes = true;
+                    } else if (char === ',') {
+                        result.push(current);
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+            }
+            result.push(current);
+            return result;
+        }
 
         function renderSemesterList() {
             const semesterList = document.getElementById('semesterList');
@@ -4467,6 +6442,12 @@
         });
 
         function init() {
+            Logger.info('应用初始化开始...');
+            
+            Announcer.init();
+            KeyboardNavigation.init();
+            LazyLoad.init();
+            
             loadData();
             loadCourseTypes();
             
@@ -4488,15 +6469,20 @@
             
             bindEvents();
             
+            Logger.info('应用初始化完成');
+            
             // 初始化数据库
             openDatabase(function() {
                 updateDbDataInfo();
             });
             
+            // 初始化新功能模块
+            initNewFeatures();
+            
             const defaultPage = localStorage.getItem('dzh_default_page');
             if (defaultPage) {
                 setTimeout(() => {
-                    const navItem = document.querySelector(`.nav-item[data-section="${defaultPage}"]`);
+                    const navItem = document.querySelector(`.bottom-nav-item[data-section="${defaultPage}"]`);
                     if (navItem) navItem.click();
                 }, 100);
             }
@@ -4517,9 +6503,6 @@
             
             const themeBtn = document.getElementById('themeBtn');
             if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
-            
-            const mobileToggle = document.getElementById('mobileToggle');
-            if (mobileToggle) mobileToggle.addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
             
             const compareSem1 = document.getElementById('compareSem1');
             if (compareSem1) compareSem1.addEventListener('change', renderCompareContent);
@@ -4549,21 +6532,25 @@
             const dbClearBtn = document.getElementById('dbClearBtn');
             if (dbClearBtn) dbClearBtn.addEventListener('click', clearDatabase);
             
-            document.querySelectorAll('.nav-item[data-section]').forEach(item => {
-                item.addEventListener('click', handleNavSectionClick);
+            // 底部导航栏事件绑定
+            document.querySelectorAll('.bottom-nav-item').forEach(item => {
+                item.addEventListener('click', handleBottomNavClick);
             });
             
-            document.querySelectorAll('.nav-item[data-action]').forEach(item => {
-                item.addEventListener('click', handleNavActionClick);
-            });
+            // 移动端顶部设置按钮事件绑定
+            const mobileSettingsBtn = document.getElementById('mobileSettingsBtn');
+            if (mobileSettingsBtn) {
+                mobileSettingsBtn.addEventListener('click', handleNavActionClick);
+            }
             
             // 固定导航栏事件绑定
             document.querySelectorAll('.sticky-nav-item').forEach(item => {
                 item.addEventListener('click', handleStickyNavClick);
             });
             
-            // 滚动监听更新活跃状态
-            document.addEventListener('scroll', handleAnalysisScroll);
+            // 滚动监听更新活跃状态（使用节流优化）
+            const throttledScrollHandler = Utils.throttle(handleAnalysisScroll, 100);
+            document.addEventListener('scroll', throttledScrollHandler);
         }
         
         // 固定导航栏点击处理
@@ -4640,30 +6627,85 @@
                 if (semesterLocks[pendingEdit.sem] && !confirm('当前学期已锁定，确定要添加课程吗？')) {
                     return;
                 }
-                semestersData[pendingEdit.sem].push({ name, type, credit, score });
+                const newCourse = { name, type, credit, score };
+                const command = {
+                    type: 'add',
+                    semester: pendingEdit.sem,
+                    course: Utils.deepClone(newCourse),
+                    index: semestersData[pendingEdit.sem].length,
+                    execute: function() {
+                        semestersData[this.semester].push(this.course);
+                        refreshCourseData();
+                    },
+                    undo: function() {
+                        semestersData[this.semester].pop();
+                        refreshCourseData();
+                    }
+                };
+                UndoRedo.execute(command);
             } else {
-                const c = semestersData[pendingEdit.sem][pendingEdit.idx];
-                c.type = type;
-                c.credit = credit;
-                c.score = score;
+                const originalCourse = Utils.deepClone(semestersData[pendingEdit.sem][pendingEdit.idx]);
+                const command = {
+                    type: 'edit',
+                    semester: pendingEdit.sem,
+                    index: pendingEdit.idx,
+                    oldData: originalCourse,
+                    newData: { name, type, credit, score },
+                    execute: function() {
+                        const c = semestersData[this.semester][this.index];
+                        c.type = this.newData.type;
+                        c.credit = this.newData.credit;
+                        c.score = this.newData.score;
+                        refreshCourseData();
+                    },
+                    undo: function() {
+                        const c = semestersData[this.semester][this.index];
+                        c.type = this.oldData.type;
+                        c.credit = this.oldData.credit;
+                        c.score = this.oldData.score;
+                        refreshCourseData();
+                    }
+                };
+                UndoRedo.execute(command);
             }
             
             modal.style.display = 'none';
-            refreshCourseData();
         }
         
         function exportToCSV() {
-            let csv = "学期,编号,课程,类型,学分,成绩,绩点\n";
+            // 添加UTF-8 BOM，确保Excel打开时中文不乱码
+            const BOM = '\uFEFF';
+            let csv = '学期,编号,课程,类型,学分,成绩,绩点\n';
+            
+            let hasData = false;
             semestersData.forEach((semArr, i) => {
                 semArr.forEach((c, idx) => {
-                    csv += `"${SEMESTERS[i]}",${idx + 1},"${c.name}","${c.type}",${c.credit},${c.score},${getGradePoint(c.score).toFixed(1)}\n`;
+                    hasData = true;
+                    // 正确处理CSV中的引号和逗号
+                    const safeName = `"${c.name.replace(/"/g, '""')}"`;
+                    const safeType = `"${c.type.replace(/"/g, '""')}"`;
+                    csv += `${SEMESTERS[i]},${idx + 1},${safeName},${safeType},${c.credit},${c.score},${getGradePoint(c.score).toFixed(1)}\n`;
                 });
             });
-            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv' });
+            
+            if (!hasData) {
+                alert('没有可导出的课程数据');
+                return;
+            }
+            
+            const blob = new Blob([BOM + csv], { type: 'text/csv;charset=utf-8' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = '数智人文成绩.csv';
+            
+            // 生成带日期的文件名
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}`;
+            a.download = `弘毅数智成绩_${dateStr}.csv`;
+            
             a.click();
+            URL.revokeObjectURL(a.href);
+            
+            alert('成绩数据已导出成功！');
         }
         
         function toggleTheme() {
@@ -4674,27 +6716,34 @@
             setTheme(nextTheme);
         }
         
-        function handleNavSectionClick(e) {
+        
+        // 底部导航栏点击处理（移动端）
+        function handleBottomNavClick(e) {
             const item = e.currentTarget;
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            const section = item.dataset.section;
+            const action = item.dataset.action;
+            
+            // 更新底部导航栏状态
+            document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
             item.classList.add('active');
             
-            const section = item.dataset.section;
-            document.querySelectorAll('.page-container').forEach(page => page.classList.remove('active'));
-            
-            const targetPage = document.getElementById(`page-${section}`);
-            if (targetPage) targetPage.classList.add('active');
-            
-            document.getElementById('sidebar').classList.remove('open');
-            
-            if (section === 'analysis') {
-                updateChart();
-                updateTypeStats();
-                updateScoreDistribution();
-            }
-            
-            if (section === 'baoyan') {
-                updateBaoyanAnalysis();
+            if (section) {
+                // 切换页面
+                document.querySelectorAll('.page-container').forEach(page => page.classList.remove('active'));
+                const targetPage = document.getElementById(`page-${section}`);
+                if (targetPage) targetPage.classList.add('active');
+                
+                if (section === 'analysis') {
+                    updateChart();
+                    updateTypeStats();
+                    updateScoreDistribution();
+                }
+                
+                if (section === 'baoyan') {
+                    updateBaoyanAnalysis();
+                }
+            } else if (action) {
+                handleNavActionClick(e);
             }
         }
         
@@ -4709,9 +6758,13 @@
                     document.getElementById('page-settings').classList.add('active');
                     renderBackupHistory();
                     renderSemesterList();
+                    
+                    // 同时更新底部导航栏（移动端）
+                    document.querySelectorAll('.bottom-nav-item').forEach(i => i.classList.remove('active'));
+                    const bottomNavSettings = document.querySelector('.bottom-nav-item[data-action="settings"]');
+                    if (bottomNavSettings) bottomNavSettings.classList.add('active');
                     break;
             }
-            document.getElementById('sidebar').classList.remove('open');
         }
         
         // ==================== 保研指导功能 ====================
@@ -4734,27 +6787,61 @@
         ];
 
         function calculateBaoyanScore(gpa, excellentCount, totalCourses, passRate) {
-            let score = 0;
+            if (totalCourses === 0) return 0;
             
-            // GPA分数 (0-60分)
+            let score = 0;
+            const allCourses = getAllCourses();
+            
+            // 1. GPA分数 (0-60分) - 核心指标
             const gpaScore = Math.min(60, (gpa / 4.0) * 60);
             score += gpaScore;
             
-            // 优秀课程加分 (0-20分)
+            // 2. 优秀课程率加分 (0-15分)
             const excellentRatio = totalCourses > 0 ? excellentCount / totalCourses : 0;
-            score += excellentRatio * 20;
+            score += excellentRatio * 15;
             
-            // 及格率加分 (0-10分)
-            score += (passRate / 100) * 10;
+            // 3. 及格率加分 (0-5分)
+            score += (passRate / 100) * 5;
             
-            // 成绩稳定性加分 (0-10分)
-            const allCourses = getAllCourses();
-            if (allCourses.length >= 5) {
+            // 4. 核心课程（必修课）GPA加权加分 (0-10分)
+            const requiredCourses = allCourses.filter(c => {
+                const type = c.type || '';
+                return type.includes('必修') && !type.includes('选修');
+            });
+            if (requiredCourses.length > 0) {
+                const requiredStats = computeStats(requiredCourses);
+                const requiredGpaScore = Math.min(10, (requiredStats.gpa / 4.0) * 10);
+                score += requiredGpaScore;
+            }
+            
+            // 5. 成绩稳定性加分 (0-10分)
+            // 改进：即使课程少于5门也给基础分，并优化计算公式
+            if (allCourses.length >= 2) {
                 const scores = allCourses.map(c => c.score);
                 const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
                 const variance = scores.reduce((sum, s) => sum + Math.pow(s - avgScore, 2), 0) / scores.length;
-                const stability = Math.max(0, 10 - Math.sqrt(variance) / 10);
+                const stdDev = Math.sqrt(variance);
+                
+                // 稳定性计算：标准差越小越稳定，0分时最稳定(标准差约0)
+                // 给予基础分3分，标准差每增加5分扣1分
+                const stability = Math.max(0, Math.min(10, 10 - (stdDev / 5)));
                 score += stability;
+            } else if (allCourses.length === 1) {
+                // 单门课程给基础分5分
+                score += 5;
+            }
+            
+            // 6. 进步趋势加分 (0-10分)
+            const semestersWithData = semestersData.filter(sem => sem.length > 0);
+            if (semestersWithData.length >= 2) {
+                const semesterGPAs = semestersWithData.map(sem => computeStats(sem).gpa);
+                const firstGPA = semesterGPAs[0];
+                const lastGPA = semesterGPAs[semesterGPAs.length - 1];
+                const improvement = lastGPA - firstGPA;
+                
+                // 进步加分：每提升0.1加2分，最多10分
+                const improvementScore = Math.max(0, Math.min(10, improvement * 20));
+                score += improvementScore;
             }
             
             return Math.min(100, Math.round(score));
@@ -4891,6 +6978,282 @@
         }
 
         document.addEventListener('DOMContentLoaded', init);
+        
+        function initNewFeatures() {
+            Shortcuts.init();
+            UndoRedo.updateUI();
+            AutoBackup.init();
+            CloudSync.init();
+            bindEncryptionEvents();
+            bindAutoBackupEvents();
+            bindCloudSyncEvents();
+            updateEncryptionStatus();
+        }
+        
+        function bindEncryptionEvents() {
+            const exportEncryptedBtn = document.getElementById('exportEncryptedBtn');
+            const importEncryptedBtn = document.getElementById('importEncryptedBtn');
+            const cancelPasswordBtn = document.getElementById('cancelPassword');
+            const confirmPasswordBtn = document.getElementById('confirmPasswordBtn');
+            const cancelDecryptBtn = document.getElementById('cancelDecrypt');
+            const confirmDecryptBtn = document.getElementById('confirmDecryptBtn');
+            
+            if (exportEncryptedBtn) {
+                exportEncryptedBtn.addEventListener('click', async () => {
+                    const password = prompt('请输入加密密码：');
+                    if (!password) {
+                        alert('密码不能为空');
+                        return;
+                    }
+                    
+                    if (password.length < 6) {
+                        alert('密码长度至少6位');
+                        return;
+                    }
+                    
+                    const confirmPwd = prompt('请再次输入密码：');
+                    if (password !== confirmPwd) {
+                        alert('两次密码不一致');
+                        return;
+                    }
+                    
+                    try {
+                        const dataToEncrypt = {
+                            semestersData: semestersData,
+                            semesterLocks: semesterLocks,
+                            semesters: SEMESTERS,
+                            exportTime: new Date().toISOString(),
+                            version: '1.0'
+                        };
+                        
+                        const encrypted = await Encryption.encryptData(dataToEncrypt, password);
+                        
+                        const blob = new Blob([JSON.stringify(encrypted, null, 2)], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `弘毅成绩加密备份_${new Date().toISOString().slice(0,10)}.json`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        
+                        Encryption.setPassword(password);
+                        updateEncryptionStatus();
+                        alert('数据加密导出成功！');
+                    } catch (error) {
+                        console.error('加密失败:', error);
+                        alert('加密失败：' + error.message);
+                    }
+                });
+            }
+            
+            if (importEncryptedBtn) {
+                importEncryptedBtn.addEventListener('click', () => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.json';
+                    input.onchange = async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        
+                        const reader = new FileReader();
+                        reader.onload = async (event) => {
+                            try {
+                                const encryptedData = JSON.parse(event.target.result);
+                                
+                                if (!encryptedData.iv || !encryptedData.data) {
+                                    alert('这不是加密文件格式，请使用普通备份恢复');
+                                    return;
+                                }
+                                
+                                const password = prompt('请输入解密密码：');
+                                if (!password) {
+                                    alert('密码不能为空');
+                                    return;
+                                }
+                                
+                                try {
+                                    const decrypted = await Encryption.decryptData(encryptedData, password);
+                                    
+                                    if (confirm('解密成功！是否导入该数据？（将覆盖当前数据）')) {
+                                        semestersData = decrypted.semestersData || semestersData;
+                                        semesterLocks = decrypted.semesterLocks || semesterLocks;
+                                        SEMESTERS = decrypted.semesters || SEMESTERS;
+                                        
+                                        saveData();
+                                        renderSemesterTabs();
+                                        refreshDisplay();
+                                        updateCompareSemesters();
+                                        
+                                        Encryption.setPassword(password);
+                                        updateEncryptionStatus();
+                                        alert('加密数据导入成功！');
+                                    }
+                                } catch (error) {
+                                    alert('解密失败：密码可能不正确');
+                                }
+                            } catch (error) {
+                                alert('文件格式错误：' + error.message);
+                            }
+                        };
+                        reader.readAsText(file);
+                    };
+                    input.click();
+                });
+            }
+            
+            if (cancelPasswordBtn) {
+                cancelPasswordBtn.addEventListener('click', () => {
+                    document.getElementById('passwordModal').style.display = 'none';
+                });
+            }
+            
+            if (cancelDecryptBtn) {
+                cancelDecryptBtn.addEventListener('click', () => {
+                    document.getElementById('importPasswordModal').style.display = 'none';
+                });
+            }
+        }
+        
+        function updateEncryptionStatus() {
+            const statusEl = document.getElementById('encryptionStatus');
+            if (statusEl) {
+                statusEl.textContent = Encryption.isPasswordSet() ? '已设置密码' : '未设置密码';
+            }
+        }
+        
+        function bindAutoBackupEvents() {
+            const autoBackupEnabled = document.getElementById('autoBackupEnabled');
+            const backupInterval = document.getElementById('backupInterval');
+            const manualBackupBtn = document.getElementById('manualBackupBtn');
+            const viewBackupHistoryBtn = document.getElementById('viewBackupHistoryBtn');
+            
+            if (autoBackupEnabled) {
+                autoBackupEnabled.addEventListener('change', () => {
+                    AutoBackup.saveSettings();
+                });
+            }
+            
+            if (backupInterval) {
+                backupInterval.addEventListener('change', () => {
+                    AutoBackup.saveSettings();
+                });
+            }
+            
+            if (manualBackupBtn) {
+                manualBackupBtn.addEventListener('click', () => {
+                    AutoBackup.manualBackup();
+                });
+            }
+            
+            if (viewBackupHistoryBtn) {
+                viewBackupHistoryBtn.addEventListener('click', () => {
+                    showBackupHistoryModal();
+                });
+            }
+        }
+        
+        function showBackupHistoryModal() {
+            const history = AutoBackup.getBackupHistory();
+            
+            let content = '<div style="max-height: 400px; overflow-y: auto;">';
+            
+            if (history.length === 0) {
+                content += '<p style="text-align: center; color: var(--text-secondary); padding: 2rem;">暂无备份记录</p>';
+            } else {
+                history.forEach((backup, index) => {
+                    const date = new Date(backup.time);
+                    const typeLabel = backup.type === 'auto' ? '自动' : '手动';
+                    const courseCount = backup.data?.semestersData?.flat().length || 0;
+                    
+                    content += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; border-bottom: 1px solid var(--border-color);">
+                            <div>
+                                <div style="font-size: 0.85rem; color: var(--text-primary);">
+                                    <span style="background: ${backup.type === 'auto' ? 'var(--accent-color)' : 'var(--success-color)'}; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 0.5rem;">${typeLabel}</span>
+                                    ${Utils.formatDate(date)}
+                                </div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                                    ${courseCount} 门课程
+                                </div>
+                            </div>
+                            <button class="modal-btn" style="background: var(--accent-color); padding: 0.3rem 0.6rem; font-size: 0.75rem;" onclick="restoreFromBackupIndex(${index})">
+                                恢复
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+            
+            content += '</div>';
+            
+            const modalContent = `
+                <div class="modal-card" style="width: 450px; max-width: 90vw;">
+                    <h3 style="margin-bottom: 1rem; color: var(--accent-color);">📋 备份历史</h3>
+                    ${content}
+                    <button class="modal-btn" style="width: 100%; margin-top: 1rem; background: var(--accent-color); padding: 0.5rem;" onclick="this.closest('.modal').style.display='none'">
+                        关闭
+                    </button>
+                </div>
+            `;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.style.display = 'flex';
+            modal.innerHTML = modalContent;
+            document.body.appendChild(modal);
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    modal.remove();
+                }
+            });
+        }
+        
+        window.restoreFromBackupIndex = function(index) {
+            if (confirm('确定要从该备份恢复吗？当前数据将被覆盖。')) {
+                if (AutoBackup.restoreFromBackup(index)) {
+                    document.querySelector('.modal')?.remove();
+                }
+            }
+        };
+        
+        function bindCloudSyncEvents() {
+            const enableSyncBtn = document.getElementById('enableSyncBtn');
+            const syncNowBtn = document.getElementById('syncNowBtn');
+            const autoSync = document.getElementById('autoSync');
+            const syncInterval = document.getElementById('syncInterval');
+            
+            if (enableSyncBtn) {
+                enableSyncBtn.addEventListener('click', () => {
+                    if (CloudSync.enabled) {
+                        CloudSync.disable();
+                    } else {
+                        CloudSync.enable();
+                    }
+                });
+            }
+            
+            if (syncNowBtn) {
+                syncNowBtn.addEventListener('click', () => {
+                    CloudSync.syncNow();
+                });
+            }
+            
+            if (autoSync) {
+                autoSync.addEventListener('change', () => {
+                    CloudSync.saveSettings();
+                });
+            }
+            
+            if (syncInterval) {
+                syncInterval.addEventListener('change', () => {
+                    CloudSync.saveSettings();
+                });
+            }
+        }
     })();
 </script>
 </body>

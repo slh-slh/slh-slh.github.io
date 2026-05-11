@@ -1961,9 +1961,13 @@
     </style>
     
     <style>
-        /* 移动端底部导航栏样式 */
+        /* 移动端底部导航栏样式 - 默认隐藏 */
+        .mobile-header {
+            display: none;
+        }
+        
         .bottom-nav {
-            display: flex;
+            display: none;
             position: fixed;
             bottom: 0;
             left: 0;
@@ -2028,11 +2032,6 @@
         
         /* 移动端布局 */
         @media (max-width: 768px) {
-            .bottom-nav {
-                display: flex;
-                justify-content: space-around;
-            }
-            
             .mobile-header {
                 display: flex;
                 justify-content: space-between;
@@ -2040,6 +2039,11 @@
                 padding: 1rem 1.25rem;
                 background: var(--bg-card);
                 border-bottom: 1px solid var(--border-color);
+            }
+            
+            .bottom-nav {
+                display: flex;
+                justify-content: space-around;
             }
             
             .mobile-header-left {

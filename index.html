@@ -3573,8 +3573,12 @@
         }
 
         function moveCourseUp(index) {
+            if (semesterLocks[currentSemester]) {
+                alert('当前学期已锁定，无法移动课程');
+                return;
+            }
             const courses = semestersData[currentSemester];
-            if (index > 0) {
+            if (index > 0 && courses[index] && !courses[index].locked) {
                 const temp = courses[index];
                 courses[index] = courses[index - 1];
                 courses[index - 1] = temp;
@@ -3583,8 +3587,12 @@
         }
         
         function moveCourseDown(index) {
+            if (semesterLocks[currentSemester]) {
+                alert('当前学期已锁定，无法移动课程');
+                return;
+            }
             const courses = semestersData[currentSemester];
-            if (index < courses.length - 1) {
+            if (index < courses.length - 1 && courses[index] && !courses[index].locked) {
                 const temp = courses[index];
                 courses[index] = courses[index + 1];
                 courses[index + 1] = temp;
@@ -3664,8 +3672,20 @@
 
         function updateTypeStats() {
             const allCourses = getAllCourses();
-            const requiredCourses = allCourses.filter(c => c.type.includes('必修') || !c.type.includes('选修'));
-            const electiveCourses = allCourses.filter(c => c.type.includes('选修'));
+            
+            // 改进的课程类型分类逻辑：明确区分必修和选修
+            const requiredCourses = allCourses.filter(c => {
+                const type = c.type || '';
+                const isElective = type.includes('选修');
+                const isRequired = type.includes('必修') && !isElective;
+                const isPractice = type === '实践必修' || type === '科研训练';
+                return isRequired || isPractice || (!type.includes('选修') && type.includes('必修'));
+            });
+            
+            const electiveCourses = allCourses.filter(c => {
+                const type = c.type || '';
+                return type.includes('选修');
+            });
             
             const requiredStats = computeStats(requiredCourses);
             const electiveStats = computeStats(electiveCourses);
@@ -4026,7 +4046,14 @@
             if (isNaN(targetGpa) || isNaN(remainingCredits) || targetGpa < 0 || targetGpa > 4 || remainingCredits < 0) {
                 resultDiv.style.display = 'block';
                 resultDiv.className = 'goal-result warning';
-                resultText.innerHTML = '请输入有效的目标GPA (0-4.0) 和剩余学分';
+                resultText.innerHTML = '请输入有效的目标GPA (0-4.0) 和剩余学分（大于0）';
+                return;
+            }
+            
+            if (remainingCredits === 0) {
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'goal-result warning';
+                resultText.innerHTML = '请输入剩余学分（大于0）';
                 return;
             }
             
@@ -4037,10 +4064,29 @@
             const futureTotalCredits = currentTotalCredits + remainingCredits;
             const requiredTotalPoints = targetGpa * futureTotalCredits;
             const requiredFuturePoints = requiredTotalPoints - currentTotalPoints;
-            const requiredGpa = remainingCredits > 0 ? requiredFuturePoints / remainingCredits : targetGpa;
+            const requiredGpa = requiredFuturePoints / remainingCredits;
             
             resultDiv.style.display = 'block';
             
+            // 最高可达GPA（假设剩余课程全4.0）
+            const maxAchievableGpa = (currentTotalPoints + remainingCredits * 4.0) / futureTotalCredits;
+            // 最低GPA（假设剩余课程全0分）
+            const minAchievableGpa = currentTotalPoints / futureTotalCredits;
+            
+            // 情况1：所需GPA为负数或0（已远超目标）
+            if (requiredGpa <= 0) {
+                resultDiv.className = 'goal-result success';
+                resultText.innerHTML = `
+                    <strong>🎉 太棒了！已远超目标！</strong><br>
+                    当前累积学分: ${currentTotalCredits.toFixed(1)} · 当前GPA: ${currentStats.gpa.toFixed(2)}<br>
+                    目标GPA: ${targetGpa.toFixed(2)} · 剩余学分: ${remainingCredits.toFixed(1)}<br>
+                    即使剩余课程全部不及格，您也能达成目标！<br>
+                    建议：继续保持，稳定发挥即可。
+                `;
+                return;
+            }
+            
+            // 情况2：所需GPA在可达成范围内 (0 < requiredGpa <= 4.0)
             if (requiredGpa <= 4.0) {
                 resultDiv.className = 'goal-result success';
                 const requiredScore = requiredGpa >= 4.0 ? '90+' : 
@@ -4053,20 +4099,44 @@
                                      requiredGpa >= 1.5 ? '64-67' :
                                      requiredGpa >= 1.0 ? '60-63' : '<60';
                 
+                const difficulty = requiredGpa >= 3.5 ? '⚠️ 有一定挑战' :
+                                  requiredGpa >= 3.0 ? '✓ 努努力可以实现' : '✓ 相对容易达成';
+                
                 resultText.innerHTML = `
-                    <strong>目标可达成！</strong><br>
-                    当前累积学分: ${currentTotalCredits.toFixed(1)} · 当前GPA: ${currentStats.gpa.toFixed(2)}<br>
-                    剩余学分: ${remainingCredits.toFixed(1)} · 目标GPA: ${targetGpa.toFixed(2)}<br>
-                    <strong>需要在剩余课程中取得平均 GPA: ${requiredGpa.toFixed(2)}</strong><br>
-                    对应成绩区间: ${requiredScore}分
+                    <strong>目标可达成！${difficulty}</strong><br>
+                    当前: ${currentTotalCredits.toFixed(1)}学分 · GPA ${currentStats.gpa.toFixed(2)}<br>
+                    剩余: ${remainingCredits.toFixed(1)}学分 · 目标 ${targetGpa.toFixed(2)}<br>
+                    <strong>需在剩余课程中取得平均 GPA: ${requiredGpa.toFixed(2)}</strong><br>
+                    对应成绩区间: ${requiredScore}分<br>
+                    📊 可达范围: ${minAchievableGpa.toFixed(2)} ~ ${maxAchievableGpa.toFixed(2)}
                 `;
-            } else {
+                return;
+            }
+            
+            // 情况3：所需GPA超过4.0（超出范围）
+            resultDiv.className = 'goal-result warning';
+            const gap = requiredGpa - 4.0;
+            const maxPossibleGpa = maxAchievableGpa;
+            
+            if (maxPossibleGpa >= targetGpa) {
+                // 虽然需要超过4.0，但理论上可以通过提高学分来达成
                 resultDiv.className = 'goal-result warning';
                 resultText.innerHTML = `
-                    <strong>目标超出范围</strong><br>
-                    当前累积学分: ${currentTotalCredits.toFixed(1)} · 当前GPA: ${currentStats.gpa.toFixed(2)}<br>
-                    即使剩余课程全部取得4.0，最高可达到: ${(requiredTotalPoints / futureTotalCredits).toFixed(2)}<br>
-                    建议调整目标或增加学分
+                    <strong>⚠️ 目标需要努力</strong><br>
+                    当前: ${currentTotalCredits.toFixed(1)}学分 · GPA ${currentStats.gpa.toFixed(2)}<br>
+                    剩余: ${remainingCredits.toFixed(1)}学分 · 目标 ${targetGpa.toFixed(2)}<br>
+                    理论上需要平均 GPA: ${requiredGpa.toFixed(2)} (超出4.0上限 ${gap.toFixed(2)})<br>
+                    💡 建议：① 提升当前课程成绩 ② 增加选修学分稀释影响
+                `;
+            } else {
+                // 即使全4.0也无法达成
+                resultDiv.className = 'goal-result warning';
+                resultText.innerHTML = `
+                    <strong>❌ 目标较难达成</strong><br>
+                    当前: ${currentTotalCredits.toFixed(1)}学分 · GPA ${currentStats.gpa.toFixed(2)}<br>
+                    即使剩余课程全4.0，最高可达: ${maxPossibleGpa.toFixed(2)}<br>
+                    与目标差距: ${(targetGpa - maxPossibleGpa).toFixed(2)}<br>
+                    💡 建议：① 调整合理目标 ② 努力提升当前课程 ③ 争取补考机会
                 `;
             }
         }
@@ -4391,40 +4461,91 @@
             reader.onload = (event) => {
                 try {
                     const csvContent = event.target.result;
-                    const lines = csvContent.split('\n').filter(line => line.trim());
+                    const lines = csvContent.split(/\r?\n/).filter(line => line.trim());
                     const importData = [];
+                    const errorRows = [];
                     
                     for (let i = 0; i < lines.length; i++) {
-                        const parts = lines[i].split(',');
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        const parts = parseCSVLine(line);
+                        
                         if (parts.length >= 4) {
                             const name = parts[0].trim();
                             const type = parts[1].trim() || '专业教育必修';
                             const credit = parseFloat(parts[2].trim());
                             const score = parseFloat(parts[3].trim());
                             
-                            if (name && !isNaN(credit) && !isNaN(score) && score >= 0 && score <= 100) {
+                            if (name && !isNaN(credit) && !isNaN(score) && score >= 0 && score <= 100 && credit > 0) {
                                 importData.push({ name, type, credit, score });
+                            } else {
+                                errorRows.push(i + 1);
                             }
+                        } else if (parts.length > 0 && parts[0].trim()) {
+                            errorRows.push(i + 1);
                         }
                     }
                     
                     if (importData.length === 0) {
-                        alert('未找到有效数据，请检查CSV格式');
+                        alert('未找到有效数据，请检查CSV格式是否正确');
                         return;
                     }
                     
-                    if (confirm(`成功解析 ${importData.length} 条课程数据，是否导入到当前学期？`)) {
+                    const errorInfo = errorRows.length > 0 ? `\n\n注意：有 ${errorRows.length} 行数据格式不正确，已跳过` : '';
+                    
+                    if (confirm(`成功解析 ${importData.length} 条课程数据，是否导入到当前学期？${errorInfo}`)) {
+                        if (semesterLocks[currentSemester]) {
+                            if (!confirm('当前学期已锁定，导入数据将会解除锁定，确定继续吗？')) {
+                                return;
+                            }
+                            semesterLocks[currentSemester] = false;
+                        }
                         semestersData[currentSemester].push(...importData);
                         refreshCourseData();
                         document.getElementById('importFile').value = '';
                         alert(`成功导入 ${importData.length} 条课程数据！`);
                     }
                 } catch (error) {
-                    alert('CSV文件解析失败');
+                    alert('CSV文件解析失败，请检查文件格式是否正确');
                 }
             };
-            reader.readAsText(file);
+            reader.readAsText(file, 'UTF-8');
         });
+        
+        // CSV行解析函数：正确处理带引号的字段
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                const nextChar = line[i + 1];
+                
+                if (inQuotes) {
+                    if (char === '"' && nextChar === '"') {
+                        current += '"';
+                        i++;
+                    } else if (char === '"') {
+                        inQuotes = false;
+                    } else {
+                        current += char;
+                    }
+                } else {
+                    if (char === '"') {
+                        inQuotes = true;
+                    } else if (char === ',') {
+                        result.push(current);
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+            }
+            result.push(current);
+            return result;
+        }
 
         function renderSemesterList() {
             const semesterList = document.getElementById('semesterList');
@@ -5011,17 +5132,39 @@
         }
         
         function exportToCSV() {
-            let csv = "学期,编号,课程,类型,学分,成绩,绩点\n";
+            // 添加UTF-8 BOM，确保Excel打开时中文不乱码
+            const BOM = '\uFEFF';
+            let csv = '学期,编号,课程,类型,学分,成绩,绩点\n';
+            
+            let hasData = false;
             semestersData.forEach((semArr, i) => {
                 semArr.forEach((c, idx) => {
-                    csv += `"${SEMESTERS[i]}",${idx + 1},"${c.name}","${c.type}",${c.credit},${c.score},${getGradePoint(c.score).toFixed(1)}\n`;
+                    hasData = true;
+                    // 正确处理CSV中的引号和逗号
+                    const safeName = `"${c.name.replace(/"/g, '""')}"`;
+                    const safeType = `"${c.type.replace(/"/g, '""')}"`;
+                    csv += `${SEMESTERS[i]},${idx + 1},${safeName},${safeType},${c.credit},${c.score},${getGradePoint(c.score).toFixed(1)}\n`;
                 });
             });
-            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv' });
+            
+            if (!hasData) {
+                alert('没有可导出的课程数据');
+                return;
+            }
+            
+            const blob = new Blob([BOM + csv], { type: 'text/csv;charset=utf-8' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = '数智人文成绩.csv';
+            
+            // 生成带日期的文件名
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}${(now.getMonth() + 1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}`;
+            a.download = `弘毅数智成绩_${dateStr}.csv`;
+            
             a.click();
+            URL.revokeObjectURL(a.href);
+            
+            alert('成绩数据已导出成功！');
         }
         
         function toggleTheme() {
@@ -5137,27 +5280,61 @@
         ];
 
         function calculateBaoyanScore(gpa, excellentCount, totalCourses, passRate) {
-            let score = 0;
+            if (totalCourses === 0) return 0;
             
-            // GPA分数 (0-60分)
+            let score = 0;
+            const allCourses = getAllCourses();
+            
+            // 1. GPA分数 (0-60分) - 核心指标
             const gpaScore = Math.min(60, (gpa / 4.0) * 60);
             score += gpaScore;
             
-            // 优秀课程加分 (0-20分)
+            // 2. 优秀课程率加分 (0-15分)
             const excellentRatio = totalCourses > 0 ? excellentCount / totalCourses : 0;
-            score += excellentRatio * 20;
+            score += excellentRatio * 15;
             
-            // 及格率加分 (0-10分)
-            score += (passRate / 100) * 10;
+            // 3. 及格率加分 (0-5分)
+            score += (passRate / 100) * 5;
             
-            // 成绩稳定性加分 (0-10分)
-            const allCourses = getAllCourses();
-            if (allCourses.length >= 5) {
+            // 4. 核心课程（必修课）GPA加权加分 (0-10分)
+            const requiredCourses = allCourses.filter(c => {
+                const type = c.type || '';
+                return type.includes('必修') && !type.includes('选修');
+            });
+            if (requiredCourses.length > 0) {
+                const requiredStats = computeStats(requiredCourses);
+                const requiredGpaScore = Math.min(10, (requiredStats.gpa / 4.0) * 10);
+                score += requiredGpaScore;
+            }
+            
+            // 5. 成绩稳定性加分 (0-10分)
+            // 改进：即使课程少于5门也给基础分，并优化计算公式
+            if (allCourses.length >= 2) {
                 const scores = allCourses.map(c => c.score);
                 const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
                 const variance = scores.reduce((sum, s) => sum + Math.pow(s - avgScore, 2), 0) / scores.length;
-                const stability = Math.max(0, 10 - Math.sqrt(variance) / 10);
+                const stdDev = Math.sqrt(variance);
+                
+                // 稳定性计算：标准差越小越稳定，0分时最稳定(标准差约0)
+                // 给予基础分3分，标准差每增加5分扣1分
+                const stability = Math.max(0, Math.min(10, 10 - (stdDev / 5)));
                 score += stability;
+            } else if (allCourses.length === 1) {
+                // 单门课程给基础分5分
+                score += 5;
+            }
+            
+            // 6. 进步趋势加分 (0-10分)
+            const semestersWithData = semestersData.filter(sem => sem.length > 0);
+            if (semestersWithData.length >= 2) {
+                const semesterGPAs = semestersWithData.map(sem => computeStats(sem).gpa);
+                const firstGPA = semesterGPAs[0];
+                const lastGPA = semesterGPAs[semesterGPAs.length - 1];
+                const improvement = lastGPA - firstGPA;
+                
+                // 进步加分：每提升0.1加2分，最多10分
+                const improvementScore = Math.max(0, Math.min(10, improvement * 20));
+                score += improvementScore;
             }
             
             return Math.min(100, Math.round(score));

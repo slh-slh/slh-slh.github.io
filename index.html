@@ -821,7 +821,25 @@
         </div>
     </div>
 
+    <!-- ========== 引入 Supabase ========== -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
+        // ==================== 在这里填入你的 Supabase 配置 ====================
+        const SUPABASE_URL = ""https://hirpdjmuywkgxojdsprf.supabase.co"";
+        const SUPABASE_KEY = "sb_publishable_ciDaiVjyNKbw0BZt3l18gA_QYW6MDsQ";
+        // ====================================================================
+
+        // 初始化 Supabase
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // 生成用户唯一ID
+        let userId = localStorage.getItem('grade_user_id');
+        if (!userId) {
+            userId = 'user_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
+            localStorage.setItem('grade_user_id', userId);
+        }
+
         // ==================== Data ====================
         const SEMESTERS = [
             '大一上', '大一下', '大二上', '大二下',
@@ -862,6 +880,54 @@
         let editingCourse = null;
         let deletingCourseIndex = null;
         let deletingCourseSemester = null;
+        let isSyncing = false;
+
+        // ==================== 云端同步核心 ====================
+        async function loadFromCloud() {
+            const { data: res } = await supabase
+                .from('user_data')
+                .select('content')
+                .eq('id', userId)
+                .single();
+
+            if (res?.content) {
+                data = res.content;
+                return true;
+            } else {
+                data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                await saveToCloud();
+                return false;
+            }
+        }
+
+        async function saveToCloud() {
+            if (isSyncing) return;
+            isSyncing = true;
+            try {
+                await supabase.from('user_data').upsert({
+                    id: userId,
+                    content: data,
+                    updated_at: Date.now()
+                });
+            } finally {
+                isSyncing = false;
+            }
+        }
+
+        function listenCloudChange() {
+            supabase.channel('grade_sync')
+                .on('postgres_changes', {
+                    event: '*',
+                    schema: 'public',
+                    table: 'user_data'
+                }, async (payload) => {
+                    if (payload.new.id === userId) {
+                        data = payload.new.content;
+                        renderAll();
+                    }
+                })
+                .subscribe();
+        }
 
         // ==================== Utils ====================
         function getGradePoint(score) {
@@ -901,30 +967,11 @@
 
         // ==================== Storage ====================
         function saveData() {
-            localStorage.setItem('gradeManager_data', JSON.stringify(data));
+            saveToCloud();
         }
         
-        function loadData() {
-            const saved = localStorage.getItem('gradeManager_data');
-            if (saved) {
-                try {
-                    data = JSON.parse(saved);
-                    // 数据迁移：将旧的课程类型映射到新类型
-                    data.forEach(semesterCourses => {
-                        semesterCourses.forEach(course => {
-                            if (course.type === '必修') {
-                                course.type = '公共必修'; // 默认映射到公共必修
-                            } else if (course.type === '选修') {
-                                course.type = '公共选修'; // 默认映射到公共选修
-                            }
-                        });
-                    });
-                } catch (e) {
-                    data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-                }
-            } else {
-                data = JSON.parse(JSON.stringify(DEFAULT_DATA));
-            }
+        async function loadData() {
+            await loadFromCloud();
             while (data.length < SEMESTERS.length) {
                 data.push([]);
             }
@@ -956,7 +1003,6 @@
             localStorage.setItem('gradeManager_theme', isDark ? 'dark' : 'light');
             updateThemeLabel();
             
-            // 如果在成绩总览页面，重新绘制图表
             const dashboardPage = document.getElementById('page-dashboard');
             if (dashboardPage.classList.contains('active')) {
                 renderDashboard();
@@ -1015,7 +1061,6 @@
                 tbody.appendChild(row);
             });
             
-            // 绘制GPA曲线图
             renderGpaChart(gpaData);
         }
         
@@ -1366,8 +1411,7 @@
             
             saveData();
             closeModal();
-            renderCourses();
-            renderDashboard();
+            renderAll();
         }
         
         function openDeleteModal(semIndex, courseIndex) {
@@ -1395,8 +1439,7 @@
             data[deletingCourseSemester].splice(deletingCourseIndex, 1);
             saveData();
             closeDeleteModal();
-            renderCourses();
-            renderDashboard();
+            renderAll();
         }
 
         // ==================== Goals ====================
@@ -1480,13 +1523,20 @@
             }).join('');
         }
 
-        // ==================== Init ====================
-        function init() {
-            loadData();
-            initTheme();
+        // ==================== 全局刷新 ====================
+        function renderAll() {
             renderDashboard();
+            renderCourses();
+            renderGoals();
+        }
+
+        // ==================== Init ====================
+        async function init() {
+            await loadData();
+            initTheme();
+            listenCloudChange();
+            renderAll();
             
-            // 窗口大小改变时重绘图表
             let resizeTimer;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);

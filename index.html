@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>成绩管理系统</title>
+    <title>武汉大学·弘毅学堂成绩管理系统</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght(400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="icon" type="image/png" id="favicon">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -109,16 +110,6 @@
             background: rgba(15, 23, 42, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-        }
-        
-        .logo {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 32px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         
         .nav-item {
@@ -565,10 +556,6 @@
 
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
-        <div class="logo">
-            成绩管理
-        </div>
-        
         <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
             成绩总览
         </div>
@@ -1258,8 +1245,8 @@
             const isDark = document.body.classList.contains('dark');
             localStorage.setItem('gradeManager_theme', isDark ? 'dark' : 'light');
             updateThemeLabel();
+            drawFavicon();
             
-            // 如果在成绩总览页面，重新绘制图表
             const dashboardPage = document.getElementById('page-dashboard');
             if (dashboardPage.classList.contains('active')) {
                 renderDashboard();
@@ -1277,6 +1264,101 @@
                 document.body.classList.add('dark');
             }
             updateThemeLabel();
+        }
+        
+        function drawFavicon() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64;
+            canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            const size = 64;
+            const cx = size / 2;
+            const cy = size / 2;
+            const isDark = document.body.classList.contains('dark');
+            
+            ctx.clearRect(0, 0, size, size);
+            
+            if (isDark) {
+                ctx.fillStyle = '#0f172a';
+            } else {
+                ctx.fillStyle = '#ffffff';
+            }
+            ctx.beginPath();
+            ctx.arc(cx, cy, size * 0.5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 0.45);
+            gradient.addColorStop(0, '#1e3a5f');
+            gradient.addColorStop(0.5, '#2563eb');
+            gradient.addColorStop(1, '#10b981');
+            
+            const baseRadius = size * 0.1;
+            const maxRadius = size * 0.4;
+            const rotations = 2.5;
+            const nodeCount = 32;
+            const totalAngle = rotations * Math.PI * 2;
+            
+            const nodes = [];
+            for (let i = 0; i < nodeCount; i++) {
+                const t = i / nodeCount;
+                const angle = Math.PI + t * totalAngle;
+                const radius = baseRadius + (maxRadius - baseRadius) * Math.pow(t, 1/1.6);
+                
+                const x = cx + radius * Math.cos(angle);
+                const y = cy + radius * Math.sin(angle);
+                
+                const colorT = t;
+                const r = Math.round(30 + colorT * 20);
+                const g = Math.round(58 + colorT * 132);
+                const b = Math.round(95 + colorT * 52);
+                
+                nodes.push({ x, y, r, g, b });
+            }
+            
+            if (nodes.length > 1) {
+                ctx.beginPath();
+                ctx.moveTo(nodes[0].x, nodes[0].y);
+                
+                for (let i = 1; i < nodes.length; i++) {
+                    const xc = (nodes[i].x + nodes[i - 1].x) / 2;
+                    const yc = (nodes[i].y + nodes[i - 1].y) / 2;
+                    ctx.quadraticCurveTo(nodes[i - 1].x, nodes[i - 1].y, xc, yc);
+                }
+                ctx.lineTo(nodes[nodes.length - 1].x, nodes[nodes.length - 1].y);
+                
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 2.5;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
+            
+            nodes.forEach((node, i) => {
+                const isFirst = i === 0;
+                const isLast = i === nodes.length - 1;
+                const nodeSize = isFirst || isLast ? size * 0.065 : size * 0.035;
+                
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, nodeSize, 0, Math.PI * 2);
+                ctx.fillStyle = isDark ? '#0f172a' : '#ffffff';
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, nodeSize, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgb(${node.r}, ${node.g}, ${node.b})`;
+                ctx.lineWidth = 1.8;
+                ctx.stroke();
+            });
+            
+            ctx.fillStyle = '#2563eb';
+            ctx.font = 'bold 22px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('H', cx, cy + 1);
+            
+            const faviconEl = document.getElementById('favicon');
+            if (faviconEl) {
+                faviconEl.href = canvas.toDataURL('image/png');
+            }
         }
 
         // ==================== Dashboard ====================
@@ -1884,6 +1966,7 @@
         function init() {
             loadData();
             initTheme();
+            drawFavicon();
             
             syncIndicator = document.getElementById('syncIndicator');
             if (initSupabase()) {

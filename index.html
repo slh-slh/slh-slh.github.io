@@ -560,49 +560,33 @@
 <body>
     <!-- Mobile Menu Button -->
     <button class="mobile-menu-btn" onclick="toggleSidebar()">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 12h18M3 6h18M3 18h18"/>
-        </svg>
+        菜单
     </button>
 
     <!-- Sidebar -->
     <nav class="sidebar" id="sidebar">
         <div class="logo">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-            </svg>
             成绩管理
         </div>
         
         <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard')">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                <path d="M9 22V12h6v10"/>
-            </svg>
             成绩总览
         </div>
         
         <div class="nav-item" data-page="courses" onclick="showPage('courses')">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
             课程管理
         </div>
         
         <div class="nav-item" data-page="goals" onclick="showPage('goals')">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-            </svg>
             目标规划
         </div>
         
         <div class="theme-toggle" onclick="toggleTheme()">
             <span id="themeLabel">深色模式</span>
-            <span id="themeIcon">🌙</span>
         </div>
         
         <div class="sync-indicator disconnected" id="syncIndicator">
-            ⚪ 未连接
+            未连接
         </div>
     </nav>
 
@@ -611,7 +595,6 @@
         <!-- Dashboard Page -->
         <div id="page-dashboard" class="page active">
             <h1 class="page-title">成绩总览</h1>
-            <p class="page-subtitle">查看您的成绩表现和统计数据</p>
             
             <!-- Stats Cards -->
             <div class="stats-grid">
@@ -672,7 +655,6 @@
         <!-- Courses Page -->
         <div id="page-courses" class="page">
             <h1 class="page-title">课程管理</h1>
-            <p class="page-subtitle">添加、编辑和管理您的课程信息</p>
             
             <div class="card">
                 <div class="card-header">
@@ -715,7 +697,6 @@
                         <tbody id="coursesTable"></tbody>
                     </table>
                     <div class="empty-state" id="emptyCourses" style="display: none;">
-                        <div class="empty-icon">📚</div>
                         <h3>还没有课程</h3>
                         <p>点击"添加课程"开始记录您的成绩</p>
                     </div>
@@ -755,38 +736,34 @@
         <!-- Goals Page -->
         <div id="page-goals" class="page">
             <h1 class="page-title">目标规划</h1>
-            <p class="page-subtitle">设定目标并计算所需成绩</p>
             
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">📊 数据管理</h2>
+                    <h2 class="card-title">数据管理</h2>
                 </div>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <button class="btn btn-primary" onclick="forceSync()">
-                        ☁️ 同步到云端
+                        同步到云端
                     </button>
                     <button class="btn btn-secondary" onclick="forceLoadFromCloud()">
-                        📥 从云端拉取
+                        从云端拉取
                     </button>
                     <button class="btn btn-secondary" onclick="exportData()">
-                        📤 导出数据
+                        导出数据
                     </button>
                     <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
-                        📥 导入数据
+                        导入数据
                     </button>
                     <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
                     <button class="btn btn-danger" onclick="confirmResetData()">
-                        🗑️ 重置数据
+                        重置数据
                     </button>
                 </div>
-                <p style="color: var(--text-secondary); margin-top: 15px; font-size: 13px;">
-                    💡 云端同步：在不同设备间自动同步您的成绩数据
-                </p>
             </div>
             
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">🎯 GPA目标计算器</h2>
+                    <h2 class="card-title">GPA目标计算器</h2>
                 </div>
                 
                 <div class="form-grid">
@@ -807,18 +784,20 @@
             
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">🏫 目标院校管理</h2>
+                    <h2 class="card-title">目标院校管理</h2>
                     <button class="btn btn-primary btn-sm" onclick="openAddSchoolModal()">
                         + 添加目标院校
                     </button>
                 </div>
                 
-                <div style="background: var(--bg); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 13px;">
-                    <p style="color: var(--text-secondary); margin: 0;">
-                        ⚠️ <strong>重要说明</strong>：以下院校的GPA要求为<strong>示例参考数据</strong>，
-                        不代表官方录取标准。不同专业、年份的要求差异很大，
-                        建议您<strong>自行添加和编辑</strong>目标院校的准确要求。
-                    </p>
+                <div style="margin-bottom: 20px;">
+                    <input 
+                        type="text" 
+                        class="input" 
+                        id="schoolSearchInput" 
+                        placeholder="搜索院校名称..."
+                        oninput="filterSchools()"
+                    >
                 </div>
                 
                 <div class="table-wrapper">
@@ -834,6 +813,9 @@
                         </thead>
                         <tbody id="schoolsTable"></tbody>
                     </table>
+                    <div id="noSchoolsMessage" style="display: none; text-align: center; padding: 40px; color: var(--text-secondary);">
+                        未找到匹配的院校
+                    </div>
                 </div>
             </div>
         </div>
@@ -844,11 +826,7 @@
         <div class="modal">
             <div class="modal-header">
                 <h2 class="modal-title" id="modalTitle">添加课程</h2>
-                <button class="modal-close" onclick="closeModal()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 6L6 18M6 6l12 12"/>
-                    </svg>
-                </button>
+                <button class="modal-close" onclick="closeModal()">×</button>
             </div>
             
             <div class="form-grid">
@@ -891,11 +869,7 @@
         <div class="modal">
             <div class="modal-header">
                 <h2 class="modal-title">确认删除</h2>
-                <button class="modal-close" onclick="closeDeleteModal()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 6L6 18M6 6l12 12"/>
-                    </svg>
-                </button>
+                <button class="modal-close" onclick="closeDeleteModal()">×</button>
             </div>
             <p style="color: var(--text-secondary); margin-bottom: 20px;" id="deleteCourseMessage">
                 确定要删除这门课程吗？此操作无法撤销。
@@ -912,11 +886,7 @@
         <div class="modal">
             <div class="modal-header">
                 <h2 class="modal-title" id="schoolModalTitle">添加目标院校</h2>
-                <button class="modal-close" onclick="closeSchoolModal()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 6L6 18M6 6l12 12"/>
-                    </svg>
-                </button>
+                <button class="modal-close" onclick="closeSchoolModal()">×</button>
             </div>
             
             <div class="form-grid">
@@ -942,11 +912,7 @@
         <div class="modal">
             <div class="modal-header">
                 <h2 class="modal-title">确认重置数据</h2>
-                <button class="modal-close" onclick="closeResetModal()">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 6L6 18M6 6l12 12"/>
-                    </svg>
-                </button>
+                <button class="modal-close" onclick="closeResetModal()">×</button>
             </div>
             <p style="color: var(--text-secondary); margin-bottom: 20px;">
                 确定要重置所有数据吗？这将清空您的所有课程和自定义院校，恢复到初始状态。此操作无法撤销！
@@ -1146,11 +1112,11 @@
             syncStatus = status;
             if (syncIndicator) {
                 const statusText = {
-                    'synced': '✅ 已同步',
-                    'syncing': '🔄 同步中...',
-                    'error': '❌ 同步失败',
-                    'local': '💾 本地数据',
-                    'disconnected': '⚪ 未连接'
+                    'synced': '已同步',
+                    'syncing': '同步中...',
+                    'error': '同步失败',
+                    'local': '本地数据',
+                    'disconnected': '未连接'
                 };
                 syncIndicator.textContent = statusText[status] || status;
                 
@@ -1303,7 +1269,6 @@
         function updateThemeLabel() {
             const isDark = document.body.classList.contains('dark');
             document.getElementById('themeLabel').textContent = isDark ? '浅色模式' : '深色模式';
-            document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
         }
         
         function initTheme() {
@@ -1787,12 +1752,33 @@
             }
         }
         
-        function renderSchools() {
+        function renderSchools(searchTerm = '') {
             const allCourses = getAllCourses();
             const currentGpa = calculateStats(allCourses).gpa;
             
+            // 智能搜索过滤
+            let filteredSchools = schools;
+            if (searchTerm.trim()) {
+                const lowerSearch = searchTerm.toLowerCase().trim();
+                filteredSchools = schools.filter(school => 
+                    school.name.toLowerCase().includes(lowerSearch)
+                );
+            }
+            
             const tbody = document.getElementById('schoolsTable');
-            tbody.innerHTML = schools.map((school, index) => {
+            const noSchoolsMessage = document.getElementById('noSchoolsMessage');
+            
+            if (filteredSchools.length === 0) {
+                tbody.innerHTML = '';
+                noSchoolsMessage.style.display = 'block';
+                return;
+            }
+            
+            noSchoolsMessage.style.display = 'none';
+            
+            tbody.innerHTML = filteredSchools.map((school, index) => {
+                // 找到原始索引
+                const originalIndex = schools.findIndex(s => s.name === school.name);
                 const diff = currentGpa - school.minGpa;
                 let level = '冲刺';
                 let tagClass = 'tag-danger';
@@ -1806,10 +1792,17 @@
                 
                 const isDefault = school.isDefault;
                 
+                // 智能高亮搜索词
+                let displayName = school.name;
+                if (searchTerm.trim()) {
+                    const regex = new RegExp(`(${searchTerm})`, 'gi');
+                    displayName = school.name.replace(regex, '<mark style="background: rgba(59, 130, 246, 0.3); padding: 2px 4px; border-radius: 3px;">$1</mark>');
+                }
+                
                 return `
                     <tr>
                         <td style="font-weight: 500;">
-                            ${school.name}
+                            ${displayName}
                             ${isDefault ? '<span style="font-size: 11px; color: var(--text-secondary); margin-left: 8px;">(示例)</span>' : ''}
                         </td>
                         <td><span class="tag ${tagClass}">${level}</span></td>
@@ -1818,12 +1811,18 @@
                             ${diff >= 0 ? '+' : ''}${diff.toFixed(2)}
                         </td>
                         <td>
-                            <button class="btn btn-secondary btn-sm" onclick="openEditSchoolModal(${index})">编辑</button>
-                            <button class="btn btn-sm" style="background: #fee2e2; color: #dc2626; border: none;" onclick="deleteSchool(${index})">删除</button>
+                            <button class="btn btn-secondary btn-sm" onclick="openEditSchoolModal(${originalIndex})">编辑</button>
+                            <button class="btn btn-sm" style="background: #fee2e2; color: #dc2626; border: none;" onclick="deleteSchool(${originalIndex})">删除</button>
                         </td>
                     </tr>
                 `;
             }).join('');
+        }
+        
+        function filterSchools() {
+            const searchInput = document.getElementById('schoolSearchInput');
+            const searchTerm = searchInput.value;
+            renderSchools(searchTerm);
         }
         
         // ==================== School Management ====================
@@ -1923,17 +1922,16 @@
         
         async function forceSync() {
             if (!supabaseClient) {
-                alert('❌ 云端同步未连接！');
+                console.error('云端同步未连接');
                 return;
             }
             
             await syncToCloud();
-            alert('✅ 数据已同步到云端！');
         }
         
         async function forceLoadFromCloud() {
             if (!supabaseClient) {
-                alert('❌ 云端同步未连接！');
+                console.error('云端同步未连接');
                 return;
             }
             
@@ -1944,10 +1942,7 @@
                     schools = cloudData.schools || JSON.parse(JSON.stringify(DEFAULT_SCHOOLS));
                     saveData();
                     renderAll();
-                    alert('✅ 成功从云端拉取数据！');
                 }
-            } else {
-                alert('ℹ️ 云端暂无数据');
             }
         }
         

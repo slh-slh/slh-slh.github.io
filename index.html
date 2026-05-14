@@ -1081,20 +1081,20 @@
             try {
                 updateSyncStatus('syncing');
                 
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
                 const { data: result, error } = await supabaseClient
                     .from('grade_data')
                     .select('*')
                     .eq('id', 'main_data')
                     .single();
                 
+                clearTimeout(timeoutId);
+                
                 if (error) {
-                    if (error.code === 'PGRST116') {
-                        console.log('ℹ️ No cloud data found, using local data');
-                        updateSyncStatus('local');
-                    } else {
-                        console.error('❌ Load from cloud failed:', error);
-                        updateSyncStatus('error');
-                    }
+                    console.log('ℹ️ Cloud data status:', error.code === 'PGRST116' ? 'No data' : error.message);
+                    updateSyncStatus('local');
                     return null;
                 }
                 
@@ -1102,8 +1102,8 @@
                 updateSyncStatus('synced');
                 return result;
             } catch (error) {
-                console.error('❌ Load error:', error);
-                updateSyncStatus('error');
+                console.log('⚠️ Cloud load skipped:', error.name === 'AbortError' ? 'Timeout' : error.message);
+                updateSyncStatus('local');
                 return null;
             }
         }
@@ -1885,16 +1885,13 @@
             loadData();
             initTheme();
             
-            // Initialize Supabase
             syncIndicator = document.getElementById('syncIndicator');
             if (initSupabase()) {
-                // 尝试从云端加载数据
-                loadFromCloudAndMerge();
+                syncToCloud();
             }
             
             renderDashboard();
             
-            // 窗口大小改变时重绘图表
             let resizeTimer;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);
@@ -1908,21 +1905,20 @@
         }
         
         async function loadFromCloudAndMerge() {
+            if (!supabaseClient) return;
+            
             const cloudData = await loadFromCloud();
             if (cloudData && cloudData.data) {
-                // 如果云端数据更新，则使用云端数据
-                if (confirm('发现云端数据！是否从云端同步最新数据？\n\n点击"确定"使用云端数据（最新）\n点击"取消"保留本地数据')) {
-                    data = cloudData.data;
-                    schools = cloudData.schools || JSON.parse(JSON.stringify(DEFAULT_SCHOOLS));
-                    saveData();
-                    renderAll();
-                }
+                data = cloudData.data;
+                schools = cloudData.schools || JSON.parse(JSON.stringify(DEFAULT_SCHOOLS));
+                saveData();
+                renderAll();
             }
         }
         
         async function forceSync() {
             if (!supabaseClient) {
-                console.error('云端同步未连接');
+                console.log('云端同步未连接');
                 return;
             }
             
@@ -1931,22 +1927,39 @@
         
         async function forceLoadFromCloud() {
             if (!supabaseClient) {
-                console.error('云端同步未连接');
+                console.log('云端同步未连接');
                 return;
             }
             
             const cloudData = await loadFromCloud();
             if (cloudData && cloudData.data) {
-                if (confirm('确定要从云端拉取数据吗？这将覆盖当前所有数据！')) {
-                    data = cloudData.data;
-                    schools = cloudData.schools || JSON.parse(JSON.stringify(DEFAULT_SCHOOLS));
-                    saveData();
-                    renderAll();
-                }
+                data = cloudData.data;
+                schools = cloudData.schools || JSON.parse(JSON.stringify(DEFAULT_SCHOOLS));
+                saveData();
+                renderAll();
             }
         }
         
         document.addEventListener('DOMContentLoaded', init);
+        
+        // 跨终端同步：页面获得焦点时自动检查云端更新
+        let lastCloudCheck = 0;
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible' && supabaseClient) {
+                const now = Date.now();
+                if (now - lastCloudCheck > 10000) {
+                    lastCloudCheck = now;
+                    loadFromCloudAndMerge();
+                }
+            }
+        });
+        
+        // 定期自动同步（每60秒）
+        setInterval(() => {
+            if (supabaseClient) {
+                loadFromCloudAndMerge();
+            }
+        }, 60000);
     </script>
 </body>
 </html>

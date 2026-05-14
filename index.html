@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -151,6 +152,47 @@
             align-items: center;
             justify-content: space-between;
             font-size: 14px;
+        }
+        
+        /* Sync Indicator */
+        .sync-indicator {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 8px;
+            transition: all 0.3s;
+        }
+        
+        .sync-indicator.synced {
+            background: rgba(16, 185, 129, 0.15);
+            color: #059669;
+        }
+        
+        .sync-indicator.syncing {
+            background: rgba(59, 130, 246, 0.15);
+            color: #2563eb;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .sync-indicator.error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #dc2626;
+        }
+        
+        .sync-indicator.local {
+            background: rgba(245, 158, 11, 0.15);
+            color: #d97706;
+        }
+        
+        .sync-indicator.disconnected {
+            background: rgba(100, 116, 139, 0.15);
+            color: #64748b;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
         }
         
         /* Main Content */
@@ -558,6 +600,10 @@
             <span id="themeLabel">深色模式</span>
             <span id="themeIcon">🌙</span>
         </div>
+        
+        <div class="sync-indicator disconnected" id="syncIndicator">
+            ⚪ 未连接
+        </div>
     </nav>
 
     <!-- Main Content -->
@@ -713,7 +759,34 @@
             
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">GPA目标计算器</h2>
+                    <h2 class="card-title">📊 数据管理</h2>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="forceSync()">
+                        ☁️ 同步到云端
+                    </button>
+                    <button class="btn btn-secondary" onclick="forceLoadFromCloud()">
+                        📥 从云端拉取
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportData()">
+                        📤 导出数据
+                    </button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">
+                        📥 导入数据
+                    </button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+                    <button class="btn btn-danger" onclick="confirmResetData()">
+                        🗑️ 重置数据
+                    </button>
+                </div>
+                <p style="color: var(--text-secondary); margin-top: 15px; font-size: 13px;">
+                    💡 云端同步：在不同设备间自动同步您的成绩数据
+                </p>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🎯 GPA目标计算器</h2>
                 </div>
                 
                 <div class="form-grid">
@@ -729,13 +802,25 @@
                 
                 <button class="btn btn-primary" onclick="calculateGoal()">计算所需成绩</button>
                 
-                <div id="goalResult" style="display: none;"></div>
+                <div id="goalResult" style="display: none; margin-top: 20px;"></div>
             </div>
             
             <div class="card">
                 <div class="card-header">
-                    <h2 class="card-title">推荐院校</h2>
+                    <h2 class="card-title">🏫 目标院校管理</h2>
+                    <button class="btn btn-primary btn-sm" onclick="openAddSchoolModal()">
+                        + 添加目标院校
+                    </button>
                 </div>
+                
+                <div style="background: var(--bg); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 13px;">
+                    <p style="color: var(--text-secondary); margin: 0;">
+                        ⚠️ <strong>重要说明</strong>：以下院校的GPA要求为<strong>示例参考数据</strong>，
+                        不代表官方录取标准。不同专业、年份的要求差异很大，
+                        建议您<strong>自行添加和编辑</strong>目标院校的准确要求。
+                    </p>
+                </div>
+                
                 <div class="table-wrapper">
                     <table>
                         <thead>
@@ -744,6 +829,7 @@
                                 <th>推荐程度</th>
                                 <th>要求GPA</th>
                                 <th>差距</th>
+                                <th>操作</th>
                             </tr>
                         </thead>
                         <tbody id="schoolsTable"></tbody>
@@ -821,24 +907,101 @@
         </div>
     </div>
 
+    <!-- Add/Edit School Modal -->
+    <div class="modal-overlay" id="schoolModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="schoolModalTitle">添加目标院校</h2>
+                <button class="modal-close" onclick="closeSchoolModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="form-grid">
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label class="form-label">院校名称</label>
+                    <input type="text" class="input" id="schoolName" placeholder="如：清华大学">
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label class="form-label">要求GPA（满分4.0）</label>
+                    <input type="number" class="input" id="schoolMinGpa" min="0" max="4" step="0.01" value="3.5">
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeSchoolModal()">取消</button>
+                <button class="btn btn-primary" onclick="saveSchool()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Data Confirmation Modal -->
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">确认重置数据</h2>
+                <button class="modal-close" onclick="closeResetModal()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                确定要重置所有数据吗？这将清空您的所有课程和自定义院校，恢复到初始状态。此操作无法撤销！
+            </p>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeResetModal()">取消</button>
+                <button class="btn btn-danger" onclick="resetData()">确认重置</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ==================== Supabase Configuration ====================
+        const SUPABASE_URL = 'https://hirpdjmuywkgxojdsprf.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_ciDaiVjyNKbw0BZt3l18gA_QYW6MDsQ';
+        
+        let supabaseClient = null;
+        let syncStatus = 'disconnected';
+        let syncIndicator = null;
+        
+        // Initialize Supabase
+        function initSupabase() {
+            try {
+                // 使用正确的方式初始化Supabase客户端
+                if (typeof window.supabase !== 'undefined') {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    console.log('✅ Supabase initialized');
+                    return true;
+                } else {
+                    console.error('❌ Supabase SDK not loaded');
+                    return false;
+                }
+            } catch (error) {
+                console.error('❌ Supabase initialization failed:', error);
+                return false;
+            }
+        }
+        
         // ==================== Data ====================
         const SEMESTERS = [
             '大一上', '大一下', '大二上', '大二下',
             '大三上', '大三下', '大四上', '大四下'
         ];
         
-        const SCHOOLS = [
-            { name: '清华大学', minGpa: 3.85 },
-            { name: '北京大学', minGpa: 3.80 },
-            { name: '复旦大学', minGpa: 3.75 },
-            { name: '上海交通大学', minGpa: 3.70 },
-            { name: '浙江大学', minGpa: 3.65 },
-            { name: '南京大学', minGpa: 3.60 },
-            { name: '中国人民大学', minGpa: 3.70 },
-            { name: '武汉大学', minGpa: 3.50 },
-            { name: '中山大学', minGpa: 3.45 },
-            { name: '四川大学', minGpa: 3.40 }
+        const DEFAULT_SCHOOLS = [
+            { name: '清华大学', minGpa: 3.85, isDefault: true },
+            { name: '北京大学', minGpa: 3.80, isDefault: true },
+            { name: '复旦大学', minGpa: 3.75, isDefault: true },
+            { name: '上海交通大学', minGpa: 3.70, isDefault: true },
+            { name: '浙江大学', minGpa: 3.65, isDefault: true },
+            { name: '南京大学', minGpa: 3.60, isDefault: true },
+            { name: '中国人民大学', minGpa: 3.70, isDefault: true },
+            { name: '武汉大学', minGpa: 3.50, isDefault: true },
+            { name: '中山大学', minGpa: 3.45, isDefault: true },
+            { name: '四川大学', minGpa: 3.40, isDefault: true }
         ];
         
         const DEFAULT_DATA = [
@@ -859,9 +1022,11 @@
         ];
         
         let data = [];
+        let schools = [];
         let editingCourse = null;
         let deletingCourseIndex = null;
         let deletingCourseSemester = null;
+        let editingSchoolIndex = null;
 
         // ==================== Utils ====================
         function getGradePoint(score) {
@@ -899,16 +1064,106 @@
             return data.flat();
         }
 
-        // ==================== Storage ====================
+        // ==================== Storage with Cloud Sync ====================
         function saveData() {
             localStorage.setItem('gradeManager_data', JSON.stringify(data));
+            localStorage.setItem('gradeManager_schools', JSON.stringify(schools));
+            
+            // 云端同步
+            if (supabaseClient) {
+                syncToCloud();
+            }
+        }
+        
+        async function syncToCloud() {
+            if (!supabaseClient) return;
+            
+            try {
+                updateSyncStatus('syncing');
+                
+                const saveDataObj = {
+                    data: data,
+                    schools: schools,
+                    updated_at: new Date().toISOString()
+                };
+                
+                const { data: result, error } = await supabaseClient
+                    .from('grade_data')
+                    .upsert({
+                        id: 'main_data',
+                        ...saveDataObj
+                    }, {
+                        onConflict: 'id'
+                    });
+                
+                if (error) {
+                    console.error('❌ Sync failed:', error);
+                    updateSyncStatus('error');
+                } else {
+                    console.log('✅ Data synced to cloud');
+                    updateSyncStatus('synced');
+                }
+            } catch (error) {
+                console.error('❌ Sync error:', error);
+                updateSyncStatus('error');
+            }
+        }
+        
+        async function loadFromCloud() {
+            if (!supabaseClient) return null;
+            
+            try {
+                updateSyncStatus('syncing');
+                
+                const { data: result, error } = await supabaseClient
+                    .from('grade_data')
+                    .select('*')
+                    .eq('id', 'main_data')
+                    .single();
+                
+                if (error) {
+                    if (error.code === 'PGRST116') {
+                        console.log('ℹ️ No cloud data found, using local data');
+                        updateSyncStatus('local');
+                    } else {
+                        console.error('❌ Load from cloud failed:', error);
+                        updateSyncStatus('error');
+                    }
+                    return null;
+                }
+                
+                console.log('✅ Data loaded from cloud');
+                updateSyncStatus('synced');
+                return result;
+            } catch (error) {
+                console.error('❌ Load error:', error);
+                updateSyncStatus('error');
+                return null;
+            }
+        }
+        
+        function updateSyncStatus(status) {
+            syncStatus = status;
+            if (syncIndicator) {
+                const statusText = {
+                    'synced': '✅ 已同步',
+                    'syncing': '🔄 同步中...',
+                    'error': '❌ 同步失败',
+                    'local': '💾 本地数据',
+                    'disconnected': '⚪ 未连接'
+                };
+                syncIndicator.textContent = statusText[status] || status;
+                
+                syncIndicator.className = 'sync-indicator ' + status;
+            }
         }
         
         function loadData() {
-            const saved = localStorage.getItem('gradeManager_data');
-            if (saved) {
+            // Load course data
+            const savedData = localStorage.getItem('gradeManager_data');
+            if (savedData) {
                 try {
-                    data = JSON.parse(saved);
+                    data = JSON.parse(savedData);
                     // 数据迁移：将旧的课程类型映射到新类型
                     data.forEach(semesterCourses => {
                         semesterCourses.forEach(course => {
@@ -928,6 +1183,88 @@
             while (data.length < SEMESTERS.length) {
                 data.push([]);
             }
+            
+            // Load schools data
+            const savedSchools = localStorage.getItem('gradeManager_schools');
+            if (savedSchools) {
+                try {
+                    schools = JSON.parse(savedSchools);
+                } catch (e) {
+                    schools = JSON.parse(JSON.stringify(DEFAULT_SCHOOLS));
+                }
+            } else {
+                schools = JSON.parse(JSON.stringify(DEFAULT_SCHOOLS));
+            }
+        }
+        
+        // ==================== Data Export/Import ====================
+        function exportData() {
+            const exportObj = {
+                version: 1,
+                exportDate: new Date().toISOString(),
+                data: data,
+                schools: schools
+            };
+            
+            const blob = new Blob([JSON.stringify(exportObj, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `成绩管理系统备份_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported.data && imported.schools) {
+                        if (confirm(`确定要导入数据吗？这将覆盖当前所有数据！\n\n导入文件创建时间：${new Date(imported.exportDate).toLocaleString('zh-CN')}`)) {
+                            data = imported.data;
+                            schools = imported.schools;
+                            saveData();
+                            renderAll();
+                            alert('✅ 数据导入成功！');
+                        }
+                    } else {
+                        alert('❌ 无效的文件格式！');
+                    }
+                } catch (error) {
+                    alert('❌ 导入失败：文件格式错误！');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+        
+        function confirmResetData() {
+            document.getElementById('resetModal').classList.add('active');
+        }
+        
+        function closeResetModal() {
+            document.getElementById('resetModal').classList.remove('active');
+        }
+        
+        function resetData() {
+            data = JSON.parse(JSON.stringify(DEFAULT_DATA));
+            schools = JSON.parse(JSON.stringify(DEFAULT_SCHOOLS));
+            saveData();
+            closeResetModal();
+            renderAll();
+            alert('✅ 数据已重置！');
+        }
+        
+        function renderAll() {
+            renderDashboard();
+            renderCourses();
+            renderGoals();
         }
 
         // ==================== Navigation ====================
@@ -1455,7 +1792,7 @@
             const currentGpa = calculateStats(allCourses).gpa;
             
             const tbody = document.getElementById('schoolsTable');
-            tbody.innerHTML = SCHOOLS.map(school => {
+            tbody.innerHTML = schools.map((school, index) => {
                 const diff = currentGpa - school.minGpa;
                 let level = '冲刺';
                 let tagClass = 'tag-danger';
@@ -1467,23 +1804,95 @@
                     tagClass = 'tag-warning';
                 }
                 
+                const isDefault = school.isDefault;
+                
                 return `
                     <tr>
-                        <td style="font-weight: 500;">${school.name}</td>
+                        <td style="font-weight: 500;">
+                            ${school.name}
+                            ${isDefault ? '<span style="font-size: 11px; color: var(--text-secondary); margin-left: 8px;">(示例)</span>' : ''}
+                        </td>
                         <td><span class="tag ${tagClass}">${level}</span></td>
                         <td>${school.minGpa.toFixed(2)}</td>
                         <td style="color: ${diff >= 0 ? '#10b981' : '#ef4444'}">
                             ${diff >= 0 ? '+' : ''}${diff.toFixed(2)}
                         </td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm" onclick="openEditSchoolModal(${index})">编辑</button>
+                            <button class="btn btn-sm" style="background: #fee2e2; color: #dc2626; border: none;" onclick="deleteSchool(${index})">删除</button>
+                        </td>
                     </tr>
                 `;
             }).join('');
+        }
+        
+        // ==================== School Management ====================
+        function openAddSchoolModal() {
+            editingSchoolIndex = null;
+            document.getElementById('schoolModalTitle').textContent = '添加目标院校';
+            document.getElementById('schoolName').value = '';
+            document.getElementById('schoolMinGpa').value = '3.5';
+            document.getElementById('schoolModal').classList.add('active');
+        }
+        
+        function openEditSchoolModal(index) {
+            const school = schools[index];
+            editingSchoolIndex = index;
+            document.getElementById('schoolModalTitle').textContent = '编辑目标院校';
+            document.getElementById('schoolName').value = school.name;
+            document.getElementById('schoolMinGpa').value = school.minGpa;
+            document.getElementById('schoolModal').classList.add('active');
+        }
+        
+        function closeSchoolModal() {
+            document.getElementById('schoolModal').classList.remove('active');
+            editingSchoolIndex = null;
+        }
+        
+        function saveSchool() {
+            const name = document.getElementById('schoolName').value.trim();
+            const minGpa = parseFloat(document.getElementById('schoolMinGpa').value);
+            
+            if (!name) {
+                alert('请输入院校名称！');
+                return;
+            }
+            if (isNaN(minGpa) || minGpa < 0 || minGpa > 4) {
+                alert('请输入有效的GPA（0-4.0）！');
+                return;
+            }
+            
+            if (editingSchoolIndex !== null) {
+                schools[editingSchoolIndex] = { name, minGpa, isDefault: false };
+            } else {
+                schools.push({ name, minGpa, isDefault: false });
+            }
+            
+            saveData();
+            closeSchoolModal();
+            renderSchools();
+        }
+        
+        function deleteSchool(index) {
+            if (confirm(`确定要删除院校"${schools[index].name}"吗？`)) {
+                schools.splice(index, 1);
+                saveData();
+                renderSchools();
+            }
         }
 
         // ==================== Init ====================
         function init() {
             loadData();
             initTheme();
+            
+            // Initialize Supabase
+            syncIndicator = document.getElementById('syncIndicator');
+            if (initSupabase()) {
+                // 尝试从云端加载数据
+                loadFromCloudAndMerge();
+            }
+            
             renderDashboard();
             
             // 窗口大小改变时重绘图表
@@ -1497,6 +1906,49 @@
                     }
                 }, 250);
             });
+        }
+        
+        async function loadFromCloudAndMerge() {
+            const cloudData = await loadFromCloud();
+            if (cloudData && cloudData.data) {
+                // 如果云端数据更新，则使用云端数据
+                if (confirm('发现云端数据！是否从云端同步最新数据？\n\n点击"确定"使用云端数据（最新）\n点击"取消"保留本地数据')) {
+                    data = cloudData.data;
+                    schools = cloudData.schools || JSON.parse(JSON.stringify(DEFAULT_SCHOOLS));
+                    saveData();
+                    renderAll();
+                }
+            }
+        }
+        
+        async function forceSync() {
+            if (!supabaseClient) {
+                alert('❌ 云端同步未连接！');
+                return;
+            }
+            
+            await syncToCloud();
+            alert('✅ 数据已同步到云端！');
+        }
+        
+        async function forceLoadFromCloud() {
+            if (!supabaseClient) {
+                alert('❌ 云端同步未连接！');
+                return;
+            }
+            
+            const cloudData = await loadFromCloud();
+            if (cloudData && cloudData.data) {
+                if (confirm('确定要从云端拉取数据吗？这将覆盖当前所有数据！')) {
+                    data = cloudData.data;
+                    schools = cloudData.schools || JSON.parse(JSON.stringify(DEFAULT_SCHOOLS));
+                    saveData();
+                    renderAll();
+                    alert('✅ 成功从云端拉取数据！');
+                }
+            } else {
+                alert('ℹ️ 云端暂无数据');
+            }
         }
         
         document.addEventListener('DOMContentLoaded', init);
